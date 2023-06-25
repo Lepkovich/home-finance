@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    color: #052C65;
+    box-sizing: border-box;
+}
+
+@font-face {
+    src: url("fonts/Roboto.ttf");
+    font-family: "Roboto";
+}
