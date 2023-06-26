@@ -10,3 +10,14 @@
 .nav-link img {
     margin-right: 7px;
 }
+#balance {
+    padding-left: 16px;
+}
+#balance span {
+    color: #0D6EFD;
+    font-weight: 500;
+    margin-bottom: -20px;
+}
+#user-info {
+    padding-bottom: 24px;
+}
