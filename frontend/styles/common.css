@@ -9,3 +9,7 @@ body {
     src: url("fonts/Roboto.ttf");
     font-family: "Roboto";
 }
+@font-face {
+    src: url("fonts/Robotomedium.ttf");
+    font-family: "Roboto Medium";
+}

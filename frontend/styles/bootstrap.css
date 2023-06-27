@@ -204,7 +204,7 @@ body {
 }
 
 hr {
-  margin: 1rem 0;
+  margin: 20px 0;
   color: inherit;
   border: 0;
   border-top: var(--bs-border-width) solid;
@@ -7923,7 +7923,7 @@ textarea.form-control-lg {
 }
 
 .m-2 {
-  margin: 0.5rem !important;
+  margin: 10px !important;
 }
 
 .m-3 {
@@ -8137,7 +8137,7 @@ textarea.form-control-lg {
 }
 
 .p-3 {
-  padding: 1rem !important;
+  padding: 20px !important;
 }
 
 .p-4 {
