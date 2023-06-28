@@ -1,7 +1,4 @@
-html,
-body {
-    height: 100%;
-}
+
 
 .form-signin {
     max-width: 330px;
@@ -22,4 +19,20 @@ body {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+h1 {
+    color: #052C65;
+    font-family: "Roboto Medium", sans-serif;
+    font-size: 40px;
+}
+
+label {
+    color: #6C757D;
+    font-size: 15px;
+    line-height: 24px;
+}
+.form-check-label {
+    color: #000;
+    font-size: 12px;
+    line-height: 23px;
 }
