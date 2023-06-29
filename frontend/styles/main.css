@@ -17,7 +17,7 @@
 }
 
 .nav-link img {
-    margin-right: 2px;
+    margin-right: 1px;
 }
 
 .arrow::after {
@@ -39,7 +39,7 @@
     border-bottom-right-radius: 0;
 }
 
-.nav-item .sub-menu-active {
+.nav-item .sub-menu-active:hover {
     background-color: #0D6EFD;
     color: white;
     border-radius: 0;
@@ -108,12 +108,13 @@ button {
 .card {
     width: 352px;
 }
-h2 {
+.card h2 {
     color: #290661;
     font-size: 28px;
     font-family: "Roboto Medium", sans-serif;
+    margin-bottom: 10px;
 }
-.btn {
+.btn.btn-earnings{
     color: #FFF;
     text-align: center;
     font-size: 14px;
@@ -123,8 +124,37 @@ button.edit {
     width: 134px;
 }
 .add-cart {
+    height: 121px;
+}
+.add-cart a{
     color: #CED4DA;
     font-size: 28px;
     font-family: "Roboto Medium", sans-serif;
     height: 119px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#add-profit-cat {
+    width: 397px;
+    height: 38px;
+    font-size: 15px;
+    line-height: 24px;
+}
+.table {
+    margin-top: -16px;
+    color: #000;
+    font-size: 16px;
+    line-height: 23px;
+}
+.table th {
+    color: #052C65;
+    font-size: 16px;
+    font-family: "Roboto Bold", sans-serif;
+}
+.table td.income {
+    color: #198754;
+}
+.table td.spending {
+    color: #DC3545;
 }
