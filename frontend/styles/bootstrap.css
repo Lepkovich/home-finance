@@ -3807,7 +3807,7 @@ textarea.form-control-lg {
 
 .nav {
   --bs-nav-link-padding-x: 1rem;
-  --bs-nav-link-padding-y: 0.5rem;
+  --bs-nav-link-padding-y: 12px;
   /*--bs-nav-link-font-weight: ;*/
   --bs-nav-link-color: var(--bs-link-color);
   --bs-nav-link-hover-color: var(--bs-link-hover-color);
@@ -8033,7 +8033,7 @@ textarea.form-control-lg {
 }
 
 .mt-5 {
-  margin-top: 3rem !important;
+  margin-top: 40px !important;
 }
 
 .mt-auto {
@@ -8049,7 +8049,7 @@ textarea.form-control-lg {
 }
 
 .me-2 {
-  margin-right: 0.5rem !important;
+  margin-right: 10px !important;
 }
 
 .me-3 {
@@ -8085,11 +8085,11 @@ textarea.form-control-lg {
 }
 
 .mb-4 {
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 20px !important;
 }
 
 .mb-5 {
-  margin-bottom: 3rem !important;
+  margin-bottom: 40px !important;
 }
 
 .mb-auto {
@@ -8141,7 +8141,7 @@ textarea.form-control-lg {
 }
 
 .p-4 {
-  padding: 1.5rem !important;
+  padding: 20px !important;
 }
 
 .p-5 {
@@ -8369,7 +8369,7 @@ textarea.form-control-lg {
 
 .column-gap-3 {
   -moz-column-gap: 1rem !important;
-  column-gap: 1rem !important;
+  column-gap: 20px !important;
 }
 
 .column-gap-4 {
