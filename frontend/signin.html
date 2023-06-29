@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Вход</title>
+    <link href="styles/bootstrap.css" rel="stylesheet">
+    <link href="styles/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/bootstrap-common.css">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body class = "d-flex align-items-center">
+<main class="form-signin w-100 m-auto text-center">
+    <form>
+        <img class="mb-5" src="images/logo.png" alt="Логотип">
+        <h1 class="mb-3">Вход</h1>
+
+        <div class="form-field">
+            <div class="field-icon"><img src="images/form-field-email.png" alt=""></div>
+            <input type="email" class="form-control" id="email" placeholder="Электронная почта">
+        </div>
+        <div class="form-field">
+            <div class="field-icon"><img src="images/form-field-psw.png" alt=""></div>
+            <input type="password" class="form-control" id="Password" placeholder="Пароль">
+        </div>
+
+        <div class="form-check text-start">
+            <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                Запомнить меня
+            </label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 mt-3 btn-my" type="submit">Войти</button>
+        <div class="no-acc">Еще нет аккаунта? <a href="#">Пройдите регистрацию</a></div>
+    </form>
+</main>
+
+</body>
+<script src="scripts/bootstrap.bundle.min.js"></script>
+</html>
