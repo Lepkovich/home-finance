@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Создание дохода/расхода</title>
+    <title>Редактирование дохода/расхода</title>
     <link href="styles/bootstrap.css" rel="stylesheet">
     <link href="styles/sidebars.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/bootstrap-common.css">
@@ -71,27 +71,24 @@
         </div>
     </div>
     <div class="container d-flex flex-column bg-body add">
-        <h1 class="mb-5">Создание дохода/расхода</h1>
-        <input type="text" class="form-control dropdown-toggle mb-2" id="type" placeholder="Тип..."
-               data-bs-toggle="dropdown"  > <!-- сделать списком-->
-        <ul class="dropdown-menu add" aria-labelledby="type">
-            <li class="dropdown-item" onclick="setValue('Доход')">Доход</li>
-            <li class="dropdown-item" onclick="setValue('Расход')">Расход</li>
-        </ul>
+        <h1 class="mb-5">Редактирование дохода/расхода</h1>
+        <input type="text" class="form-control mb-2" id="type" placeholder="Категория...">
         <input type="text" class="form-control mb-2" id="category" placeholder="Категория..."> <!-- сделать списком-->
         <input type="text" class="form-control mb-2" id="sum" placeholder="Сумма в $...">
         <input type="text" class="form-control mb-2" id="date" placeholder="Дата..."> <!-- type="date"?-->
         <input type="text" class="form-control mb-3" id="comment" placeholder="Комментарий...">
             <div class="d-flex">
-                <button class="btn btn-success px-2 me-3 btn-add" type="button">Создать</button>
+                <button class="btn btn-success px-2 me-3 btn-add" type="button">Сохранить</button>
                 <button class="btn btn-danger px-2 btn-add" type="button">Отмена</button>
             </div>
     </div>
 </main>
 <script>
-    function setValue(value) {
-        document.getElementById("type").value = value;
-    }
+        document.getElementById("type").value = 'Доход';
+        document.getElementById("category").value = 'Зарплата';
+        document.getElementById("sum").value = '500$';
+        document.getElementById("date").value = '11.09.2022';
+
 </script>
 <script src="scripts/bootstrap.bundle.min.js"></script>
 <script src="scripts/sidebars.js"></script>

@@ -121,7 +121,7 @@ button {
     font-size: 14px;
     font-family: "Roboto Medium", sans-serif;
 }
-button.edit {
+.btn.edit {
     width: 134px;
 }
 .add-cart {
@@ -167,4 +167,28 @@ button.edit {
 }
 .modal-dialog {
     width: 530px;
+}
+
+.add {
+    margin-top: 100px;
+    margin-left: 60px;
+}
+
+.add.container {
+    max-width: 397px;
+}
+.form-control {
+    height: 38px;
+    font-size: 15px;
+    padding: 7px 16px;
+}
+.btn.btn-add {
+    height: 38px;
+    width: 88px;
+    font-size: 14px;
+    font-family: "Roboto Medium", sans-serif;
+}
+.dropdown-menu.add {
+    font-size: 14px;
+    cursor: pointer;
 }
