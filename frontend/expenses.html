@@ -14,21 +14,21 @@
 
 <main class="d-flex flex-nowrap">
     <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <a href="main.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <img class="logo" src="images/logo.png" alt="логотип">
         </a>
         <hr>
         <div class="d-flex flex-column flex-shrink-0 p-3 mb-auto menu">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis" aria-current="page">
+                    <a href="main.html" class="nav-link link-body-emphasis" aria-current="page">
                         <img src="images/home-icon-dark.png" alt="Главная" style="vertical-align: inherit;">
                         Главная
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis">
+                    <a href="p&l.html" class="nav-link link-body-emphasis">
                         <img src="images/p&l-icon.png" alt="Доходы и расходы">
                         Доходы & Расходы
                     </a>
@@ -40,34 +40,16 @@
                 </li>
                 <ul class="nav flex-column mb-auto sub-menu">
                     <li class="nav-item">
-                        <a href="#" class="nav-link sub-menu-active">
+                        <a href="earnings.html" class="nav-link sub-menu-active">
                             Доходы
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link sub-menu-active">
+                        <a href="expenses.html" class="nav-link sub-menu-active">
                             Расходы
                         </a>
                     </li>
                 </ul>
-
-
-
-                <!--            <li>-->
-                <!--                <button class="nav-link link-body-emphasis arrow"-->
-                <!--                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">-->
-                <!--                    Категории-->
-                <!--                </button>-->
-                <!--                <div class="collapse" id="dashboard-collapse">-->
-                <!--                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">-->
-                <!--                        <li>-->
-                <!--                            <a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Доходы</a></li>-->
-                <!--                        <li>-->
-                <!--                            <a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Расходы</a>-->
-                <!--                        </li>-->
-                <!--                    </ul>-->
-                <!--                </div>-->
-                <!--            </li>-->
             </ul>
         </div>
         <div class="nav-link" id="balance">
@@ -94,8 +76,9 @@
             <div class="card mb-4 rounded-3 p-4">
                 <h2>Еда</h2>
                 <div class="d-flex">
-                    <button class="btn btn-primary px-2 me-2 edit btn-earnings" type="button">Редактировать</button>
-                    <button class="btn btn-danger px-2 btn-earnings" type="button">Удалить</button>
+                    <a href="edit-expenses.html" class="btn btn-primary px-2 me-2 edit btn-earnings" role="button">Редактировать</a>
+<!--                    <button class="btn btn-primary px-2 me-2 edit btn-earnings" type="button">Редактировать</button>-->
+                    <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger px-2 btn-earnings" type="button">Удалить</button>
                 </div>
             </div>
             <div class="card mb-4 rounded-3 p-4">
@@ -161,6 +144,20 @@
 
     </div>
 </main>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="d-flex modal-content rounded-4 text-center popup">
+            <h3 class="mt-5 mb-4">
+                Вы действительно хотите удалить категорию? Связанные расходы будут удалены навсегда.
+            </h3>
+            <div class="d-flex mb-5 justify-content-center g-1">
+                <button class="btn btn-success px-2 me-2 edit btn-earnings" type="button">Да, удалить</button>
+                <button class="btn btn-danger px-2 edit btn-earnings" type="button">Не удалять</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="scripts/bootstrap.bundle.min.js"></script>
 <script src="scripts/sidebars.js"></script>
 </body>

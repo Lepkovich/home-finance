@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Редактировать доход</title>
+    <title>Создание дохода/расхода</title>
     <link href="styles/bootstrap.css" rel="stylesheet">
     <link href="styles/sidebars.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/bootstrap-common.css">
@@ -71,8 +71,10 @@
         </div>
     </div>
     <div class="container d-flex flex-column bg-body main">
-        <h1 class="mb-5">Редактирование категории доходов</h1>
-        <input type="text" class="form-control mb-3" id="add-profit-cat" placeholder="Название...">
+        <h1 class="mb-5">Создание дохода/расхода</h1>
+       <input type="text" class="form-control mb-3" id="type" placeholder="Тип..."> <!-- сделать списком-->
+        <input type="text" class="form-control mb-3" id="category" placeholder="Категория..."> <!-- сделать списком-->
+        <input type="text" class="form-control mb-3" id="sum" placeholder="Сумма в $...">
             <div class="d-flex">
                 <button class="btn btn-success px-2 me-2 edit btn-earnings" type="button">Сохранить</button>
                 <button class="btn btn-danger px-2 btn-earnings" type="button">Удалить</button>
