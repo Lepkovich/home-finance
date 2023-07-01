@@ -3377,6 +3377,7 @@ textarea.form-control-lg {
     transition: none;
   }
 }
+
 .collapsing.collapse-horizontal {
   width: 0;
   height: auto;
