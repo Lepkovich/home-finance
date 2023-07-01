@@ -16,6 +16,15 @@
     color: #6C757D;
     font-size: 15px;
     line-height: 24px;
+    height: 38px;
+    padding: 7px 13px;
+}
+.form-signin input.form-check-input {
+    height: 13px;
+    width: 13px;
+    border: 1px solid #CED4DA;
+    padding: 0 0;
+    margin-left: -15px  ;
 }
 
 h1 {
@@ -28,6 +37,7 @@ h1 {
     color: #000;
     font-size: 12px;
     line-height: 23px;
+    margin-left: 12px;
 }
 .form-field {
     display: flex;
