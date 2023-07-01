@@ -26,6 +26,17 @@
     padding: 0 0;
     margin-left: -15px  ;
 }
+.form-signin input.is-invalid {
+    border-left: 1px solid #dc3545;
+}
+.form-signin .invalid-feedback {
+    margin: -5px 0 5px 36px
+}
+.error {
+    color: #dc3545;
+    margin-top: 4px;
+    display: none;
+}
 
 h1 {
     color: #052C65;
