@@ -24,7 +24,7 @@
     width: 13px;
     border: 1px solid #CED4DA;
     padding: 0 0;
-    margin-left: -15px  ;
+    margin-left: -12px  ;
 }
 .form-signin input.is-invalid {
     border-left: 1px solid #dc3545;
@@ -35,7 +35,7 @@
 .error {
     color: #dc3545;
     display: none;
-    flex-basis: 324px;
+    flex-basis: 500px;
     padding-left: 5px;
     align-items: center;
     margin-bottom: 10px;
