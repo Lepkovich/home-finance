@@ -1,17 +1,3 @@
-<!doctype html>
-<html lang="en" data-bs-theme="auto">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Редактировать доход</title>
-    <link href="styles/bootstrap.css" rel="stylesheet">
-    <link href="styles/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bootstrap-common.css">
-    <link rel="stylesheet" href="styles/common.css">
-    <link rel="stylesheet" href="styles/main.css">
-</head>
-<body>
-
 <main class="d-flex flex-nowrap">
     <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
         <a href="main.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
@@ -61,7 +47,7 @@
                 <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
-                         class="rounded-circle me-4">
+                         class="rounded-circle me-2">
                     RomanChernov
                 </a>
                 <ul class="dropdown-menu text-small shadow">
@@ -70,16 +56,24 @@
             </div>
         </div>
     </div>
-    <div class="container d-flex flex-column bg-body main">
-        <h1 class="mb-5">Редактирование категории доходов</h1>
-        <input type="text" class="form-control mb-3" id="add-profit-cat" placeholder="Название...">
+    <div class="container d-flex flex-column bg-body add">
+        <h1 class="mb-5">Редактирование дохода/расхода</h1>
+        <input type="text" class="form-control mb-2" id="type" placeholder="Категория...">
+        <input type="text" class="form-control mb-2" id="category" placeholder="Категория..."> <!-- сделать списком-->
+        <input type="text" class="form-control mb-2" id="sum" placeholder="Сумма в $...">
+        <input type="text" class="form-control mb-2" id="date" placeholder="Дата..."> <!-- type="date"?-->
+        <input type="text" class="form-control mb-3" id="comment" placeholder="Комментарий...">
             <div class="d-flex">
-                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button">Сохранить</button>
-                <button class="btn btn-danger px-2 btn-earnings" type="button">Удалить</button>
+                <button class="btn btn-success px-2 me-3 btn-add" type="button">Сохранить</button>
+                <button class="btn btn-danger px-2 btn-add" type="button">Отмена</button>
             </div>
     </div>
 </main>
-<script src="scripts/bootstrap.bundle.min.js"></script>
-<script src="scripts/sidebars.js"></script>
-</body>
-</html>
+<script>
+        document.getElementById("type").value = 'Доход';
+        document.getElementById("category").value = 'Зарплата';
+        document.getElementById("sum").value = '500$';
+        document.getElementById("date").value = '11.09.2022';
+
+</script>
+

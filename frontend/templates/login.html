@@ -1,37 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Регистрация</title>
-    <link href="styles/bootstrap.css" rel="stylesheet">
-    <link href="styles/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bootstrap-common.css">
-    <link rel="stylesheet" href="styles/common.css">
-    <link rel="stylesheet" href="styles/login.css">
-</head>
-<body class = "d-flex align-items-center">
-<main class="form-signin w-100 m-auto text-center">
+<main class="form-signin w-100 m-auto text-center main">
     <form>
-        <img class="mb-5" src="images/logo.png" alt="Логотип">
+        <img class="mb-5" src="static/images/logo.png" alt="Логотип">
         <h1 class="mb-3">Создайте аккаунт</h1>
         <div class="form-field">
-            <div class="field-icon"><img src="images/form-field-fullname.png" alt="ФИО"></div>
+            <div class="field-icon"><img src="static/images/form-field-fullname.png" alt="ФИО"></div>
             <input type="text" class="form-control" id="full-name" placeholder="ФИО">
             <div class="error">Имя и фамилия на русском. Первые буквы - заглавные.</div>
         </div>
         <div class="form-field">
-            <div class="field-icon"><img src="images/form-field-email.png" alt="Электронная почта"></div>
+            <div class="field-icon"><img src="static/images/form-field-email.png" alt="Электронная почта"></div>
             <input type="email" class="form-control" id="email" placeholder="Электронная почта">
             <div class="error">Введите корректный email.</div>
         </div>
         <div class="form-field my-form-field">
-            <div class="field-icon"><img src="images/form-field-psw.png" alt="Пароль"></div>
+            <div class="field-icon"><img src="static/images/form-field-psw.png" alt="Пароль"></div>
             <input type="password" class="form-control" id="password" placeholder="Пароль">
             <div class="error">Не менее 8 символов. Хотя бы одна цифра и заглавная буква.</div>
         </div>
         <div class="form-field my-form-field">
-            <div class="field-icon"><img src="images/form-field-psw.png" alt="Пароль"></div>
+            <div class="field-icon"><img src="static/images/form-field-psw.png" alt="Пароль"></div>
             <input type="password" class="form-control" id="repeat-password" placeholder="Подтверждение пароля">
             <div class="error">Пароли не совпадают</div>
         </div>
@@ -40,8 +27,3 @@
         <div class="no-acc">Уже есть аккаунт? <a href="signin.html">Войдите в систему</a></div>
     </form>
 </main>
-
-</body>
-<script src="scripts/bootstrap.bundle.min.js"></script>
-<script src="scripts/form.js"></script>
-</html>

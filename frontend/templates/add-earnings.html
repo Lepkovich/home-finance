@@ -1,34 +1,20 @@
-<!doctype html>
-<html lang="en" data-bs-theme="auto">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Редактировать расход</title>
-    <link href="styles/bootstrap.css" rel="stylesheet">
-    <link href="styles/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bootstrap-common.css">
-    <link rel="stylesheet" href="styles/common.css">
-    <link rel="stylesheet" href="styles/main.css">
-</head>
-<body>
-
 <main class="d-flex flex-nowrap">
     <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <a href="main.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <img class="logo" src="images/logo.png" alt="логотип">
         </a>
         <hr>
         <div class="d-flex flex-column flex-shrink-0 p-3 mb-auto menu">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis" aria-current="page">
+                    <a href="main.html" class="nav-link link-body-emphasis" aria-current="page">
                         <img src="images/home-icon-dark.png" alt="Главная" style="vertical-align: inherit;">
                         Главная
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis">
+                    <a href="p&l.html" class="nav-link link-body-emphasis">
                         <img src="images/p&l-icon.png" alt="Доходы и расходы">
                         Доходы & Расходы
                     </a>
@@ -45,7 +31,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link sub-menu-active">
+                        <a href="expenses.html" class="nav-link sub-menu-active">
                             Расходы
                         </a>
                     </li>
@@ -71,7 +57,7 @@
         </div>
     </div>
     <div class="container d-flex flex-column bg-body main">
-        <h1 class="mb-5">Редактирование категории расходов</h1>
+        <h1 class="mb-5">Создание категории доходов</h1>
         <input type="text" class="form-control mb-3" id="add-profit-cat" placeholder="Название...">
             <div class="d-flex">
                 <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button">Создать</button>
@@ -79,7 +65,3 @@
             </div>
     </div>
 </main>
-<script src="scripts/bootstrap.bundle.min.js"></script>
-<script src="scripts/sidebars.js"></script>
-</body>
-</html>
