@@ -24,10 +24,10 @@
     margin-left: 60px;
     line-height: 0;
     vertical-align: middle;
-    content: url(../images/arrow.png);
+    content: url(../static/images/arrow.png);
 }
 .active.arrow::after {
-    content: url(../images/arrow-down.png);
+    content: url(../static/images/arrow-down.png);
 
 }
 .sub-menu {
