@@ -30,13 +30,13 @@ export class Form  {
                 regex: /^[А-Я][а-я]+\s*$/, //регулярка для имени (первая - заглавная, русские буквы
                 valid: false,
             });
-            this.fields.pop({  // нужно вставить в конец массива fields
+            this.fields.push({
                     name: 'repeat-password',
                     id: 'repeat-password',
                     element: null,
                     valid: false,
                 })
-        }
+        };
 
         const that = this;
         this.fields.forEach(item => {
