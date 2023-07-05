@@ -17,7 +17,16 @@ export class Router {
                 template: 'templates/login.html',
                 styles: 'styles/login.css',
                 load: () => {
-                     new Form();
+                     new Form('login');
+                }
+            },
+            {
+                route: '#/signin',
+                title: 'Вход',
+                template: 'templates/signin.html',
+                styles: 'styles/login.css',
+                load: () => {
+                     new Form('signin');
                 }
             },
             {

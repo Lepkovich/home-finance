@@ -1,15 +1,8 @@
 export class Form  {
-    constructor() {
+    constructor(page) {
         this.processElement = null;
+        this.page = page;
         this.fields = [
-            {
-                name: 'name',
-                id: 'full-name',
-                element: null,
-                regex: /^[А-Я][а-я]+\s*$/, //регулярка для имени (первая - заглавная, русские буквы
-                valid: false,
-
-            },
             {
                 name: 'email',
                 id: 'email',
@@ -27,14 +20,23 @@ export class Form  {
                 (?=.*[A-Z])       // should contain at least one upper case
                 [a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters  */
                 valid: false,
-            },
-            {
-                name: 'repeat-password',
-                id: 'repeat-password',
+            }
+        ];
+        if (this.page === 'login') {
+            this.fields.unshift({
+                name: 'name',
+                id: 'full-name',
                 element: null,
+                regex: /^[А-Я][а-я]+\s*$/, //регулярка для имени (первая - заглавная, русские буквы
                 valid: false,
-            },
-        ]
+            });
+            this.fields.pop({  // нужно вставить в конец массива fields
+                    name: 'repeat-password',
+                    id: 'repeat-password',
+                    element: null,
+                    valid: false,
+                })
+        }
 
         const that = this;
         this.fields.forEach(item => {
