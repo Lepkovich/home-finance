@@ -1,4 +1,6 @@
 import {CustomHttp} from "../services/custom-http.js";
+import {Auth} from "../services/auth.js";
+import config from "../../config/config.js";
 
 export class Form  {
     constructor(page) {
@@ -118,7 +120,7 @@ export class Form  {
 
             if (this.page === 'signup') {
                 try {
-                    const result = await CustomHttp.request('http://localhost:3000/api/signup', 'POST', {
+                    const result = await CustomHttp.request(config.host +  '/signup', 'POST', {
                         name: this.name,
                         lastName: this.lastName,
                         email: this.fields.find(item => item.name === 'email').element.value,
@@ -130,13 +132,32 @@ export class Form  {
                         if (result.error || !result.user) {
                             throw new Error(result.message);
                         }
-                        location.href = "#/login"
+                        location.href = "#/"
                     }
 
                 } catch (error) {
                     console.log(error);
                 }
+            } else {
+                try {
+                    const result = await CustomHttp.request( config.host + '/login', 'POST', {
+                        email: this.fields.find(item => item.name === 'email').element.value,
+                        password: this.fields.find(item => item.name === 'password').element.value,
+                        rememberMe: true // подключить обработку checkbox
+                    })
 
+                    if (result) {
+                        if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id)  {
+                            throw new Error(result.message);
+                        }
+                        let userFullName = result.user.name + result.user.lastName;
+                        Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken, result.user.id, userFullName);
+                        location.href = "#/"
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     }

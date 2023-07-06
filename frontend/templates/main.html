@@ -1,6 +1,6 @@
 <main class="d-flex flex-nowrap">
     <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
-        <a href="main.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <a href="#/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <img class="logo" src="static/images/logo.png" alt="логотип">
         </a>
         <hr>
@@ -27,7 +27,7 @@
             </ul>
         </div>
         <div class="nav-link" id="balance">
-            <strong>Баланс:</strong> <span>500$</span>
+            <strong>Баланс:</strong> <span id="balance-value">400$</span>
         </div>
         <hr>
         <div class="dropdown p-3 nav-link link-body-emphasis">
@@ -36,7 +36,7 @@
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-2">
-                    RomanChernov
+                    <span id="userFullName">RomanChernov</span>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
                     <li><a class="dropdown-item" href="#">Выйти</a></li>
@@ -61,15 +61,15 @@
         <div class="d-flex justify-content-between charts">
             <div style="width: 437px;">
                 <div class="d-flex flex-column">
-                    <h3>Доходы</h3>
+                    <h3 id="income-block">Доходы</h3>
                     <canvas id="profit-chart">Здесь диаграмма доходов</canvas>
                 </div>
             </div>
             <div class="separator"></div>
             <div style="width: 437px;">
                 <div class="d-flex flex-column">
-                    <h3>Расходы</h3>
-                    <canvas id="lost-chart">Здесь диаграмма расхдов</canvas>
+                    <h3 id="expenses-block">Расходы</h3>
+                    <canvas id="lost-chart">Здесь диаграмма расходов</canvas>
                 </div>
             </div>
         </div>

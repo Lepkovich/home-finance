@@ -1,4 +1,5 @@
 import {Form} from "./components/form.js";
+import {Main} from "./components/main.js";
 
 export class Router {
     constructor() {
@@ -9,6 +10,8 @@ export class Router {
                 template: 'templates/main.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new Main();
+
                 }
             },
             {
