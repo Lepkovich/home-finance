@@ -1,5 +1,8 @@
 export class Form  {
     constructor(page) {
+        this.rememberMeElement = null;
+        this.name = null;
+        this.lastName = null;
         this.processElement = null;
         this.page = page;
         this.fields = [
@@ -22,21 +25,22 @@ export class Form  {
                 valid: false,
             }
         ];
-        if (this.page === 'login') {
+        if (this.page === 'signup') {
             this.fields.unshift({
                 name: 'name',
                 id: 'full-name',
                 element: null,
-                regex: /^[А-Я][а-я]+\s*$/, //регулярка для имени (первая - заглавная, русские буквы
+                regex: /^[А-Я][а-я]+\s{1}[А-Я][а-я]+$/, //регулярка для имени и фамилии (первая - заглавная, русские буквы, через пробел)
                 valid: false,
-            });
-            this.fields.push({
+            },
+            {
                     name: 'repeat-password',
                     id: 'repeat-password',
                     element: null,
                     valid: false,
-                })
-        };
+            });
+        }
+
 
         const that = this;
         this.fields.forEach(item => {
@@ -48,6 +52,12 @@ export class Form  {
         this.processElement = document.getElementById('process');
         this.processElement.onclick = function () {
             that.processForm();
+        }
+        if (this.page === 'login'){
+            this.rememberMeElement = document.getElementById('checkbox');
+            this.rememberMeElement.onchange = function () {
+                that.processForm();
+            }
         }
 
     }
@@ -65,6 +75,13 @@ export class Form  {
             field.valid = true;
             element.classList.remove('is-invalid');
             element.nextElementSibling.style.display = "none";
+        }
+
+        if (field.name === 'name') {
+            const fullName = this.fields.find(item => item.name === 'name').element.value;
+            this.name = fullName.split(" ")[0]; // Имя (до пробела)
+            this.lastName = fullName.split(" ")[1]; // Фамилия (после пробела)
+            console.log(this.name + ' ' + this.lastName);
         }
 
         if (field.name === 'repeat-password') {
@@ -93,9 +110,44 @@ export class Form  {
         }
         return validForm;
     };
-    processForm() {
+
+    async processForm() {
         if (this.validateForm()) {
-            location.href = 'main.html'
+
+            if (this.page === 'signup') {
+                try {
+                    const response = await fetch('http://localhost:3000/api/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+
+                            name: this.name,
+                            lastName: this.lastName,
+                            email: this.fields.find(item => item.name === 'email').element.value,
+                            password: this.fields.find(item => item.name === 'password').element.value,
+                            passwordRepeat: this.fields.find(item => item.name === 'repeat-password').element.value,
+                        })
+                    })
+
+                    if (response.status < 200 || response.status >= 300) {
+                        throw new Error(response.message);
+                    }
+                    const result = await response.json();
+                    if (result) {
+                        if (result.error || !result.user) {
+                            throw new Error(result.message);
+                        }
+                        location.href = "#/"
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
+
+            }
         }
     }
 }

@@ -1,29 +1,26 @@
 <main class="form-signin w-100 m-auto text-center main">
     <form>
         <img class="mb-5" src="static/images/logo.png" alt="Логотип">
-        <h1 class="mb-3">Создайте аккаунт</h1>
+        <h1 class="mb-3">Вход</h1>
+
         <div class="form-field">
-            <div class="field-icon"><img src="static/images/form-field-fullname.png" alt="ФИО"></div>
-            <input type="text" class="form-control" id="full-name" placeholder="ФИО">
-            <div class="error">Имя и фамилия на русском. Первые буквы - заглавные.</div>
-        </div>
-        <div class="form-field">
-            <div class="field-icon"><img src="static/images/form-field-email.png" alt="Электронная почта"></div>
+            <div class="field-icon my-form-field"><img src="static/images/form-field-email.png" alt=""></div>
             <input type="email" class="form-control" id="email" placeholder="Электронная почта">
-            <div class="error">Введите корректный email.</div>
+            <div class="error">Введите правильную электронную почту</div>
         </div>
         <div class="form-field my-form-field">
-            <div class="field-icon"><img src="static/images/form-field-psw.png" alt="Пароль"></div>
+            <div class="field-icon"><img src="static/images/form-field-psw.png" alt=""></div>
             <input type="password" class="form-control" id="password" placeholder="Пароль">
-            <div class="error">Не менее 8 символов. Хотя бы одна цифра и заглавная буква.</div>
-        </div>
-        <div class="form-field my-form-field">
-            <div class="field-icon"><img src="static/images/form-field-psw.png" alt="Пароль"></div>
-            <input type="password" class="form-control" id="repeat-password" placeholder="Подтверждение пароля">
-            <div class="error">Пароли не совпадают</div>
+            <div class="error">Введите правильный пароль</div>
         </div>
 
-        <button class="btn btn-primary w-100 py-2 mt-2 btn-my disabled" id="process" type="submit">Войти</button>
-        <div class="no-acc">Уже есть аккаунт? <a href="#/signin">Войдите в систему</a></div>
+        <div class="form-check text-start">
+            <input class="form-check-input" type="checkbox" value="remember-me" id="checkbox">
+            <label class="form-check-label" for="checkbox">
+                Запомнить меня
+            </label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 mt-3 btn-my disabled" id="process" type="submit">Войти</button>
+        <div class="no-acc">Еще нет аккаунта? <a href="#/signup">Пройдите регистрацию</a></div>
     </form>
 </main>

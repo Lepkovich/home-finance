@@ -12,21 +12,21 @@ export class Router {
                 }
             },
             {
-                route: '#/login',
+                route: '#/signup',
                 title: 'Регистрация',
+                template: 'templates/signup.html',
+                styles: 'styles/login.css',
+                load: () => {
+                     new Form('signup');
+                }
+            },
+            {
+                route: '#/login',
+                title: 'Вход',
                 template: 'templates/login.html',
                 styles: 'styles/login.css',
                 load: () => {
                      new Form('login');
-                }
-            },
-            {
-                route: '#/signin',
-                title: 'Вход',
-                template: 'templates/signin.html',
-                styles: 'styles/login.css',
-                load: () => {
-                     new Form('signin');
                 }
             },
             {
