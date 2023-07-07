@@ -47,22 +47,22 @@
     <div class="container d-flex flex-column bg-body main">
         <h1 class="mb-5">Доходы и расходы</h1>
             <div class="d-flex mb-5">
-                <a href="#/add-p&l" class="btn btn-success p-2 me-3 edit btn-earnings">Создать доход</a>
-                <a href="#/add-p&l" class="btn btn-danger p-2 edit btn-earnings">Создать расход</a>
+                <button class="btn btn-success p-2 me-3 edit btn-earnings" id="add-income">Создать доход</button>
+                <button href="#/add-p&l" class="btn btn-danger p-2 edit btn-earnings" id="add-expense">Создать расход</button>
 <!--                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button">Создать доход</button>-->
 <!--                <button class="btn btn-danger px-2 edit btn-earnings" type="button">Создать расход</button>-->
             </div>
         <div class="bd-example border-0 range-buttons mb-5">
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Сегодня</button>
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Неделя</button>
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Месяц</button>
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Год</button>
-            <button type="button" class="btn btn-secondary m-2 medium">Все</button>
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Интервал</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="today">Сегодня</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="week">Неделя</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="month">Месяц</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="year">Год</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="all">Все</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium" id="period">Интервал</button>
             <span>c</span>
-            <a href="#">Дата</a>
+            <input type="date" id="periodFrom" placeholder="Дата">
             <span>по</span>
-            <a href="#">Дата</a>
+            <input type="date" id="periodTo" placeholder="Дата">
         </div>
             <table class="table text-center table-hover table-sm ">
             <thead>
@@ -78,35 +78,20 @@
             </tr>
             </thead>
             <tbody id="tbody">
-            <tr>
-                <th>1</th>
-                <td class="income">доход</td>
-                <td>зарплата</td>
-                <td>500$</td>
-                <td>11.09.2022</td>
-                <td></td>
-                <td>
-                    <div class="d-flex">
-                        <a href="#" id="delete-1" data-bs-toggle="modal" data-bs-target="#exampleModal"  class="me-3"><img src="static/images/trash-icon.png" alt="удалить"></a>
-                        <a href="#/edit-p&l" id="edit-1"><img src="static/images/pen-icon.png" alt="редактировать"></a>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td class="spending">расход</td>
-                <td>жильё</td>
-                <td>2 500$</td>
-                <td>12.09.2022</td>
-                <td></td>
-                <td>
-                    <div class="d-flex">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" id="delete-2" class="me-3"><img src="static/images/trash-icon.png" alt="удалить"></a>
-                        <a href="#/edit-p&l" id="edit-2"><img src="static/images/pen-icon.png" alt="редактировать"></a>
-                    </div>
-                </td>
-            </tr>
-            </tr>
+<!--            <tr>-->
+<!--                <th>1</th>-->
+<!--                <td class="income">доход</td>-->
+<!--                <td>зарплата</td>-->
+<!--                <td>500$</td>-->
+<!--                <td>11.09.2022</td>-->
+<!--                <td></td>-->
+<!--                <td>-->
+<!--                    <div class="d-flex">-->
+<!--                        <a href="#" id="delete-1" data-bs-toggle="modal" data-bs-target="#exampleModal"  class="me-3"><img src="static/images/trash-icon.png" alt="удалить"></a>-->
+<!--                        <a href="#/edit-p&l" id="edit-1"><img src="static/images/pen-icon.png" alt="редактировать"></a>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
             </tbody>
         </table>
     </div>

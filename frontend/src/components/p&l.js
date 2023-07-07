@@ -4,14 +4,26 @@ import config from "../../config/config.js";
 
 export class PL {
     constructor() {
+        this.addIncomeButton = document.getElementById('add-income');
+        this.addExpenseButton = document.getElementById('add-expense');
+        this.period = 'all';
+        this.todayButton = null;
+        this.weekButton = null;
+        this.monthButton = null;
+        this.yearButton = null;
+        this.allButton = null;
+        this.periodButton = null;
+        this.periodFrom = null;
+        this.periodTo = null;
+
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
-        this.init();
+        this.processForm();
     }
 
-    async init() {
+    async getTable(period) {
         try {
-            const result = await CustomHttp.request(config.host + '/operations/?period=all', 'GET',)
+            const result = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
 
             if (result) {
                 if (result.error || !result) {
@@ -24,6 +36,61 @@ export class PL {
             console.log(error);
         }
     };
+
+    processForm() {
+        this.getTable(this.period);
+
+        this.addIncomeButton.onclick = () => {
+            location.href = '#/add-p&l'
+                // + '?cat=income';  переадресовывает, если добавлять querry параметры
+        };
+
+        this.addExpenseButton.onclick = () => {
+            location.href = '#/add-p&l'
+                // + '?cat=expense'; переадресовывает, если добавлять querry параметры
+        };
+
+        const buttons = document.querySelectorAll('.medium'); //выберем все кнопки
+        let activeButton = null;
+        // меняем оформление активных и неактивных кнопок
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (activeButton !== null) {
+                    activeButton.classList.remove('btn-secondary');
+                    activeButton.classList.add('btn-outline-secondary');
+                }
+                button.classList.add('btn-secondary');
+                button.classList.remove('btn-outline-secondary');
+                activeButton = button;
+            });
+        });
+
+        this.todayButton = document.getElementById('today');
+        this.todayButton.onclick = this.getTable.bind(this, 'today');
+
+        this.weekButton = document.getElementById('week');
+        this.weekButton.onclick = this.getTable.bind(this, 'week');
+
+        this.monthButton = document.getElementById('month');
+        this.monthButton.onclick = this.getTable.bind(this, 'month');
+
+        this.yearButton = document.getElementById('year');
+        this.yearButton.onclick = this.getTable.bind(this, 'year');
+
+        this.allButton = document.getElementById('all');
+        this.allButton.onclick = this.getTable.bind(this, 'all');
+
+        this.periodFrom = document.getElementById('periodFrom');
+        this.periodTo = document.getElementById('periodTo');
+
+        this.periodButton = document.getElementById('period');
+        this.periodButton.onclick = () => {
+
+            const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
+
+            this.getTable(queryString);
+        };
+    }
 
     showTable(table){
         console.log(table);
@@ -43,8 +110,13 @@ export class PL {
         //         </div>
         //     </td>
         // </tr>
+
+
         // Получение ссылки на элемент таблицы
         let tbody = document.getElementById("tbody");
+
+        // Очистим таблицу перед заполнением
+        tbody.innerHTML = '';
 
 // Перебор каждого объекта в массиве и создание соответствующих элементов таблицы
         for (let i = 0; i < table.length; i++) {
@@ -60,7 +132,11 @@ export class PL {
 
             // Создание ячейки для типа (доход/расход)
             let typeCell = document.createElement("td");
-            typeCell.textContent = item.type;
+            if(item.type === 'expense'){
+                typeCell.textContent = 'расход'
+            } else {
+                typeCell.textContent = 'доход'
+            }
             typeCell.classList.add(item.type); // Добавление класса в соответствии с типом
             row.appendChild(typeCell);
 
@@ -71,12 +147,13 @@ export class PL {
 
             // Создание ячейки для суммы
             let amountCell = document.createElement("td");
-            amountCell.textContent = item.amount + "$";
+            amountCell.textContent = item.amount.toLocaleString('ru-RU') + "$"; //отобразит разделяя тысячи пробелом
             row.appendChild(amountCell);
 
             // Создание ячейки для даты
             let dateCell = document.createElement("td");
-            dateCell.textContent = item.date;
+            const parts = item.date.split('-');                    //преобразовываем дату в формат по макету
+            dateCell.textContent = `${parts[2]}.${parts[1]}.${parts[0]}`; //из YYYY-MM-DD в DD.MM.YYYY
             row.appendChild(dateCell);
 
             // Создание ячейки для комментария
