@@ -1,5 +1,6 @@
 import {Form} from "./components/form.js";
 import {Main} from "./components/main.js";
+import {PL} from "./components/p&l.js";
 
 export class Router {
     constructor() {
@@ -38,6 +39,7 @@ export class Router {
                 template: 'templates/p&l.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new PL();
                 }
             },
             {

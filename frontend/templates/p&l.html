@@ -27,7 +27,7 @@
             </ul>
         </div>
         <div class="nav-link" id="balance">
-            <strong>Баланс:</strong> <span>500$</span>
+            <strong>Баланс:</strong> <span id="balance-value">400$</span>
         </div>
         <hr>
         <div class="dropdown p-3 nav-link link-body-emphasis">
@@ -35,8 +35,8 @@
                 <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
-                         class="rounded-circle me-4">
-                    RomanChernov
+                         class="rounded-circle me-2">
+                    <span id="userFullName">RomanChernov</span>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
                     <li><a class="dropdown-item" href="#">Выйти</a></li>
@@ -53,11 +53,11 @@
 <!--                <button class="btn btn-danger px-2 edit btn-earnings" type="button">Создать расход</button>-->
             </div>
         <div class="bd-example border-0 range-buttons mb-5">
-            <button type="button" class="btn btn-secondary m-2 medium">Сегодня</button>
+            <button type="button" class="btn btn-outline-secondary m-2 medium">Сегодня</button>
             <button type="button" class="btn btn-outline-secondary m-2 medium">Неделя</button>
             <button type="button" class="btn btn-outline-secondary m-2 medium">Месяц</button>
             <button type="button" class="btn btn-outline-secondary m-2 medium">Год</button>
-            <button type="button" class="btn btn-outline-secondary m-2 medium">Все</button>
+            <button type="button" class="btn btn-secondary m-2 medium">Все</button>
             <button type="button" class="btn btn-outline-secondary m-2 medium">Интервал</button>
             <span>c</span>
             <a href="#">Дата</a>
@@ -77,9 +77,9 @@
                 <th scope="col" class="col-1"></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody">
             <tr>
-                <th scope="row">1</th>
+                <th>1</th>
                 <td class="income">доход</td>
                 <td>зарплата</td>
                 <td>500$</td>
