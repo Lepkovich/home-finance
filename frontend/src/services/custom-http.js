@@ -28,8 +28,8 @@ export class CustomHttp {
                     return null;
                 }
             }
-
-            throw new Error(response.message);
+            console.log(response.message);
+            // throw new Error(response.message);
         }
         return await response.json();
 

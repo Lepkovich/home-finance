@@ -6,6 +6,8 @@ export class PL {
     constructor() {
         this.addIncomeButton = document.getElementById('add-income');
         this.addExpenseButton = document.getElementById('add-expense');
+        this.editElements = null;
+        this.deleteElements = null;
         this.period = 'all';
         this.todayButton = null;
         this.weekButton = null;
@@ -18,6 +20,12 @@ export class PL {
 
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
+        // document.addEventListener("click", function(event) {
+        //     const clickedElement = event.target;
+        //     const parentElement = clickedElement.parentNode;
+        //     const parentId = parentElement.id;
+        //     console.log("Кликнут родительский элемент с id:", parentId);
+        // });
         this.processForm();
     }
 
@@ -33,22 +41,20 @@ export class PL {
             }
 
         } catch (error) {
-            console.log(error);
+            console.log('ошибка' + error);
         }
     };
 
     processForm() {
-        this.getTable(this.period);
-
+        // this.getTable(this.period);
         this.addIncomeButton.onclick = () => {
-            location.href = '#/add-p&l'
-                // + '?cat=income';  переадресовывает, если добавлять querry параметры
+            location.href = '#/add-p&l?=income'
         };
 
         this.addExpenseButton.onclick = () => {
-            location.href = '#/add-p&l'
-                // + '?cat=expense'; переадресовывает, если добавлять querry параметры
+            location.href = '#/add-p&l?=expense'
         };
+
 
         const buttons = document.querySelectorAll('.medium'); //выберем все кнопки
         let activeButton = null;
@@ -168,7 +174,6 @@ export class PL {
 
             // Создание ссылки для удаления
             let deleteLink = document.createElement("a");
-            deleteLink.href = "#";
             deleteLink.id = "delete-" + item.id;
             deleteLink.setAttribute("data-bs-toggle", "modal");
             deleteLink.setAttribute("data-bs-target", "#exampleModal");
@@ -181,7 +186,6 @@ export class PL {
 
             // Создание ссылки для редактирования
             let editLink = document.createElement("a");
-            editLink.href = "#/edit-p&l";
             editLink.id = "edit-" + item.id;
             let editIcon = document.createElement("img");
             editIcon.src = "static/images/pen-icon.png";
@@ -194,7 +198,27 @@ export class PL {
 
             // Добавление строки в таблицу
             tbody.appendChild(row);
+
         }
+        this.editElements = document.querySelectorAll('[id^="edit-"]');
+        this.deleteElements = document.querySelectorAll('[id^="delete-"]');
+
+        this.editElements.forEach((element) => {
+            element.addEventListener("click", () => {
+                const id = element.id;
+                const number = parseInt(id.split('-')[1]);
+                location.href = '#/edit-p&l?=' + number
+                console.log("Редактировать с id:", number);
+            });
+        });
+
+        this.deleteElements.forEach((element) => {
+            element.addEventListener("click", () => {
+                const id = element.id;
+                const number = parseInt(id.split('-')[1]);
+                console.log("Удалить с id:", number);
+            });
+        });
     }
 
 }

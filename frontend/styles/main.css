@@ -195,6 +195,12 @@ button {
     max-width: 397px;
 }
 .form-control {
+    height: auto;
+    min-height: 38px;
+    font-size: 15px;
+    padding: 7px 16px;
+}
+.form-select{
     height: 38px;
     font-size: 15px;
     padding: 7px 16px;
@@ -214,4 +220,13 @@ button {
     text-align: left;
     padding: 20px;
     list-style: none;
+}
+
+.error {
+    color: #dc3545;
+    display: none;
+    padding-left: 5px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: left;
 }

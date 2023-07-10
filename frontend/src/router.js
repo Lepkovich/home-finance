@@ -1,6 +1,8 @@
 import {Form} from "./components/form.js";
 import {Main} from "./components/main.js";
 import {PL} from "./components/p&l.js";
+import {AddPL} from "./components/add-p&l.js";
+import {EditPL} from "./components/edit-p&l.js";
 
 export class Router {
     constructor() {
@@ -48,6 +50,7 @@ export class Router {
                 template: 'templates/edit-p&l.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new EditPL();
                 }
             },
             {
@@ -82,12 +85,22 @@ export class Router {
                 load: () => {
                 }
             },
+            // {
+            //     route: '#/add-p&l-income',
+            //     title: 'Создание дохода',
+            //     template: 'templates/add-p&l.html',
+            //     styles: 'styles/main.css',
+            //     load: () => {
+            //         new AddPL('income');
+            //     }
+            // },
             {
                 route: '#/add-p&l',
-                title: 'Создание дохода/расхода',
+                title: 'Создание дохода',
                 template: 'templates/add-p&l.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new AddPL();
                 }
             },
             {
@@ -110,11 +123,18 @@ export class Router {
     }
 
     async openRoute(){
+        const urlRoute =  window.location.hash.split('?')[0];//split разделит адресную строку до ?, а [0] возьмет первую часть
+        if (urlRoute === '#/logout') {
+            await Auth.logOut();
+            window.location.href = '#/login';
+            return;
+        }
+
         const newRoute = this.routes.find(item => {
-            return item.route === window.location.hash;
+            return item.route === urlRoute;
         });
         if(!newRoute) {
-            window.location.href = '#/';
+            window.location.href = '#/login';
             return;
         }
 

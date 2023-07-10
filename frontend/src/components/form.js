@@ -2,7 +2,7 @@ import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
 import config from "../../config/config.js";
 
-export class Form  {
+export class Form {
     constructor(page) {
         this.rememberMeElement = null;
         this.name = null;
@@ -31,18 +31,18 @@ export class Form  {
         ];
         if (this.page === 'signup') {
             this.fields.unshift({
-                name: 'name',
-                id: 'full-name',
-                element: null,
-                regex: /^[А-Я][а-я]+\s{1}[А-Я][а-я]+$/, //регулярка для имени и фамилии (первая - заглавная, русские буквы, через пробел)
-                valid: false,
-            },
-            {
+                    name: 'name',
+                    id: 'full-name',
+                    element: null,
+                    regex: /^[А-Я][а-я]+\s{1}[А-Я][а-я]+$/, //регулярка для имени и фамилии (первая - заглавная, русские буквы, через пробел)
+                    valid: false,
+                },
+                {
                     name: 'repeat-password',
                     id: 'repeat-password',
                     element: null,
                     valid: false,
-            });
+                });
         }
 
 
@@ -54,10 +54,12 @@ export class Form  {
             }
         });
         this.processElement = document.getElementById('process');
-        this.processElement.onclick = function () {
-            that.processForm();
-        }
-        if (this.page === 'login'){
+        this.processElement.addEventListener('click', this.processForm.bind(this));
+
+        // this.processElement.onclick = function () {
+        //     that.processForm();
+        // }
+        if (this.page === 'login') {
             this.rememberMeElement = document.getElementById('checkbox');
             this.rememberMeElement.onchange = function () {
                 that.processForm();
@@ -105,6 +107,7 @@ export class Form  {
 
         this.validateForm();
     };
+
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
         if (validForm) {
@@ -115,49 +118,62 @@ export class Form  {
         return validForm;
     };
 
-    async processForm() {
+    showError(message){
+        const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+            backdrop:true
+        });
+        const text = document.getElementById('error-message');
+        text.innerText = message;
+        myModal.show(myModal);
+        return console.log(message);
+    }
+
+    async processForm(event) {
+        event.preventDefault();
         if (this.validateForm()) {
+            const email = this.fields.find(item => item.name === 'email').element.value;
+            const password = this.fields.find(item => item.name === 'password').element.value;
 
             if (this.page === 'signup') {
                 try {
-                    const result = await CustomHttp.request(config.host +  '/signup', 'POST', {
+                    const result = await CustomHttp.request(config.host + '/signup', 'POST', {
                         name: this.name,
                         lastName: this.lastName,
-                        email: this.fields.find(item => item.name === 'email').element.value,
-                        password: this.fields.find(item => item.name === 'password').element.value,
+                        email: email,
+                        password: password,
                         passwordRepeat: this.fields.find(item => item.name === 'repeat-password').element.value,
                     })
 
                     if (result) {
                         if (result.error || !result.user) {
+                            this.showError(result.message);
                             throw new Error(result.message);
                         }
-                        location.href = "#/"
                     }
-
                 } catch (error) {
-                    console.log(error);
+                  return   console.log(error);
                 }
-            } else {
-                try {
-                    const result = await CustomHttp.request( config.host + '/login', 'POST', {
-                        email: this.fields.find(item => item.name === 'email').element.value,
-                        password: this.fields.find(item => item.name === 'password').element.value,
-                        rememberMe: true // подключить обработку checkbox
-                    })
+            }
 
-                    if (result) {
-                        if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id)  {
-                            throw new Error(result.message);
-                        }
-                        let userFullName = result.user.name + result.user.lastName;
-                        Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken, result.user.id, userFullName);
-                        location.href = "#/"
+            try {
+                const result = await CustomHttp.request(config.host + '/login', 'POST', {
+                    email: email,
+                    password: password,
+                    rememberMe: true // подключить обработку checkbox
+                })
+
+                if (result) {
+                    if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
+                        this.showError(result.message);
+                        throw new Error(result.message);
                     }
-
-                } catch (error) {
-                    console.log(error);
+                    let userFullName = result.user.name + result.user.lastName;
+                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken, result.user.id, userFullName);
+                    location.href = "#/"
                 }
+
+            } catch (error) {
+                console.log(error);
             }
         }
     }
