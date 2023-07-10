@@ -6,6 +6,7 @@ export class EditPL {
     constructor() {
 
         this.id = document.location.hash.split('=')[1];
+        this.typeValue =null;
         this.fields = [
             {
                 name: 'type',
@@ -19,28 +20,28 @@ export class EditPL {
                 id: 'category',
                 element: null,
                 regex: /\S+/, // проверка на непустое значение
-                valid: false,
+                valid: true,
             },
             {
                 name: 'amount',
                 id: 'amount',
                 element: null,
                 regex: /^\d+$/, //только цифры
-                valid: false,
+                valid: true,
             },
             {
                 name: 'date',
                 id: 'date',
                 element: null,
                 regex: /\S+/, // проверка на непустое значение
-                valid: false,
+                valid: true,
             },
             {
                 name: 'comment',
                 id: 'comment',
                 element: null,
                 regex: /\S+/, // проверка на непустое значение
-                valid: false,
+                valid: true,
             },
         ];
         const that = this;
@@ -52,7 +53,6 @@ export class EditPL {
         });
         this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
-        this.typeElement = document.getElementById('type');
         this.cancelElement.onclick = function () {
             location.href = '#/p&l';
         }
@@ -73,27 +73,61 @@ export class EditPL {
                     this.showError(result.message);
                     throw new Error(result.message);
                 }
-                this.fillFields(result);
+                await this.fillFields(result);
             }
         } catch (error) {
             return console.log(error);
         }
     }
 
-    fillFields(fields){
-        for (const key in fields) {
-            if (fields.hasOwnProperty(key)) {
-                const field = document.getElementById(key);
-                if (field) {
-                    field.value = fields[key];
+    async fillFields(fields) {
+        try {
+            if (fields.type === 'income') {
+                this.typeValue = 'income';
+                const result = await CustomHttp.request(config.host + '/categories/income');
+                if (result && !result.error) {
+                    this.showCategories(result);
+                }
+            } else {
+                this.typeValue = 'expense';
+                const result = await CustomHttp.request(config.host + '/categories/expense');
+                if (result && !result.error) {
+                    this.showCategories(result);
                 }
             }
+
+            for (const key in fields) {
+                if (fields.hasOwnProperty(key)) {
+                    const field = document.getElementById(key);
+                    if (field) {
+                        if (field.tagName === 'SELECT') {
+                            // Для элемента <select>
+                            const options = field.options;
+                            for (let i = 0; i < options.length; i++) { //пройдемся по всем options
+                                const option = options[i];
+                                if (option.textContent.trim() === fields[key]) { //и сравним текстовые значения {"id": 2, "title": "Жилье"}
+                                    field.selectedIndex = i; //и подставим индекс того, с которым мы перешли на страницу  {category:"Жилье"}
+                                    break;
+                                }
+                            }
+                        } else {
+                            // для полей input просто добавим value
+                            if(fields[key] === 'income'){
+                                fields[key] = 'Доход';
+                            } else if(fields[key] === 'expense'){
+                                fields[key] = 'Расход'
+                            }
+                            field.value = fields[key];
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
-        console.log(fields);
     }
 
     showCategories(categories) {
-        console.log(categories);
         // Получение ссылки на элемент <select>
         const selectElement = document.getElementById("category");
 
@@ -126,6 +160,7 @@ export class EditPL {
     };
 
     validateForm() {
+
         const validForm = this.fields.every(item => item.valid);
         if (validForm) {
             this.processElement.classList.remove('disabled');
@@ -139,20 +174,22 @@ export class EditPL {
         event.preventDefault();
         if (this.validateForm()) {
 
-            // "type": "income",
-            // "amount": 250,
-            // "date": "2022-01-01",
-            // "comment": "new comment",
-            // "category_id": 2
+            //     "type": "expense",
+            //     "amount": 150,
+            //     "date": "2022-02-02",
+            //     "comment": "wtf",
+            //     "category_id": 3
 
-            const amount = this.fields.find(item => item.name === 'sum').element.value;
+
+            const type = this.typeValue;
+            const amount = this.fields.find(item => item.name === 'amount').element.value;
             const date = this.fields.find(item => item.name === 'date').element.value;
             const comment = this.fields.find(item => item.name === 'comment').element.value;
             const categoryId = this.fields.find(item => item.name === 'category').element.value;
 
             try {
-                const result = await CustomHttp.request(config.host + '/operations', 'POST', {
-                    type: this.type,
+                const result = await CustomHttp.request(config.host + '/operations/' + this.id, 'PUT', {
+                    type: type,
                     amount: amount,
                     date: date,
                     comment: comment,
@@ -186,7 +223,7 @@ export class EditPL {
 
     showResult(message) {
 
-        let textMessage = "Создан " + this.typeValue + " от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
+        let textMessage = "Изменена запись от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
         const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
             backdrop: true
         });
