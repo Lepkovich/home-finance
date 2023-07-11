@@ -192,7 +192,7 @@ export class EditPL {
             try {
                 const result = await CustomHttp.request(config.host + '/operations/' + this.id, 'PUT', {
                     type: type,
-                    amount: amount,
+                    amount: parseInt(amount),
                     date: date,
                     comment: comment,
                     category_id: parseInt(categoryId)

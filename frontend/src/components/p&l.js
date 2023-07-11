@@ -175,8 +175,8 @@ export class PL {
             // Создание ссылки для удаления
             let deleteLink = document.createElement("a");
             deleteLink.id = "delete-" + item.id;
-            deleteLink.setAttribute("data-bs-toggle", "modal");
-            deleteLink.setAttribute("data-bs-target", "#exampleModal");
+            // deleteLink.setAttribute("data-bs-toggle", "modal");
+            // deleteLink.setAttribute("data-bs-target", "#exampleModal");
             deleteLink.classList.add("me-3");
             let deleteIcon = document.createElement("img");
             deleteIcon.src = "static/images/trash-icon.png";
@@ -208,7 +208,6 @@ export class PL {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
                 location.href = '#/edit-p&l?=' + number
-                console.log("Редактировать с id:", number);
             });
         });
 
@@ -216,9 +215,75 @@ export class PL {
             element.addEventListener("click", () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
-                console.log("Удалить с id:", number);
+                // Открытие модального окна перед удалением
+                const confirmModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+                    backdrop: true
+                });
+                confirmModal.show(confirmModal);
+
+                // Обработчик для кнопки "Да, удалить"
+                const deleteButton = document.getElementById("delete-confirm");
+                deleteButton.addEventListener("click", async () => {
+                    try {
+                        // Вызов функции deleteElement
+                        await this.deleteElement(number);
+                        confirmModal.hide(); // Скрытие модального окна после удаления
+                        // confirmModal.dispose(); // Удаление модального окна и фонового затемнителя
+                    } catch (error) {
+                        console.log('ошибка' + error);
+                    }
+                });
+
+                // Обработчик для кнопки "Не удалять"
+                const cancelButton = document.getElementById("delete-cancel");
+                cancelButton.addEventListener("click", () => {
+                    confirmModal.hide(); // Скрытие модального окна без удаления
+                    // confirmModal.dispose(); // Удаление модального окна и фонового затемнителя
+                });
             });
         });
+    }
+
+    async deleteElement(id) {
+        try {
+            const result = await CustomHttp.request(config.host + '/operations/' + id, 'DELETE',)
+
+            if (result) {
+                if (result.error || !result) {
+                    this.showError(result.message);
+                    throw new Error();
+                }
+                this.showResult(result.message)
+            }
+
+        } catch (error) {
+            console.log('ошибка' + error);
+        }
+    }
+
+    showError(message) {
+        const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+            backdrop: true
+        });
+        const text = document.getElementById('error-message');
+        text.innerText = message;
+        myModal.show(myModal);
+        myModal.hide();
+        myModal.dispose();
+        return console.log(message);
+    };
+
+    showResult(message) {
+        let textMessage = "Запись успешно удалена. Сообщение сервера: " + message + ".";
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+            backdrop: true
+        });
+        const text = document.getElementById('confirmation-message');
+        text.innerText = textMessage;
+        confirmModal.show(confirmModal);
+        confirmModal.hide();
+        confirmModal.dispose();
+        return console.log(message);
     }
 
 }
