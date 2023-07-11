@@ -152,6 +152,9 @@ button {
     text-decoration: none;
     cursor: pointer;
 }
+#add-earning-category {
+    color: #CED4DA;
+}
 
 #add-profit-cat {
     width: 397px;

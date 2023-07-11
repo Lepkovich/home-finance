@@ -42,6 +42,7 @@ export class Main{
         }
     };
     showExpenses(expenses){
+        console.log(expenses);
         //создаем структуру html
         const expensesBlock = document.getElementById('expenses-block')
         const ul = document.createElement("ul");

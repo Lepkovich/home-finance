@@ -3,6 +3,7 @@ import {Main} from "./components/main.js";
 import {PL} from "./components/p&l.js";
 import {AddPL} from "./components/add-p&l.js";
 import {EditPL} from "./components/edit-p&l.js";
+import {Earnings} from "./components/earnings.js";
 
 export class Router {
     constructor() {
@@ -75,6 +76,7 @@ export class Router {
                 template: 'templates/earnings.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new Earnings();
                 }
             },
             {
