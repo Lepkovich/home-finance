@@ -186,6 +186,8 @@ export class EditPL {
             const date = this.fields.find(item => item.name === 'date').element.value;
             const comment = this.fields.find(item => item.name === 'comment').element.value;
             const categoryId = this.fields.find(item => item.name === 'category').element.value;
+            console.log('сумма: ' + amount);
+
 
             try {
                 const result = await CustomHttp.request(config.host + '/operations/' + this.id, 'PUT', {
@@ -201,6 +203,7 @@ export class EditPL {
                         this.showError(result.message);
                         throw new Error(result.message);
                     }
+                    console.log('сумма: ' + amount);
                     this.showResult(result);
                     location.href = '#/p&l';
                 }

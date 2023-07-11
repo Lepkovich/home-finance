@@ -22,8 +22,8 @@ export class CustomHttp {
         if (response.status < 200 || response.status >= 300) {
             if(response.status === 401) {
                 const result = await Auth.processUnauthorizedResponse();
-                if(result){
-                    return await this.request(url, method, body);
+                if(result){ // если пришло true из processUnauthorizedResponse() , но вроде не приходит
+                    return await this.request(url, method, body); //повторяем запрос на логин
                 } else {
                     return null;
                 }

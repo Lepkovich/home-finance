@@ -13,7 +13,7 @@ export class ShowUserBalance {
             const result = await CustomHttp.request(config.host +  '/balance', 'GET')
 
             if (result) {
-                if (result.error || !result.balance) {
+                if (result.error || result.balance === undefined) {
                     this.showError(result.message);
                     throw new Error(result.message);
                 }
