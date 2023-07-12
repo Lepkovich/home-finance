@@ -2,7 +2,7 @@ import {ShowUserBalance} from "../services/show-user-balance.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 
-export class Earnings {
+export class Expenses {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
@@ -13,7 +13,7 @@ export class Earnings {
 
     async init() {
         try {
-            const result = await CustomHttp.request(config.host + '/categories/income', 'GET',)
+            const result = await CustomHttp.request(config.host + '/categories/expense', 'GET',)
 
             if (result) {
                 if (result.error || !result) {
@@ -31,13 +31,12 @@ export class Earnings {
         console.log(categories);
         //создаем структуру html
         // <div className="card mb-4 rounded-3 p-4">
-        //     <h2>Зарплата</h2>
+        //     <h2>Жилье</h2>
         //     <div className="d-flex">
         //         <button className="btn btn-primary px-2 me-3 edit btn-earnings" type="button" id="edit-1">Редактировать</button>
         //         <button className="btn btn-danger px-2 btn-earnings" type="button" id="delete-1">Удалить</button>
         //     </div>
         // </div>
-
 
         // Получение ссылки на элемент таблицы
         let categoriesBlock = document.getElementById("categories-block");
@@ -85,7 +84,7 @@ export class Earnings {
         let innerDiv = document.createElement("div");
 
         let link = document.createElement("a");
-        link.id = "add-earning-category";
+        link.id = "add-expense-category";
         link.textContent = "+";
 
         innerDiv.appendChild(link);
@@ -97,17 +96,17 @@ export class Earnings {
 
         this.editCategoryButtons = document.querySelectorAll('[id^="edit-"]');
         this.deleteCategoryButtons = document.querySelectorAll('[id^="delete-"]');
-        this.addCategoryButton = document.getElementById('add-earning-category');
+        this.addCategoryButton = document.getElementById('add-expense-category');
 
         this.addCategoryButton.onclick = () => {
-            location.href = "#/add-earnings"
+            location.href = "#/add-expenses";
         };
 
         this.editCategoryButtons.forEach((element) => {
             element.addEventListener("click", () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
-                location.href = '#/edit-earnings?=' + number
+                location.href = '#/edit-expenses?=' + number
                 console.log("Редактировать с id:", number);
             });
         });
@@ -123,7 +122,7 @@ export class Earnings {
     async deleteCategory(categoryId){
         if(categoryId){
             try {
-                const result = await CustomHttp.request(config.host + '/categories/income/' + categoryId, 'DELETE',)
+                const result = await CustomHttp.request(config.host + '/categories/expense/' + categoryId, 'DELETE',)
 
                 if (result) {
                     if (result.error || !result) {

@@ -68,6 +68,8 @@ export class AddPL {
     async init() {
         if (this.type === 'income') {
             this.typeValue = 'Доход';
+            let incomeMenu = document.getElementById('earning-menu');
+            incomeMenu.classList.add('sub-menu-active');
             try {
                 const result = await CustomHttp.request(config.host + '/categories/income')
 
@@ -84,6 +86,8 @@ export class AddPL {
 
         } else {
             this.typeValue = 'Расход';
+            let expenseMenu = document.getElementById('expense-menu');
+            expenseMenu.classList.add('sub-menu-active');
             try {
                 const result = await CustomHttp.request(config.host + '/categories/expense')
 

@@ -4,6 +4,11 @@ import {PL} from "./components/p&l.js";
 import {AddPL} from "./components/add-p&l.js";
 import {EditPL} from "./components/edit-p&l.js";
 import {Earnings} from "./components/earnings.js";
+import {Expenses} from "./components/expenses.js";
+import {EditExpenses} from "./components/edit-expenses.js";
+import {EditEarnings} from "./components/edit-earnings.js";
+import {AddEarnings} from "./components/add-earnings.js";
+import {AddExpenses} from "./components/add-expenses.js";
 
 export class Router {
     constructor() {
@@ -60,6 +65,7 @@ export class Router {
                 template: 'templates/edit-expenses.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new EditExpenses();
                 }
             },
             {
@@ -68,6 +74,7 @@ export class Router {
                 template: 'templates/edit-earnings.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new EditEarnings();
                 }
             },
             {
@@ -85,17 +92,9 @@ export class Router {
                 template: 'templates/expenses.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new Expenses();
                 }
             },
-            // {
-            //     route: '#/add-p&l-income',
-            //     title: 'Создание дохода',
-            //     template: 'templates/add-p&l.html',
-            //     styles: 'styles/main.css',
-            //     load: () => {
-            //         new AddPL('income');
-            //     }
-            // },
             {
                 route: '#/add-p&l',
                 title: 'Создание дохода',
@@ -111,6 +110,7 @@ export class Router {
                 template: 'templates/add-expenses.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new AddExpenses();
                 }
             },
             {
@@ -119,6 +119,7 @@ export class Router {
                 template: 'templates/add-earnings.html',
                 styles: 'styles/main.css',
                 load: () => {
+                    new AddEarnings();
                 }
             },
         ]

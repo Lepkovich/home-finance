@@ -39,7 +39,7 @@
     border-bottom-right-radius: 0;
 }
 
-.nav-item .sub-menu-active:hover {
+.nav-item .sub-menu-active {
     background-color: #0D6EFD;
     color: white;
     border-radius: 0;
@@ -152,11 +152,11 @@ button {
     text-decoration: none;
     cursor: pointer;
 }
-#add-earning-category {
+#add-earning-category, #add-expense-category {
     color: #CED4DA;
 }
 
-#add-profit-cat {
+#add-profit-cat, #add-expense-cat, #expense-cat, #income-cat {
     width: 397px;
     height: 38px;
     font-size: 15px;
@@ -232,4 +232,7 @@ button {
     margin-top: -10px;
     margin-bottom: 10px;
     text-align: left;
+}
+#invalid-filed-text {
+    display: none;
 }
