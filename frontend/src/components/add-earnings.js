@@ -8,6 +8,7 @@ export class AddEarnings {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('add-profit-cat');
         this.errorText = document.getElementById('invalid-filed-text');
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
         this.cancelCategoryButton.onclick = function () {
             location.href = '#/earnings';
         }
@@ -59,12 +60,11 @@ export class AddEarnings {
         }
     }
     showResult(message){
-        let confirmModal = document.getElementById('confirmModal')
         let textMessage = "Создана новая категория дохода " + this.categoryField.value + ". Сообщение сервера: " + message;
 
-        const text = document.getElementById('confirmation-message');
+        const text = document.getElementById('exampleModalLabel');
         text.innerText = textMessage;
-        confirmModal.show(confirmModal);
+        this.confirmationModal.show();
         return console.log(message);
     }
 }
