@@ -8,6 +8,7 @@ export class EditExpenses {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('expense-cat')
         this.id = document.location.hash.split('=')[1];
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
 
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
@@ -58,6 +59,7 @@ export class EditExpenses {
                     if (result.error || !result) {
                         throw new Error();
                     }
+                    await this.showResult(result);
                     location.href = '#/expenses';
                 }
 
@@ -65,6 +67,21 @@ export class EditExpenses {
                 console.log('ошибка' + error);
             }
         }
+    }
+    showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.confirmationModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 
 }

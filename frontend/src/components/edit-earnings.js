@@ -8,6 +8,8 @@ export class EditEarnings {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('income-cat')
         this.id = document.location.hash.split('=')[1];
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
 
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
@@ -25,7 +27,7 @@ export class EditEarnings {
                     throw new Error();
                 }
                 this.categoryField.value = result.title
-                this.processButtons(result, field);
+                await this.processButtons(result, field);
             }
 
         } catch (error) {
@@ -37,7 +39,7 @@ export class EditEarnings {
         console.log(category);
         console.log(field);
         this.cancelCategoryButton.onclick = function () {
-            location.href = '#/expenses';
+            location.href = '#/earnings';
         }
 
         this.saveCategoryButton.onclick = () => {
@@ -58,6 +60,7 @@ export class EditEarnings {
                     if (result.error || !result) {
                         throw new Error();
                     }
+                    await this.showResult(result);
                     location.href = '#/earnings';
                 }
 
@@ -65,6 +68,21 @@ export class EditEarnings {
                 console.log('ошибка' + error);
             }
         }
+    }
+    showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.confirmationModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 
 }

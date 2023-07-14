@@ -57,7 +57,7 @@
 #user-info {
     margin-top: -20px;
     padding-bottom: 20px;
-
+    cursor: pointer;
 }
 .main {
     margin-top: 100px;
@@ -187,6 +187,7 @@ button {
 }
 .modal-dialog {
     width: 530px;
+    font-size: 16px;
 }
 
 .add {

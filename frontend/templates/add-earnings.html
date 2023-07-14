@@ -43,16 +43,14 @@
         </div>
         <hr>
         <div class="dropdown p-3 nav-link link-body-emphasis">
-            <div id="user-info">
-                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+            <div id="user-info" class="dropup-center dropup">
+                <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-4">
-                    <span id="userFullName">RomanChernov</span>
+                    <span class="text-truncate dropdown-toggle" id="userFullName">RomanChernov</span>
                 </a>
-                <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item" href="#">Выйти</a></li>
-                </ul>
+                <div class="dropdown-menu">Выйти</div>
             </div>
         </div>
     </div>
@@ -70,16 +68,15 @@
 <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-message">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <div class="modal-header text-center">
+                <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Новая категория дохода создана</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"  id="popup-message">
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>

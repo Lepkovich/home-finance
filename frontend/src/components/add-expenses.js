@@ -8,6 +8,8 @@ export class AddExpenses {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('add-expense-cat');
         this.errorText = document.getElementById('invalid-filed-text');
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
         this.cancelCategoryButton.onclick = function () {
             location.href = '#/expenses';
         }
@@ -36,7 +38,7 @@ export class AddExpenses {
                     if (result.error || !result) {
                         throw new Error();
                     }
-                    this.showResult(result);
+                    await this.showResult(result);
                     location.href = '#/expenses';
                 }
 
@@ -58,14 +60,20 @@ export class AddExpenses {
             this.saveCategoryButton.classList.remove('disabled');
         }
     }
-    showResult(message){
+    showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
 
-        let textMessage = "Создан " + this.typeValue + " от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
 
-        const text = document.getElementById('confirmation-message');
-        text.innerText = textMessage;
-        confirmModal.show(confirmModal);
-        return console.log(message);
+            this.confirmationModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 }
 

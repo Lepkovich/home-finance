@@ -6,6 +6,8 @@ export class Earnings {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
         this.init();
@@ -19,7 +21,7 @@ export class Earnings {
                 if (result.error || !result) {
                     throw new Error();
                 }
-                this.showCategories(result);
+                await this.showCategories(result);
             }
 
         } catch (error) {
@@ -28,7 +30,6 @@ export class Earnings {
     };
 
     async showCategories(categories) {
-        console.log(categories);
         //создаем структуру html
         // <div className="card mb-4 rounded-3 p-4">
         //     <h2>Зарплата</h2>
@@ -116,11 +117,13 @@ export class Earnings {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
                 console.log("Удалить с id:", number);
-                this.deleteCategory(number);
+                this.confirmDeleting(number);
             });
         });
     }
     async deleteCategory(categoryId){
+        await this.confirmDeleting(categoryId);
+
         if(categoryId){
             try {
                 const result = await CustomHttp.request(config.host + '/categories/income/' + categoryId, 'DELETE',)
@@ -136,6 +139,31 @@ export class Earnings {
                 console.log('ошибка' + error);
             }
         }
+    }
+
+    async confirmDeleting(categoryId) {
+        return new Promise((resolve) => {
+            const deleteButton = document.getElementById('delete');
+            const cancelButton = document.getElementById('cancel');
+
+            deleteButton.onclick = async () => {
+                await this.deleteCategory(categoryId);
+                this.confirmationModal.hide();
+                resolve(); // Разрешаем обещание после удаления категории
+            };
+
+            cancelButton.onclick = () => {
+                this.confirmationModal.hide();
+                resolve(); // Разрешаем обещание после закрытия модального окна
+            };
+
+            this.confirmationModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 
     clearPage(){

@@ -48,7 +48,7 @@
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-4">
-                    <span id="userFullName">RomanChernov</span>
+                    <span class="text-truncate dropdown-toggle" id="userFullName">RomanChernov</span>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
                     <li><a class="dropdown-item" href="#">Выйти</a></li>
@@ -65,15 +65,15 @@
     </div>
 </main>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="d-flex modal-content rounded-4 text-center popup">
             <h3 class="mt-5 mb-4">
                 Вы действительно хотите удалить категорию? Связанные расходы будут удалены навсегда.
             </h3>
             <div class="d-flex mb-5 justify-content-center g-1">
-                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button">Да, удалить</button>
-                <button class="btn btn-danger px-2 edit btn-earnings" type="button">Не удалять</button>
+                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button" id="delete">Да, удалить</button>
+                <button class="btn btn-danger px-2 edit btn-earnings" type="button" id="cancel">Не удалять</button>
             </div>
         </div>
     </div>
@@ -83,14 +83,6 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="d-flex modal-content rounded-4 text-center popup">
             <h3 class="mt-5 mb-4" id="error-message">Текст ошибки</h3>
-        </div>
-    </div>
-</div>
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="d-flex modal-content rounded-4 text-center popup">
-            <h3 class="mt-5 mb-4" id="confirmation-message">Текст ошибки</h3>
         </div>
     </div>
 </div>

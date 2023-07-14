@@ -37,7 +37,7 @@ export class AddEarnings {
                     if (result.error || !result) {
                         throw new Error();
                     }
-                    this.showResult(result);
+                    await this.showResult(result);
                     location.href = '#/earnings';
                 }
 
@@ -59,13 +59,22 @@ export class AddEarnings {
             this.saveCategoryButton.classList.remove('disabled');
         }
     }
-    showResult(message){
-        let textMessage = "Создана новая категория дохода " + this.categoryField.value + ". Сообщение сервера: " + message;
 
-        const text = document.getElementById('exampleModalLabel');
-        text.innerText = textMessage;
-        this.confirmationModal.show();
-        return console.log(message);
+
+    showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.confirmationModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 }
 
