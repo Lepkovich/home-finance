@@ -20,7 +20,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link arrow active">
+                    <a class="nav-link arrow active">
                         Категории
                     </a>
                 </li>
@@ -44,14 +44,14 @@
         <hr>
         <div class="dropdown p-3 nav-link link-body-emphasis">
             <div id="user-info">
-                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+                <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-4">
-                    <span id="userFullName">RomanChernov</span>
+                    <span class="text-truncate" id="userFullName">RomanChernov</span>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item" href="#">Выйти</a></li>
+                    <li><a class="dropdown-item">Выйти</a></li>
                 </ul>
             </div>
         </div>
@@ -85,11 +85,20 @@
         </div>
     </div>
 </div>
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-message">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="d-flex modal-content rounded-4 text-center popup">
-            <h3 class="mt-5 mb-4" id="confirmation-message">Текст ошибки</h3>
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h1 class="modal-title text-center" id="exampleModalLabel">Создание записи</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"  id="popup-message">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
         </div>
     </div>
 </div>

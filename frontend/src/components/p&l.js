@@ -6,6 +6,9 @@ export class PL {
     constructor() {
         this.addIncomeButton = document.getElementById('add-income');
         this.addExpenseButton = document.getElementById('add-expense');
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
         this.editElements = null;
         this.deleteElements = null;
         this.period = 'all';
@@ -45,7 +48,7 @@ export class PL {
         }
     };
 
-    processForm() {
+    async processForm() {
         // this.getTable(this.period);
         this.addIncomeButton.onclick = () => {
             location.href = '#/add-p&l?=income'
@@ -98,8 +101,7 @@ export class PL {
         };
     }
 
-    showTable(table){
-        console.log(table);
+    async showTable(table) {
         //создаем структуру html
         // <tr>
         //     <th>1</th>
@@ -138,7 +140,7 @@ export class PL {
 
             // Создание ячейки для типа (доход/расход)
             let typeCell = document.createElement("td");
-            if(item.type === 'expense'){
+            if (item.type === 'expense') {
                 typeCell.textContent = 'расход'
             } else {
                 typeCell.textContent = 'доход'
@@ -211,37 +213,24 @@ export class PL {
             });
         });
 
-        this.deleteElements.forEach((element) => {
-            element.addEventListener("click", () => {
+        // this.deleteElements.forEach((element) => {
+        //     element.addEventListener("click", () => {
+        //         const id = element.id;
+        //         const number = parseInt(id.split('-')[1]);
+        //         // Открытие модального окна перед удалением
+        //
+        //         await this.deleteElement(number);
+        //     });
+        // })
+        for (const element of this.deleteElements) {
+            element.addEventListener("click", async () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
-                // Открытие модального окна перед удалением
-                const confirmModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-                    backdrop: true
-                });
-                confirmModal.show(confirmModal);
+                await this.confirmDeleting(number); //await заставляет дождаться исполнения, и только потом перейти дальше
 
-                // Обработчик для кнопки "Да, удалить"
-                const deleteButton = document.getElementById("delete-confirm");
-                deleteButton.addEventListener("click", async () => {
-                    try {
-                        // Вызов функции deleteElement
-                        await this.deleteElement(number);
-                        confirmModal.hide(); // Скрытие модального окна после удаления
-                        // confirmModal.dispose(); // Удаление модального окна и фонового затемнителя
-                    } catch (error) {
-                        console.log('ошибка' + error);
-                    }
-                });
-
-                // Обработчик для кнопки "Не удалять"
-                const cancelButton = document.getElementById("delete-cancel");
-                cancelButton.addEventListener("click", () => {
-                    confirmModal.hide(); // Скрытие модального окна без удаления
-                    // confirmModal.dispose(); // Удаление модального окна и фонового затемнителя
-                });
+                // location.reload();
             });
-        });
+        }
     }
 
     async deleteElement(id) {
@@ -253,37 +242,52 @@ export class PL {
                     this.showError(result.message);
                     throw new Error();
                 }
-                this.showResult(result.message)
+                await this.showResult(result.message);
+                location.reload();
             }
 
         } catch (error) {
             console.log('ошибка' + error);
         }
     }
+    async confirmDeleting(id) {
+        return new Promise((resolve) => {
+            const deleteButton = document.getElementById('delete');
+            const cancelButton = document.getElementById('cancel');
 
-    showError(message) {
-        const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-            backdrop: true
-        });
-        const text = document.getElementById('error-message');
-        text.innerText = message;
-        myModal.show(myModal);
-        myModal.hide();
-        myModal.dispose();
-        return console.log(message);
-    };
+            this.confirmationModal.show();
 
-    showResult(message) {
-        let textMessage = "Запись успешно удалена. Сообщение сервера: " + message + ".";
-        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
-            backdrop: true
+            cancelButton.onclick = () => {
+                this.confirmationModal.hide();
+                resolve(); // Разрешаем обещание после закрытия модального окна
+            };
+
+            deleteButton.onclick = async () => {
+                this.confirmationModal.hide();
+                await this.deleteElement(id);
+                resolve(); // Разрешаем обещание после удаления категории
+            };
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
         });
-        const text = document.getElementById('confirmation-message');
-        text.innerText = textMessage;
-        confirmModal.show(confirmModal);
-        confirmModal.hide();
-        confirmModal.dispose();
-        return console.log(message);
+    }
+    async showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 
 }

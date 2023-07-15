@@ -8,14 +8,14 @@
         <div class="d-flex flex-column flex-shrink-0 p-3 mb-auto menu">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis" aria-current="page">
+                    <a class="nav-link link-body-emphasis" aria-current="page">
                         <img src="static/images/home-icon-dark.png" alt="Главная" style="vertical-align: inherit;">
                         Главная
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis">
+                    <a class="nav-link link-body-emphasis">
                         <img src="static/images/p&l-icon.png" alt="Доходы и расходы">
                         Доходы & Расходы
                     </a>
@@ -49,10 +49,10 @@
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-4">
-                    <span class="text-truncate dropdown-toggle" id="userFullName">RomanChernov</span>
+                    <span class="text-truncate " id="userFullName">RomanChernov</span>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item" href="#">Выйти</a></li>
+                    <li><a class="dropdown-item">Выйти</a></li>
                 </ul>
             </div>
         </div>
@@ -70,10 +70,10 @@
 
 <!-- Modal -->
 <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-message">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Новая категория расхода создана</h1>
+                <h1 class="modal-title text-center" id="exampleModalLabel">Новая категория расхода создана</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"  id="popup-message">

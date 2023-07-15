@@ -6,12 +6,17 @@ export class Expenses {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
+        this.categoriesBlock = document.getElementById("categories-block");
+        this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
         const showUserBalance = new ShowUserBalance();
         showUserBalance.processBalance();
-        this.init();
+        this.getCategories();
+
     }
 
-    async init() {
+    async getCategories() {
         try {
             const result = await CustomHttp.request(config.host + '/categories/expense', 'GET',)
 
@@ -19,7 +24,7 @@ export class Expenses {
                 if (result.error || !result) {
                     throw new Error();
                 }
-                this.showCategories(result);
+                await this.showCategories(result);
             }
 
         } catch (error) {
@@ -27,8 +32,10 @@ export class Expenses {
         }
     };
 
+
     async showCategories(categories) {
-        console.log(categories);
+        this.categoriesBlock.innerHTML = ""; //сначала очистим блок
+
         //создаем структуру html
         // <div className="card mb-4 rounded-3 p-4">
         //     <h2>Жилье</h2>
@@ -110,12 +117,36 @@ export class Expenses {
                 console.log("Редактировать с id:", number);
             });
         });
-        this.deleteCategoryButtons.forEach((element) => {
-            element.addEventListener("click", () => {
+        for (const element of this.deleteCategoryButtons) {
+            element.addEventListener("click", async () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
-                console.log("Удалить с id:", number);
-                this.deleteCategory(number);
+                await this.confirmDeleting(number);
+                await this.getCategories();
+            });
+        }
+    }
+    async confirmDeleting(categoryId) {
+        return new Promise((resolve) => {
+            const deleteButton = document.getElementById('delete');
+            const cancelButton = document.getElementById('cancel');
+
+            this.confirmationModal.show();
+
+            cancelButton.onclick = () => {
+                this.confirmationModal.hide();
+                resolve(); // Разрешаем обещание после закрытия модального окна
+            };
+
+            deleteButton.onclick = async () => {
+                await this.deleteCategory(categoryId);
+                this.confirmationModal.hide();
+                resolve(); // Разрешаем обещание после удаления категории
+            };
+
+            // Обработчик события при закрытии попапа
+            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
             });
         });
     }
@@ -128,19 +159,27 @@ export class Expenses {
                     if (result.error || !result) {
                         throw new Error();
                     }
-                    this.clearPage();
+                    await this.showResult(result);
                 }
-
             } catch (error) {
                 console.log('ошибка' + error);
             }
         }
     }
+    async showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
 
-    clearPage(){
-        const categoriesBlock = document.getElementById("categories-block");
-        categoriesBlock.innerHTML = "";
-        this.init();
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 }
 

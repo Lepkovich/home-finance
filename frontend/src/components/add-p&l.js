@@ -54,6 +54,8 @@ export class AddPL {
         this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
         this.typeElement = document.getElementById('type');
+        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
         this.cancelElement.onclick = function () {
             location.href = '#/p&l';
         }
@@ -174,10 +176,10 @@ export class AddPL {
 
                 if (result) {
                     if (result.error) {
-                        this.showError(result.message);
+                        await this.showError(result.message);
                         throw new Error(result.message);
                     }
-                    this.showResult(result);
+                    await this.showResult(result);
                     location.href = '#/p&l';
                 }
             } catch (error) {
@@ -187,7 +189,7 @@ export class AddPL {
         }
     }
 
-    showError(message){
+    async showError(message){
         const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
             backdrop:true
         });
@@ -197,16 +199,20 @@ export class AddPL {
         return console.log(message);
     };
 
-    showResult(message){
+    async showResult(message) {
+        return new Promise((resolve) => {
+            let textMessage = "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
 
-        let textMessage = "Создан " + this.typeValue + " от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
-        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
-            backdrop:true
+            const text = document.getElementById('popup-message');
+            text.innerText = textMessage;
+
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
         });
-        const text = document.getElementById('confirmation-message');
-        text.innerText = textMessage;
-        confirmModal.show(confirmModal);
-        return console.log(message);
     }
 
 }

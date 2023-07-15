@@ -32,14 +32,15 @@
         <hr>
         <div class="dropdown p-3 nav-link link-body-emphasis">
             <div id="user-info">
-                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+                <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                          class="rounded-circle me-2">
-                    <span id="userFullName">RomanChernov</span>
+                    <span class="text-truncate" id="userFullName">RomanChernov</span>
+
                 </a>
                 <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item" href="#">Выйти</a></li>
+                    <li><a class="dropdown-item" >Выйти</a></li>
                 </ul>
             </div>
         </div>
@@ -48,9 +49,7 @@
         <h1 class="mb-5">Доходы и расходы</h1>
             <div class="d-flex mb-5">
                 <button class="btn btn-success p-2 me-3 edit btn-earnings" id="add-income">Создать доход</button>
-                <button href="#/add-p&l" class="btn btn-danger p-2 edit btn-earnings" id="add-expense">Создать расход</button>
-<!--                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button">Создать доход</button>-->
-<!--                <button class="btn btn-danger px-2 edit btn-earnings" type="button">Создать расход</button>-->
+                <button class="btn btn-danger p-2 edit btn-earnings" id="add-expense">Создать расход</button>
             </div>
         <div class="bd-example border-0 range-buttons mb-5">
             <button type="button" class="btn btn-outline-secondary m-2 medium" id="today">Сегодня</button>
@@ -64,7 +63,7 @@
             <span>по</span>
             <input type="date" id="periodTo" placeholder="Дата">
         </div>
-            <table class="table text-center table-hover table-sm ">
+            <table class="table text-center table-hover table-sm" id="table-pl">
             <thead>
             <hr>
             <tr>
@@ -96,33 +95,35 @@
         </table>
     </div>
 </main>
-<!-- Button trigger modal -->
-<!--data-bs-toggle="modal" data-bs-target="#exampleModal"-->
+
 <!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="d-flex modal-content rounded-4 text-center popup">
             <h3 class="mt-5 mb-4">Вы действительно хотите удалить операцию?</h3>
             <div class="d-flex mb-5 justify-content-center g-1">
-                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button" id="delete-confirm">Да, удалить</button>
-                <button class="btn btn-danger px-2 edit btn-earnings" type="button" id="delete-cancel">Не удалять</button>
+                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button" id="delete">Да, удалить</button>
+                <button class="btn btn-danger px-2 edit btn-earnings" type="button" id="cancel">Не удалять</button>
             </div>
         </div>
     </div>
 </div>
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+<!-- Modal -->
+<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-message">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="d-flex modal-content rounded-4 text-center popup">
-            <h3 class="mt-5 mb-4" id="error-message">Текст ошибки</h3>
-        </div>
-    </div>
-</div>
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="d-flex modal-content rounded-4 text-center popup">
-            <h3 class="mt-5 mb-4" id="confirmation-message">Текст ошибки</h3>
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h1 class="modal-title text-center" id="exampleModalLabel">Удаление категории</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"  id="popup-message">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
         </div>
     </div>
 </div>
