@@ -10,10 +10,13 @@ export class Expenses {
         this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
-        this.getCategories();
+        this.dataInit();
 
+    }
+
+    async dataInit(){
+        await ShowUserBalance.init();
+        await this.getCategories();
     }
 
     async getCategories() {

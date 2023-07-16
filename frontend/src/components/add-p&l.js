@@ -62,9 +62,12 @@ export class AddPL {
         this.processElement.addEventListener('click', this.processForm.bind(this));
         // this.cancelElement.addEventListener('click', this.cancelForm.bind(this));
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
-        this.init();
+        this.dataInit();
+    }
+
+    async dataInit(){
+        await ShowUserBalance.init();
+        await this.init();
     }
 
     async init() {
@@ -95,7 +98,7 @@ export class AddPL {
 
                 if (result) {
                     if (result.error) {
-                        this.showError(result.message);
+                        await this.showError(result.message);
                         throw new Error(result.message);
                     }
                     this.showCategories(result);

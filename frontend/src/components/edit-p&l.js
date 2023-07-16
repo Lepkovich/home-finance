@@ -58,9 +58,12 @@ export class EditPL {
         }
         this.processElement.addEventListener('click', this.processForm.bind(this));
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
-        this.init();
+        this.dataInit();
+    }
+
+    async dataInit(){
+        await ShowUserBalance.init();
+        await this.init();
     }
 
     async init() {

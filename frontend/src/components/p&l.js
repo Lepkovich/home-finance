@@ -21,17 +21,13 @@ export class PL {
         this.periodFrom = null;
         this.periodTo = null;
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
-        // document.addEventListener("click", function(event) {
-        //     const clickedElement = event.target;
-        //     const parentElement = clickedElement.parentNode;
-        //     const parentId = parentElement.id;
-        //     console.log("Кликнут родительский элемент с id:", parentId);
-        // });
-        this.processForm();
+        this.dataInit();
     }
 
+    async dataInit(){
+        await ShowUserBalance.init();
+        await this.processForm();
+    }
     async getTable(period) {
         try {
             const result = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
@@ -213,22 +209,11 @@ export class PL {
             });
         });
 
-        // this.deleteElements.forEach((element) => {
-        //     element.addEventListener("click", () => {
-        //         const id = element.id;
-        //         const number = parseInt(id.split('-')[1]);
-        //         // Открытие модального окна перед удалением
-        //
-        //         await this.deleteElement(number);
-        //     });
-        // })
         for (const element of this.deleteElements) {
             element.addEventListener("click", async () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
                 await this.confirmDeleting(number); //await заставляет дождаться исполнения, и только потом перейти дальше
-
-                // location.reload();
             });
         }
     }
@@ -239,7 +224,6 @@ export class PL {
 
             if (result) {
                 if (result.error || !result) {
-                    this.showError(result.message);
                     throw new Error();
                 }
                 await this.showResult(result.message);

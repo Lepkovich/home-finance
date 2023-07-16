@@ -22,9 +22,12 @@ export class AddExpenses {
             await this.init(this.categoryField.value);
         }
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.init();
+        this.dataInit();
 
+
+    }
+    async dataInit(){
+        await ShowUserBalance.init();
     }
 
     async init(title) {

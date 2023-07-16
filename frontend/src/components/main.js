@@ -17,9 +17,14 @@ export class Main{
         this.periodFrom = null;
         this.periodTo = null;
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
-        this.processForm();
+        // const showUserBalance = new ShowUserBalance();
+        // showUserBalance.processBalance();
+        this.dataInit();
+    }
+
+    async dataInit(){
+        await ShowUserBalance.init();
+        await this.processForm();
     }
 
 

@@ -3,21 +3,23 @@ import config from "../../config/config.js";
 
 export class ShowUserBalance {
     constructor() {
-        this.balance = null;
-        this.userFullName = localStorage.getItem('userFullName');
+        // this.balance = null;
+        // this.userFullName = localStorage.getItem('userFullName');
 
-        this.init();
+        // this.init();
     }
-    async init(){
+    static async init(){
+        let balanceValue = document.getElementById('balance-value');
+        let userFullName = document.getElementById('userFullName');
         try {
             const result = await CustomHttp.request(config.host +  '/balance', 'GET')
 
             if (result) {
                 if (result.error || result.balance === undefined) {
-                    this.showError(result.message);
                     throw new Error(result.message);
                 }
-                this.processBalance(result.balance);
+                balanceValue.textContent = result.balance + "$";
+                userFullName.textContent = localStorage.getItem('userFullName');
             }
 
         } catch (error) {
@@ -26,20 +28,11 @@ export class ShowUserBalance {
         }
     };
 
-    showError(message){
-        const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-            backdrop:true
-        });
-        const text = document.getElementById('error-message');
-        text.innerText = message;
-        myModal.show(myModal);
-        return console.log(message);
-    };
 
-    processBalance(balance){
-        let balanceValue = document.getElementById('balance-value');
-        let userFullName = document.getElementById('userFullName');
-        balanceValue.textContent = balance + "$";
-        userFullName.textContent = this.userFullName;
-    }
+    // processBalance(balance){
+    //     let balanceValue = document.getElementById('balance-value');
+    //     let userFullName = document.getElementById('userFullName');
+    //     balanceValue.textContent = balance + "$";
+    //     userFullName.textContent = this.userFullName;
+    // }
 }

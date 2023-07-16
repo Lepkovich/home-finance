@@ -11,11 +11,14 @@ export class EditEarnings {
         this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
 
 
-        const showUserBalance = new ShowUserBalance();
-        showUserBalance.processBalance();
         const that = this;
 
-        this.init(that);
+        this.dataInit(that);
+    }
+
+    async dataInit(field){
+        await ShowUserBalance.init();
+        await this.init(field);
     }
 
     async init(field) {

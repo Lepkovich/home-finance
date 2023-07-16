@@ -14,7 +14,13 @@ export class EditExpenses {
         showUserBalance.processBalance();
         const that = this;
 
-        this.init(that);
+        this.dataInit(that);
+
+    }
+
+    async dataInit(field){
+        await ShowUserBalance.init();
+        await this.init(field);
     }
 
     async init(field) {
