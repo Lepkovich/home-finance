@@ -22,6 +22,21 @@ export class AddExpenses {
             await this.init(this.categoryField.value);
         }
 
+        // обрабатываем кнопку меню на sidebar
+        const categoriesMenuItem = document.getElementById("categories-menu");
+        const subMenu = document.querySelector(".sub-menu");
+
+        categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
+
+
+        categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
+
+        subMenu.style.display = "block";
+        const subMenuLink = subMenu.querySelector(".expenses");
+        subMenuLink.removeAttribute("href");
+        subMenuLink.classList.add("sub-menu-active");
+
         this.dataInit();
 
 

@@ -17,8 +17,26 @@ export class Main{
         this.periodFrom = null;
         this.periodTo = null;
 
-        // const showUserBalance = new ShowUserBalance();
-        // showUserBalance.processBalance();
+        // обрабатываем кнопку меню на sidebar
+        const homeMenuItem = document.getElementById("main");
+        homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        homeMenuItem.querySelector("a.nav-link").classList.add("active");
+
+        homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
+        const iconElement = homeMenuItem.querySelector("img");
+        iconElement.src = "static/images/home-icon.png";
+
+
+        // const navLinks = document.querySelectorAll(".nav-link");
+        // navLinks.forEach(link => {
+        //     link.classList.remove("active");
+        //     link.classList.remove("link-body-emphasis");
+        // });
+        // const activeElementIcon = navLinks[0].querySelector("img");
+        // activeElementIcon.src = "static/images/home-icon.png";
+        // navLinks[0].classList.add("active");
+        // navLinks[0].classList.add("link-body-emphasis");
+
         this.dataInit();
     }
 

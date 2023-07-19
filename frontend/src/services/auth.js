@@ -21,7 +21,6 @@ export class Auth{
                 const result = await response.json();
                 if(result && !result.error){
                     this.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
-                    // this.setTokens(result.tokens.accessToken, result.tokens.refreshToken, result.user.id);
                     return true;
                 }
             }
@@ -34,9 +33,13 @@ export class Auth{
     static setTokens(accessToken, refreshToken, userId, userFullName) {
         localStorage.setItem(this.accessTokenKey, accessToken);
         localStorage.setItem(this.refreshTokenKey, refreshToken);
+    }
+    static setUserData(userId, userFullName) {
         localStorage.setItem(this.userId, userId);
         localStorage.setItem('userFullName', userFullName);
     }
+
+
     static removeTokens() {
         localStorage.removeItem(this.accessTokenKey);
         localStorage.removeItem(this.refreshTokenKey);
@@ -59,7 +62,6 @@ export class Auth{
                 const result = await response.json();
                 if (result && !result.error) {
                     Auth.removeTokens();
-                    localStorage.removeItem(Auth.userId);
                     return true;
                 }
             }

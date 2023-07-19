@@ -1,78 +1,22 @@
-<main class="d-flex flex-nowrap">
-    <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
-        <a href="#/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <img class="logo" src="static/images/logo.png" alt="логотип">
-        </a>
-        <hr>
-        <div class="d-flex flex-column flex-shrink-0 p-3 mb-auto menu">
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="#/" class="nav-link link-body-emphasis" aria-current="page">
-                        <img src="static/images/home-icon-dark.png" alt="Главная" style="vertical-align: inherit;">
-                        Главная
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="#/p&l" class="nav-link link-body-emphasis">
-                        <img src="static/images/p&l-icon.png" alt="Доходы и расходы">
-                        Доходы & Расходы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link arrow active">
-                        Категории
-                    </a>
-                </li>
-                <ul class="nav flex-column mb-auto sub-menu">
-                    <li class="nav-item">
-                        <a href="#/earnings" class="nav-link sub-menu-active">
-                            Доходы
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#/expenses" class="nav-link">
-                            Расходы
-                        </a>
-                    </li>
-                </ul>
-            </ul>
-        </div>
-        <div class="nav-link" id="balance">
-            <strong>Баланс:</strong> <span id="balance-value">400$</span>
-        </div>
-        <hr>
-        <div class="dropdown p-3 nav-link link-body-emphasis">
-            <div id="user-info">
-                <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
-                         class="rounded-circle me-4">
-                    <span class="text-truncate " id="userFullName">RomanChernov</span>
-                </a>
-                <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item">Выйти</a></li>
-                </ul>
-            </div>
-        </div>
+<div class="container d-flex flex-column bg-body main">
+    <h1 class="mb-5">Доходы</h1>
+    <div class="d-flex flex-row flex-wrap justify-content-start column-gap-3" id="categories-block">
+        <!-- карточки с категориями доходов -->
     </div>
-    <div class="container d-flex flex-column bg-body main">
-        <h1 class="mb-5">Доходы</h1>
-        <div class="d-flex flex-row flex-wrap justify-content-start column-gap-3" id="categories-block">
-                <!-- карточки с категориями доходов -->
-        </div>
 
-    </div>
-</main>
+</div>
+
 <!-- Modal -->
-<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="d-flex modal-content rounded-4 text-center popup">
             <h3 class="mt-5 mb-4">
                 Вы действительно хотите удалить категорию? Связанные доходы будут удалены навсегда.
             </h3>
             <div class="d-flex mb-5 justify-content-center g-1">
-                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button" id="delete">Да, удалить</button>
+                <button class="btn btn-success px-2 me-3 edit btn-earnings" type="button" id="delete">Да, удалить
+                </button>
                 <button class="btn btn-danger px-2 edit btn-earnings" type="button" id="cancel">Не удалять</button>
             </div>
         </div>
@@ -94,7 +38,7 @@
                 <h1 class="modal-title text-center" id="exampleModalLabel">Удаление категории</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body"  id="popup-message">
+            <div class="modal-body" id="popup-message">
                 ...
             </div>
             <div class="modal-footer">

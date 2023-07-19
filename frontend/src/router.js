@@ -133,14 +133,25 @@ export class Router {
             return;
         }
 
+
+
         const newRoute = this.routes.find(item => {
             return item.route === urlRoute;
         });
         if(!newRoute) {
             window.location.href = '#/login';
             return;
+        } else if (urlRoute === '#/login' || urlRoute === '#/signup') {
+            console.log('мы в логине');
+            document.getElementById('login').innerHTML = await fetch(newRoute.template).then(response => response.text());
+            document.getElementById('styles').setAttribute('href', newRoute.styles);
+            document.getElementById('title').innerText = newRoute.title;
+            newRoute.load();
+            return;
         }
 
+
+        document.getElementById('sidebar').innerHTML = await fetch('templates/sidebar.html').then(response => response.text());
         document.getElementById('content').innerHTML = await fetch(newRoute.template).then(response => response.text());
         document.getElementById('styles').setAttribute('href', newRoute.styles);
         document.getElementById('title').innerText = newRoute.title;

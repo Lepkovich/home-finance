@@ -56,9 +56,7 @@ export class Form {
         this.processElement = document.getElementById('process');
         this.processElement.addEventListener('click', this.processForm.bind(this));
 
-        // this.processElement.onclick = function () {
-        //     that.processForm();
-        // }
+
         if (this.page === 'login') {
             this.rememberMeElement = document.getElementById('checkbox');
             this.rememberMeElement.onchange = function () {
@@ -87,7 +85,6 @@ export class Form {
             const fullName = this.fields.find(item => item.name === 'name').element.value;
             this.name = fullName.split(" ")[0]; // Имя (до пробела)
             this.lastName = fullName.split(" ")[1]; // Фамилия (после пробела)
-            console.log(this.name + ' ' + this.lastName);
         }
 
         if (field.name === 'repeat-password') {
@@ -168,7 +165,8 @@ export class Form {
                         throw new Error(result.message);
                     }
                     let userFullName = result.user.name + result.user.lastName;
-                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken, result.user.id, userFullName);
+                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
+                    Auth.setUserData(result.user.id, userFullName);
                     location.href = "#/"
                 }
 
