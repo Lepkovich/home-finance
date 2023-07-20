@@ -27,16 +27,6 @@ export class Main{
         iconElement.src = "static/images/home-icon.png";
 
 
-        // const navLinks = document.querySelectorAll(".nav-link");
-        // navLinks.forEach(link => {
-        //     link.classList.remove("active");
-        //     link.classList.remove("link-body-emphasis");
-        // });
-        // const activeElementIcon = navLinks[0].querySelector("img");
-        // activeElementIcon.src = "static/images/home-icon.png";
-        // navLinks[0].classList.add("active");
-        // navLinks[0].classList.add("link-body-emphasis");
-
         this.dataInit();
     }
 

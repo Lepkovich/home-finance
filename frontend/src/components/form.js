@@ -59,9 +59,6 @@ export class Form {
 
         if (this.page === 'login') {
             this.rememberMeElement = document.getElementById('checkbox');
-            this.rememberMeElement.onchange = function () {
-                that.processForm();
-            }
         }
 
     }
@@ -130,6 +127,7 @@ export class Form {
         if (this.validateForm()) {
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
+            const rememberMe = this.rememberMeElement.checked;
 
             if (this.page === 'signup') {
                 try {
@@ -156,7 +154,7 @@ export class Form {
                 const result = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
-                    rememberMe: true // подключить обработку checkbox
+                    rememberMe: rememberMe
                 })
 
                 if (result) {

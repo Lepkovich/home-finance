@@ -60,7 +60,21 @@ export class AddPL {
             location.href = '#/p&l';
         }
         this.processElement.addEventListener('click', this.processForm.bind(this));
-        // this.cancelElement.addEventListener('click', this.cancelForm.bind(this));
+
+        // обрабатываем кнопку меню на sidebar
+        this.categoriesMenuItem = document.getElementById("categories-menu");
+        this.subMenu = document.querySelector(".sub-menu");
+
+        this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
+
+
+        this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
+
+        this.subMenu.style.display = "block";
+        this.subMenuLink = this.subMenu.querySelector(".nav-link");
+        this.expensesMenuLink = this.subMenu.querySelector(".expenses");
+
 
         this.dataInit();
     }
@@ -73,8 +87,8 @@ export class AddPL {
     async init() {
         if (this.type === 'income') {
             this.typeValue = 'Доход';
-            let incomeMenu = document.getElementById('earning-menu');
-            incomeMenu.classList.add('sub-menu-active');
+            this.subMenuLink.removeAttribute("href");
+            this.subMenuLink.classList.add("sub-menu-active");
             try {
                 const result = await CustomHttp.request(config.host + '/categories/income')
 
@@ -91,8 +105,8 @@ export class AddPL {
 
         } else {
             this.typeValue = 'Расход';
-            let expenseMenu = document.getElementById('expense-menu');
-            expenseMenu.classList.add('sub-menu-active');
+            this.expensesMenuLink.removeAttribute("href");
+            this.expensesMenuLink.classList.add("sub-menu-active");
             try {
                 const result = await CustomHttp.request(config.host + '/categories/expense')
 

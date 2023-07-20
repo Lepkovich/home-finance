@@ -1,6 +1,7 @@
 import {Form} from "./components/form.js";
 import {Main} from "./components/main.js";
 import {PL} from "./components/p&l.js";
+import {Auth} from "./services/auth.js";
 import {AddPL} from "./components/add-p&l.js";
 import {EditPL} from "./components/edit-p&l.js";
 import {Earnings} from "./components/earnings.js";
@@ -142,8 +143,8 @@ export class Router {
             window.location.href = '#/login';
             return;
         } else if (urlRoute === '#/login' || urlRoute === '#/signup') {
-            console.log('мы в логине');
-            document.getElementById('login').innerHTML = await fetch(newRoute.template).then(response => response.text());
+            document.getElementById('content').innerHTML = '';
+            document.getElementById('sidebar').innerHTML = await fetch(newRoute.template).then(response => response.text());
             document.getElementById('styles').setAttribute('href', newRoute.styles);
             document.getElementById('title').innerText = newRoute.title;
             newRoute.load();

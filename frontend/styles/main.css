@@ -66,6 +66,9 @@
     padding-bottom: 20px;
     cursor: pointer;
 }
+#user-info ul li {
+    font-size: 14px;
+}
 .main {
     margin-top: 100px;
     margin-left: 60px;

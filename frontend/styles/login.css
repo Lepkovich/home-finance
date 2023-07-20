@@ -1,3 +1,6 @@
+#sidebar{
+    display: contents;
+}
 .main {
     display: flex;
     align-items: center;

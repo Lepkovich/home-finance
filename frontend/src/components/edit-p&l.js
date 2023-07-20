@@ -60,19 +60,18 @@ export class EditPL {
 
 
         // обрабатываем кнопку меню на sidebar
-        const categoriesMenuItem = document.getElementById("categories-menu");
-        const subMenu = document.querySelector(".sub-menu");
+        this.categoriesMenuItem = document.getElementById("categories-menu");
+        this.subMenu = document.querySelector(".sub-menu");
 
-        categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
+        this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
 
 
-        categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
+        this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
 
-        subMenu.style.display = "block";
-        const subMenuLink = subMenu.querySelector(".nav-link");
-        subMenuLink.removeAttribute("href");
-        subMenuLink.classList.add("sub-menu-active");
+        this.subMenu.style.display = "block";
+        this.subMenuLink = this.subMenu.querySelector(".nav-link");
+        this.expensesMenuLink = this.subMenu.querySelector(".expenses");
 
         this.dataInit();
     }
@@ -103,12 +102,16 @@ export class EditPL {
         try {
             if (fields.type === 'income') {
                 this.typeValue = 'income';
+                this.subMenuLink.removeAttribute("href");
+                this.subMenuLink.classList.add("sub-menu-active");
                 const result = await CustomHttp.request(config.host + '/categories/income');
                 if (result && !result.error) {
                     this.showCategories(result);
                 }
             } else {
                 this.typeValue = 'expense';
+                this.expensesMenuLink.removeAttribute("href");
+                this.expensesMenuLink.classList.add("sub-menu-active");
                 const result = await CustomHttp.request(config.host + '/categories/expense');
                 if (result && !result.error) {
                     this.showCategories(result);
