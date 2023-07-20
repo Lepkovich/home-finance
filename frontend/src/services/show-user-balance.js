@@ -3,10 +3,6 @@ import config from "../../config/config.js";
 
 export class ShowUserBalance {
     constructor() {
-        // this.balance = null;
-        // this.userFullName = localStorage.getItem('userFullName');
-
-        // this.init();
     }
     static async init(){
         let balanceValue = document.getElementById('balance-value');
@@ -27,12 +23,4 @@ export class ShowUserBalance {
             location.href = '#/login';
         }
     };
-
-
-    // processBalance(balance){
-    //     let balanceValue = document.getElementById('balance-value');
-    //     let userFullName = document.getElementById('userFullName');
-    //     balanceValue.textContent = balance + "$";
-    //     userFullName.textContent = this.userFullName;
-    // }
 }
