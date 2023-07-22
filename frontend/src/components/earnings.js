@@ -7,8 +7,13 @@ export class Earnings {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
+
+        //определяем параметры модальных окон
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
         this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+        this.modalMessageField = document.getElementById('textModal-message');
+        this.textMessage = null;
+
 
         // обрабатываем кнопку меню на sidebar
         const categoriesMenuItem = document.getElementById("categories-menu");
@@ -82,7 +87,9 @@ export class Earnings {
         return new Promise((resolve) => {
             const deleteButton = document.getElementById('delete');
             const cancelButton = document.getElementById('cancel');
+            const confirmationText = document.getElementById('confirmationText');
 
+            confirmationText.innerText = 'Вы действительно хотите удалить категорию?'
             this.confirmationModal.show();
 
             cancelButton.onclick = () => {
@@ -91,15 +98,10 @@ export class Earnings {
             };
 
             deleteButton.onclick = async () => {
-                await this.deleteCategory(categoryId);
                 this.confirmationModal.hide();
+                await this.deleteCategory(categoryId);
                 resolve(); // Разрешаем обещание после удаления категории
             };
-
-            // Обработчик события при закрытии попапа
-            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
-                resolve(); // Разрешаем обещание при закрытии попапа
-            });
         });
     }
     async deleteCategory(categoryId){
@@ -109,12 +111,11 @@ export class Earnings {
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.error());
                         throw new Error();
                     }
                     await this.showResult(result);
-
                 }
-
             } catch (error) {
                 console.log('ошибка' + error);
             }
@@ -122,10 +123,13 @@ export class Earnings {
     }
     async showResult(message) {
         return new Promise((resolve) => {
-            let textMessage = "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+            if (message.error) {
+                this.textMessage = message.error;
+            } else {
+                this.textMessage = "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+            }
 
-            const text = document.getElementById('popup-message');
-            text.innerText = textMessage;
+            this.modalMessageField.innerText = this.textMessage;
 
             this.resultModal.show();
 

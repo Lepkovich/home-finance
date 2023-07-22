@@ -145,6 +145,7 @@ export class Router {
         } else if (urlRoute === '#/login' || urlRoute === '#/signup') {
             document.getElementById('content').innerHTML = '';
             document.getElementById('sidebar').innerHTML = await fetch(newRoute.template).then(response => response.text());
+            document.getElementById('popup').innerHTML = await fetch('templates/modal.html').then(response => response.text());
             document.getElementById('styles').setAttribute('href', newRoute.styles);
             document.getElementById('title').innerText = newRoute.title;
             newRoute.load();
@@ -153,6 +154,7 @@ export class Router {
 
 
         document.getElementById('sidebar').innerHTML = await fetch('templates/sidebar.html').then(response => response.text());
+        document.getElementById('popup').innerHTML = await fetch('templates/modal.html').then(response => response.text());
         document.getElementById('content').innerHTML = await fetch(newRoute.template).then(response => response.text());
         document.getElementById('styles').setAttribute('href', newRoute.styles);
         document.getElementById('title').innerText = newRoute.title;

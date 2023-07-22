@@ -8,7 +8,11 @@ export class AddExpenses {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('add-expense-cat');
         this.errorText = document.getElementById('invalid-filed-text');
-        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
+        //определяем параметры модального окна
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
 
         this.cancelCategoryButton.onclick = function () {
             location.href = '#/expenses';
@@ -54,6 +58,7 @@ export class AddExpenses {
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.error);
                         throw new Error();
                     }
                     await this.showResult(result);
@@ -80,15 +85,18 @@ export class AddExpenses {
     }
     showResult(message) {
         return new Promise((resolve) => {
-            let textMessage = "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+            if (message.error) {
+                this.textMessage = message.error;
+            } else {
+                this.textMessage = "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+            }
 
-            const text = document.getElementById('popup-message');
-            text.innerText = textMessage;
+            this.modalMessageField.innerText = this.textMessage;
 
-            this.confirmationModal.show();
+            this.resultModal.show();
 
             // Обработчик события при закрытии попапа
-            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
         });

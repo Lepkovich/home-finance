@@ -175,7 +175,7 @@ button {
     text-decoration: none;
     cursor: pointer;
 }
-#add-earning-category, #add-expense-category {
+#add-category {
     color: #CED4DA;
 }
 
@@ -268,4 +268,8 @@ button {
 }
 #invalid-filed-text {
     display: none;
+}
+
+.modal-footer .btn-secondary {
+    font-size: 16px;
 }

@@ -195,7 +195,6 @@ export class Main{
             return data;
         }, { labels: [], amounts: [] });
 
-        console.log(expensesData);
 
         const expensesChart = new Chart(this.expensesChart, {
             type: 'pie',

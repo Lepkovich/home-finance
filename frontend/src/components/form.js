@@ -4,7 +4,9 @@ import config from "../../config/config.js";
 
 export class Form {
     constructor(page) {
+        this.resultModal = new bootstrap.Modal(document.getElementById('errorModal'));
         this.rememberMeElement = null;
+        this.rememberMe = false;
         this.name = null;
         this.lastName = null;
         this.processElement = null;
@@ -112,14 +114,26 @@ export class Form {
         return validForm;
     };
 
-    showError(message){
-        const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-            backdrop:true
+    async showError(message){
+        return new Promise((resolve) => {
+
+            const text = document.getElementById('error-message');
+            text.innerText = message;
+
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
         });
-        const text = document.getElementById('error-message');
-        text.innerText = message;
-        myModal.show(myModal);
-        return console.log(message);
+        // const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+        //     backdrop:true
+        // });
+        // const text = document.getElementById('error-message');
+        // text.innerText = message;
+        // myModal.show(myModal);
+        // return console.log(message);
     }
 
     async processForm(event) {
@@ -127,7 +141,10 @@ export class Form {
         if (this.validateForm()) {
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
-            const rememberMe = this.rememberMeElement.checked;
+            if (this.rememberMeElement){
+                this.rememberMe = this.rememberMeElement.checked;
+            }
+
 
             if (this.page === 'signup') {
                 try {
@@ -141,7 +158,7 @@ export class Form {
 
                     if (result) {
                         if (result.error || !result.user) {
-                            this.showError(result.message);
+                            await this.showError(result.message);
                             throw new Error(result.message);
                         }
                     }
@@ -154,18 +171,21 @@ export class Form {
                 const result = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
-                    rememberMe: rememberMe
+                    rememberMe: this.rememberMe
                 })
 
                 if (result) {
-                    if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
-                        this.showError(result.message);
+                    if (result.error) {
+                        await this.showError(result.message);
                         throw new Error(result.message);
                     }
-                    let userFullName = result.user.name + result.user.lastName;
-                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
-                    Auth.setUserData(result.user.id, userFullName);
-                    location.href = "#/"
+                    if (result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {
+                        await this.showError('Вход успешно выполнен!');
+                        let userFullName = result.user.name + result.user.lastName;
+                        Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
+                        Auth.setUserData(result.user.id, userFullName);
+                        location.href = "#/"
+                    }
                 }
 
             } catch (error) {

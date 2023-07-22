@@ -8,7 +8,17 @@ export class EditEarnings {
         this.cancelCategoryButton = document.getElementById('cancel-button');
         this.categoryField = document.getElementById('income-cat')
         this.id = document.location.hash.split('=')[1];
-        this.confirmationModal = new bootstrap.Modal(document.getElementById('modal-message'));
+        this.errorText = document.getElementById('invalid-filed-text');
+
+
+        //определяем параметры модального окна
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
+
+        this.categoryField.addEventListener('input', () => {
+            this.validateField(this.categoryField.value);
+        })
 
         // обрабатываем кнопку меню на sidebar
         const categoriesMenuItem = document.getElementById("categories-menu");
@@ -41,6 +51,7 @@ export class EditEarnings {
 
             if (result) {
                 if (result.error || !result) {
+                    await this.showResult(result.error);
                     throw new Error();
                 }
                 this.categoryField.value = result.title
@@ -53,8 +64,6 @@ export class EditEarnings {
     };
 
     async processButtons(category, field) {
-        console.log(category);
-        console.log(field);
         this.cancelCategoryButton.onclick = function () {
             location.href = '#/earnings';
         }
@@ -62,7 +71,6 @@ export class EditEarnings {
         this.saveCategoryButton.onclick = () => {
             let newCategory = field.categoryField.value;
             this.rewriteCategory(newCategory, category.id);
-            console.log(newCategory, category.id);
         }
 
     }
@@ -75,6 +83,7 @@ export class EditEarnings {
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.error);
                         throw new Error();
                     }
                     await this.showResult(result);
@@ -86,17 +95,34 @@ export class EditEarnings {
             }
         }
     }
+
+    validateField(newCategory) {
+        if (newCategory.length === 0) {
+            this.errorText.style.display = "flex";
+            this.categoryField.classList.add('is-invalid');
+            this.saveCategoryButton.classList.add('disabled');
+        } else {
+            this.errorText.style.display = "none";
+            this.categoryField.classList.remove('is-invalid');
+            this.saveCategoryButton.classList.remove('disabled');
+        }
+    }
+
     showResult(message) {
         return new Promise((resolve) => {
-            let textMessage = "Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
 
-            const text = document.getElementById('popup-message');
-            text.innerText = textMessage;
+            if (message.error) {
+                this.textMessage = message.error;
+            } else {
+                this.textMessage ="Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+            }
 
-            this.confirmationModal.show();
+            this.modalMessageField.innerText = this.textMessage;
+
+            this.resultModal.show();
 
             // Обработчик события при закрытии попапа
-            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
         });

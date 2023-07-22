@@ -22,10 +22,10 @@ export class CustomHttp {
         if (response.status < 200 || response.status >= 300) {
             if(response.status === 401) {
                 const result = await Auth.processUnauthorizedResponse();
-                if(result){ // если пришло true из processUnauthorizedResponse() , но вроде не приходит
+                if(result){ // если пришло true из processUnauthorizedResponse()
                     return await this.request(url, method, body); //повторяем запрос на логин
                 } else {
-                    return null;
+                    return response.json();
                 }
             }
             console.log(response.message);

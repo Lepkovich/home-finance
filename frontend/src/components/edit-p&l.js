@@ -51,6 +51,13 @@ export class EditPL {
                 that.validateField.call(that, item, this)
             }
         });
+
+        //определяем параметры модального окна
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
+
+
         this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
         this.cancelElement.onclick = function () {
@@ -208,7 +215,6 @@ export class EditPL {
             const date = this.fields.find(item => item.name === 'date').element.value;
             const comment = this.fields.find(item => item.name === 'comment').element.value;
             const categoryId = this.fields.find(item => item.name === 'category').element.value;
-            console.log('сумма: ' + amount);
 
 
             try {
@@ -222,11 +228,10 @@ export class EditPL {
 
                 if (result) {
                     if (result.error) {
-                        this.showError(result.message);
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
-                    console.log('сумма: ' + amount);
-                    this.showResult(result);
+                    await this.showResult(result);
                     location.href = '#/p&l';
                 }
             } catch (error) {
@@ -236,26 +241,22 @@ export class EditPL {
         }
     }
 
-    showError(message) {
-        const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-            backdrop: true
-        });
-        const text = document.getElementById('error-message');
-        text.innerText = message;
-        myModal.show(myModal);
-        return console.log(message);
-    };
+    async showResult(message) {
+        return new Promise((resolve) => {
+            if (message.date && message.category && message.amount && message.comment) {
+                this.textMessage = "Изменена запись от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
+            } else {
+                this.textMessage = message;
+            }
 
-    showResult(message) {
+            this.modalMessageField.innerText = this.textMessage;
 
-        let textMessage = "Изменена запись от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
-        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
-            backdrop: true
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
         });
-        const text = document.getElementById('confirmation-message');
-        text.innerText = textMessage;
-        confirmModal.show(confirmModal);
-        return console.log(message);
     }
-
 }

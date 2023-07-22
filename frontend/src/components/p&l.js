@@ -6,8 +6,12 @@ export class PL {
     constructor() {
         this.addIncomeButton = document.getElementById('add-income');
         this.addExpenseButton = document.getElementById('add-expense');
+
+        //определяем параметры модальных окон
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
         this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+        this.modalMessageField = document.getElementById('textModal-message');
+        this.textMessage = null;
 
         this.editElements = null;
         this.deleteElements = null;
@@ -242,6 +246,7 @@ export class PL {
 
             if (result) {
                 if (result.error || !result) {
+                    await this.showResult(result.error);
                     throw new Error();
                 }
                 await this.showResult(result.message);
@@ -278,10 +283,13 @@ export class PL {
     }
     async showResult(message) {
         return new Promise((resolve) => {
-            let textMessage = "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+            if (message.error) {
+                this.textMessage = message.error;
+            } else {
+                this.textMessage = "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+            }
 
-            const text = document.getElementById('popup-message');
-            text.innerText = textMessage;
+            this.modalMessageField.innerText = this.textMessage;
 
             this.resultModal.show();
 

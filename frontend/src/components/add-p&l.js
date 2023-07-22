@@ -54,7 +54,11 @@ export class AddPL {
         this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
         this.typeElement = document.getElementById('type');
-        this.resultModal = new bootstrap.Modal(document.getElementById('modal-message'));
+
+        //определяем параметры модального окна
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
 
         this.cancelElement.onclick = function () {
             location.href = '#/p&l';
@@ -125,7 +129,6 @@ export class AddPL {
     };
 
     showCategories(categories){
-        console.log(categories);
         // Получение ссылки на элемент <select>
         const selectElement = document.getElementById("category");
 
@@ -193,7 +196,7 @@ export class AddPL {
 
                 if (result) {
                     if (result.error) {
-                        await this.showError(result.message);
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);
@@ -206,22 +209,15 @@ export class AddPL {
         }
     }
 
-    async showError(message){
-        const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-            backdrop:true
-        });
-        const text = document.getElementById('error-message');
-        text.innerText = message;
-        myModal.show(myModal);
-        return console.log(message);
-    };
-
     async showResult(message) {
         return new Promise((resolve) => {
-            let textMessage = "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
+            if (message.error) {
+                this.textMessage = message.error;
+            } else {
+                this.textMessage = "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
+            }
 
-            const text = document.getElementById('popup-message');
-            text.innerText = textMessage;
+            this.modalMessageField.innerText = this.textMessage;
 
             this.resultModal.show();
 
