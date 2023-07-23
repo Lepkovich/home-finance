@@ -12,18 +12,21 @@
         <span>по</span>
         <input type="date" id="periodTo" placeholder="Дата">
     </div>
-    <div class="d-flex justify-content-between charts">
-        <div style="width: 437px;">
-            <div class="d-flex flex-column">
-                <h3 id="income-block">Доходы</h3>
-                <canvas id="earnings-chart">Здесь диаграмма доходов</canvas>
+    <div id="emptyText" class="display-4">Нет записей в выбранном диапазоне</div>
+    <div id="charts" style="display: none">
+        <div class="d-flex justify-content-between charts">
+            <div style="width: 437px;">
+                <div class="d-flex flex-column">
+                    <h3 id="income-block">Доходы</h3>
+                    <canvas id="earnings-chart">Здесь диаграмма доходов</canvas>
+                </div>
             </div>
-        </div>
-        <div class="separator"></div>
-        <div style="width: 437px;">
-            <div class="d-flex flex-column">
-                <h3 id="expenses-block">Расходы</h3>
-                <canvas id="expenses-chart">Здесь диаграмма расходов</canvas>
+            <div class="separator"></div>
+            <div style="width: 437px;">
+                <div class="d-flex flex-column">
+                    <h3 id="expenses-block">Расходы</h3>
+                    <canvas id="expenses-chart">Здесь диаграмма расходов</canvas>
+                </div>
             </div>
         </div>
     </div>

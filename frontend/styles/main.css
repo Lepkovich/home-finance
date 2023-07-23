@@ -73,6 +73,9 @@
     margin-top: 100px;
     margin-left: 60px;
 }
+#emptyText{
+    font-size: 14px;
+}
 #categories-block{
     overflow: auto;
 }
@@ -128,7 +131,7 @@ button {
     width: 100px;
 }
 .charts {
-    margin-top: 140px;
+    margin-top: 120px;
 }
 .charts h3 {
     text-align: center;

@@ -4,7 +4,11 @@ import config from "../../config/config.js";
 
 export class Form {
     constructor(page) {
-        this.resultModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        //определяем параметры модального окна
+        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
+
         this.rememberMeElement = null;
         this.rememberMe = false;
         this.name = null;
@@ -114,12 +118,13 @@ export class Form {
         return validForm;
     };
 
-    async showError(message){
+    async showResult(message){
         return new Promise((resolve) => {
 
-            const text = document.getElementById('error-message');
-            text.innerText = message;
+            this.textMessage = message.error ? message.message :
+                "Вход под именем " + message.user.name + " успешно выполнен";
 
+            this.modalMessageField.innerText = this.textMessage;
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа
@@ -127,13 +132,6 @@ export class Form {
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
         });
-        // const myModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-        //     backdrop:true
-        // });
-        // const text = document.getElementById('error-message');
-        // text.innerText = message;
-        // myModal.show(myModal);
-        // return console.log(message);
     }
 
     async processForm(event) {
@@ -158,8 +156,8 @@ export class Form {
 
                     if (result) {
                         if (result.error || !result.user) {
-                            await this.showError(result.message);
-                            throw new Error(result.message);
+                            await this.showResult(result);
+                            throw new Error(result.error);
                         }
                     }
                 } catch (error) {
@@ -176,12 +174,12 @@ export class Form {
 
                 if (result) {
                     if (result.error) {
-                        await this.showError(result.message);
+                        await this.showResult(result);
                         throw new Error(result.message);
                     }
                     if (result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {
-                        await this.showError('Вход успешно выполнен!');
-                        let userFullName = result.user.name + result.user.lastName;
+                        await this.showResult(result);
+                        let userFullName = result.user.name + ' ' + result.user.lastName;
                         Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                         Auth.setUserData(result.user.id, userFullName);
                         location.href = "#/"

@@ -111,7 +111,6 @@ export class Earnings {
 
                 if (result) {
                     if (result.error || !result) {
-                        await this.showResult(result.error());
                         throw new Error();
                     }
                     await this.showResult(result);
@@ -123,11 +122,8 @@ export class Earnings {
     }
     async showResult(message) {
         return new Promise((resolve) => {
-            if (message.error) {
-                this.textMessage = message.error;
-            } else {
-                this.textMessage = "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
-            }
+            this.textMessage = message.error ? message.message :
+                "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
 
             this.modalMessageField.innerText = this.textMessage;
 

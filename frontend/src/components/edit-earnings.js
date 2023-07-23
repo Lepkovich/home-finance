@@ -51,7 +51,7 @@ export class EditEarnings {
 
             if (result) {
                 if (result.error || !result) {
-                    await this.showResult(result.error);
+                    await this.showResult(result);
                     throw new Error();
                 }
                 this.categoryField.value = result.title
@@ -83,7 +83,6 @@ export class EditEarnings {
 
                 if (result) {
                     if (result.error || !result) {
-                        await this.showResult(result.error);
                         throw new Error();
                     }
                     await this.showResult(result);
@@ -108,14 +107,10 @@ export class EditEarnings {
         }
     }
 
-    showResult(message) {
+    async showResult(message) {
         return new Promise((resolve) => {
-
-            if (message.error) {
-                this.textMessage = message.error;
-            } else {
-                this.textMessage ="Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
-            }
+            this.textMessage = message.error ? message.message :
+                "Новое название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
 
             this.modalMessageField.innerText = this.textMessage;
 

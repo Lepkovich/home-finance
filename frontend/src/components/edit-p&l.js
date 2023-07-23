@@ -228,7 +228,6 @@ export class EditPL {
 
                 if (result) {
                     if (result.error) {
-                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);

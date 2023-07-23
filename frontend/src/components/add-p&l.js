@@ -196,7 +196,6 @@ export class AddPL {
 
                 if (result) {
                     if (result.error) {
-                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);
@@ -211,11 +210,9 @@ export class AddPL {
 
     async showResult(message) {
         return new Promise((resolve) => {
-            if (message.error) {
-                this.textMessage = message.error;
-            } else {
-                this.textMessage = "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
-            }
+            this.textMessage = message.error ? message.message :
+                "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
+
 
             this.modalMessageField.innerText = this.textMessage;
 
