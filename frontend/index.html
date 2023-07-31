@@ -1,23 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title id="title">Главная</title>
-  <link href="styles/bootstrap.css" rel="stylesheet">
-  <link href="styles/sidebars.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles/bootstrap-common.css">
-  <link rel="stylesheet" href="styles/common.css">
-  <link rel="stylesheet" id="styles" href="styles/main.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="title">Главная</title>
+    <link href="styles/bootstrap.css" rel="stylesheet">
+    <link href="styles/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/bootstrap-common.css">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" id="styles" href="styles/main.css">
 </head>
 <body>
 
 <div class="d-flex flex-nowrap">
-  <div  id="sidebar"></div>
-  <div id="content"></div>
-  <div id="popup"></div>
-</div>
+    <div id="sidebar" style="display: none">
+        <div class="d-flex flex-column flex-shrink-0 bg-body sidebar">
+            <a href="#/"
+               class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <img class="logo" src="static/images/logo.png" alt="логотип">
+            </a>
+            <hr>
+            <div class="d-flex flex-column flex-shrink-0 p-3 mb-auto menu">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item" id="main">
+                        <a href="#/" class="nav-link link-body-emphasis">
+                            <img src="static/images/home-icon-dark.png" alt="Главная" style="vertical-align: inherit;">
+                            Главная
+                        </a>
+                    </li>
 
+                    <li class="nav-item" id="p&l">
+                        <a href="#/p&l" class="nav-link link-body-emphasis">
+                            <img src="static/images/p&l-icon.png" alt="Доходы и расходы">
+                            Доходы & Расходы
+                        </a>
+                    </li>
+                    <li class="nav-item" id="categories-menu">
+                        <a href="#/earnings" class="nav-link arrow link-body-emphasis">
+                            Категории
+                        </a>
+                    </li>
+                    <ul class="nav flex-column mb-auto sub-menu" style="display: none">
+                        <li class="nav-item">
+                            <a href="#/earnings" class="nav-link">
+                                Доходы
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#/expenses" class="nav-link expenses">
+                                Расходы
+                            </a>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+            <div class="nav-link" id="balance">
+                <strong>Баланс:</strong> <span id="balance-value">400$</span>
+            </div>
+            <hr>
+            <div class="dropdown p-3 nav-link link-body-emphasis">
+                <div id="user-info" class="dropup">
+                    <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="static/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
+                             class="rounded-circle me-4">
+                        <span class="text-truncate" id="userFullName">RomanChernov</span>
+
+                    </a>
+                    <ul class="dropdown-menu shadow">
+                        <li><a href="#/logout" class="dropdown-item link-body-emphasis">Выйти</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content"></div>
+    <div id="popup"></div>
+</div>
 
 
 <script src="scripts/bootstrap.bundle.min.js"></script>

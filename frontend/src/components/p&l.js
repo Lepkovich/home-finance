@@ -1,6 +1,7 @@
 import {ShowUserBalance} from "../services/show-user-balance.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import {Sidebar} from "./sidebar.js";
 
 export class PL {
     constructor() {
@@ -27,13 +28,13 @@ export class PL {
 
 
         // обрабатываем кнопку меню на sidebar
-        const homeMenuItem = document.getElementById("p&l");
-        homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        homeMenuItem.querySelector("a.nav-link").classList.add("active");
-
-        homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        const iconElement = homeMenuItem.querySelector("img");
-        iconElement.src = "static/images/p&l-icon-white.png";
+        // const homeMenuItem = document.getElementById("p&l");
+        // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        // homeMenuItem.querySelector("a.nav-link").classList.add("active");
+        //
+        // homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
+        // const iconElement = homeMenuItem.querySelector("img");
+        // iconElement.src = "static/images/p&l-icon-white.png";
 
         // const navLinks = document.querySelectorAll(".nav-link");
         // navLinks.forEach(link => {
@@ -47,7 +48,8 @@ export class PL {
     }
 
     async dataInit(){
-        await ShowUserBalance.init();
+        // await ShowUserBalance.init();
+        await Sidebar.showSidebar('p&l');
         await this.processForm();
     }
     async getTable(period) {

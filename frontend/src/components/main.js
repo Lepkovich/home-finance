@@ -1,6 +1,7 @@
 import {ShowUserBalance} from "../services/show-user-balance.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import {Sidebar} from "./sidebar.js";
 
 export class Main{
 
@@ -10,6 +11,7 @@ export class Main{
         this.emptyText = document.getElementById('emptyText');
         this.charts = document.getElementById('charts');
         this.sidebar = document.getElementById('sidebar');
+        this.sidebar.style.display = 'flex';
 
         this.todayButton = null;
         this.weekButton = null;
@@ -21,20 +23,22 @@ export class Main{
         this.periodTo = null;
 
         // обрабатываем кнопку меню на sidebar
-        const homeMenuItem = document.getElementById("main");
-        homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        homeMenuItem.querySelector("a.nav-link").classList.add("active");
-
-        homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        const iconElement = homeMenuItem.querySelector("img");
-        iconElement.src = "static/images/home-icon.png";
+        // const homeMenuItem = document.getElementById("main");
+        // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        // homeMenuItem.querySelector("a.nav-link").classList.add("active");
+        //
+        // homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
+        // const iconElement = homeMenuItem.querySelector("img");
+        // iconElement.src = "static/images/home-icon.png";
 
 
         this.dataInit();
     }
 
     async dataInit(){
-        await ShowUserBalance.init();
+        // await ShowUserBalance.init()
+
+        await Sidebar.showSidebar('main');
         await this.processForm();
     }
 
