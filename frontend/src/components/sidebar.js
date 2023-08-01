@@ -1,5 +1,6 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
+import {icons} from "http-server/lib/core/show-dir/styles";
 
 export class Sidebar {
     constructor() {
@@ -25,31 +26,21 @@ export class Sidebar {
         }
 
         // обрабатываем кнопки меню на sidebar
-        this.previousActiveMenuItem = document.querySelector('.menu .nav-link.active');
-        // тут ошибка
-        this.previousActiveMenuItem.querySelector(".menu .nav-link").classList.remove("active");
-        this.previousActiveMenuItem.querySelector(".menu .nav-link").classList.add("link-body-emphasis");
+        this.previousActiveMenuItem = document.querySelector('.nav-link.active');
+        document.querySelector('.sub-menu').style.display = 'none';
+        this.previousActiveMenuItem.classList.remove("active");
+        console.log('Предыдущий элемент: ' + this.previousActiveMenuItem);
 
 
         this.selectedMenuItem = document.getElementById(newActiveMenuItem);
-        // this.mainMenuItem = document.getElementById("main");
-        // this.plMenuItem = document.getElementById("pl");
-        // this.categoriesMenuItem = document.getElementById("categories-menu");
+        console.log('Текущий элемент: ' + this.previousActiveMenuItem);
 
-        this.selectedMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        this.selectedMenuItem.querySelector("a.nav-link").classList.add("active");
+
+        this.selectedMenuItem.classList.add("active");
         // this.selectedMenuItem.querySelector("a.nav-link").removeAttribute("href");
 
 
 
-        // кнопка для p&l
-        // const homeMenuItem = document.getElementById("pl");
-        // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // homeMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        // homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        // const iconElement = homeMenuItem.querySelector("img");
-        // iconElement.src = "static/images/p&l-icon-white.png";
 
     }
 }

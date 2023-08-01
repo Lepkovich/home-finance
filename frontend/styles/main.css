@@ -14,6 +14,13 @@
 }
 .nav-link {
     font-size: 14px;
+    color: #052C65;
+}
+.menu .nav-link {
+    color: #052C65;
+}
+.sub-menu .nav-link {
+    color: #0D6EFD;
 }
 
 #main .nav-link, #pl  .nav-link  {
@@ -46,6 +53,9 @@
     background-image: url('../static/images/p&l-icon-white.png');
 }
 
+.nav-item .nav-link.active {
+    border-radius: 0;
+}
 
 
 .arrow::after {
@@ -67,11 +77,7 @@
     border-bottom-right-radius: 0;
 }
 
-.nav-item .sub-menu-active {
-    background-color: #0D6EFD;
-    color: white;
-    border-radius: 0;
-}
+
 
 
 #balance {
