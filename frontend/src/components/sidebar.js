@@ -4,7 +4,7 @@ import config from "../../config/config.js";
 export class Sidebar {
     constructor() {
     }
-    static async showSidebar(activeMenuItem){
+    static async showSidebar(newActiveMenuItem){
         //получаем баланс и имя пользователя
         let balanceValue = document.getElementById('balance-value');
         let userFullName = document.getElementById('userFullName');
@@ -25,18 +25,25 @@ export class Sidebar {
         }
 
         // обрабатываем кнопки меню на sidebar
-        this.selectedMenuItem = document.getElementById(activeMenuItem);
+        this.previousActiveMenuItem = document.querySelector('.menu .nav-link.active');
+        // тут ошибка
+        this.previousActiveMenuItem.querySelector(".menu .nav-link").classList.remove("active");
+        this.previousActiveMenuItem.querySelector(".menu .nav-link").classList.add("link-body-emphasis");
+
+
+        this.selectedMenuItem = document.getElementById(newActiveMenuItem);
         // this.mainMenuItem = document.getElementById("main");
-        // this.plMenuItem = document.getElementById("p&l");
+        // this.plMenuItem = document.getElementById("pl");
         // this.categoriesMenuItem = document.getElementById("categories-menu");
 
         this.selectedMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
         this.selectedMenuItem.querySelector("a.nav-link").classList.add("active");
-        this.selectedMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        this.selectedMenuItem.querySelector("img").src = "static/images/home-icon.png";
+        // this.selectedMenuItem.querySelector("a.nav-link").removeAttribute("href");
+
+
 
         // кнопка для p&l
-        // const homeMenuItem = document.getElementById("p&l");
+        // const homeMenuItem = document.getElementById("pl");
         // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
         // homeMenuItem.querySelector("a.nav-link").classList.add("active");
         //

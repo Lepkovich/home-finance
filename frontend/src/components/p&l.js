@@ -28,7 +28,7 @@ export class PL {
 
 
         // обрабатываем кнопку меню на sidebar
-        // const homeMenuItem = document.getElementById("p&l");
+        // const homeMenuItem = document.getElementById("pl");
         // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
         // homeMenuItem.querySelector("a.nav-link").classList.add("active");
         //
@@ -49,7 +49,7 @@ export class PL {
 
     async dataInit(){
         // await ShowUserBalance.init();
-        await Sidebar.showSidebar('p&l');
+        await Sidebar.showSidebar('pl');
         await this.processForm();
     }
     async getTable(period) {
