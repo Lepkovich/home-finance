@@ -1,66 +1,28 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Sidebar} from "./sidebar.js";
+import { ShowButtons } from '../services/show-buttons.js'
 
-export class Main{
+export class Main extends ShowButtons{
 
     constructor() {
+        super();
         this.earningsChart = document.getElementById('earnings-chart');
         this.expensesChart = document.getElementById('expenses-chart');
         this.emptyText = document.getElementById('emptyText');
         this.charts = document.getElementById('charts');
-        this.sidebar = document.getElementById('sidebar');
-        this.sidebar.style.display = 'flex';
 
-        this.todayButton = null;
-        this.weekButton = null;
-        this.monthButton = null;
-        this.yearButton = null;
-        this.allButton = null;
-        this.periodButton = null;
-        this.periodFrom = null;
-        this.periodTo = null;
-
-        this.processForm();
+        this.dataInit();
     }
-    async processForm() {
+    async dataInit(){
         await Sidebar.showSidebar('main');
+        this.processButtons();
 
-        const buttons = document.querySelectorAll('.medium'); //выберем все кнопки
-
-        let activeButton = null;
-        // меняем оформление активных и неактивных кнопок
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (activeButton !== null) {
-                    activeButton.classList.remove('btn-secondary');
-                    activeButton.classList.add('btn-outline-secondary');
-                }
-                button.classList.add('btn-secondary');
-                button.classList.remove('btn-outline-secondary');
-                activeButton = button;
-            });
-        });
-
-        this.todayButton = document.getElementById('today');
         this.todayButton.onclick = this.getTable.bind(this, 'today');
-
-        this.weekButton = document.getElementById('week');
         this.weekButton.onclick = this.getTable.bind(this, 'week');
-
-        this.monthButton = document.getElementById('month');
         this.monthButton.onclick = this.getTable.bind(this, 'month');
-
-        this.yearButton = document.getElementById('year');
         this.yearButton.onclick = this.getTable.bind(this, 'year');
-
-        this.allButton = document.getElementById('all');
         this.allButton.onclick = this.getTable.bind(this, 'all');
-
-        this.periodFrom = document.getElementById('periodFrom');
-        this.periodTo = document.getElementById('periodTo');
-
-        this.periodButton = document.getElementById('period');
         this.periodButton.onclick = () => {
             const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
             this.getTable(queryString);
@@ -78,7 +40,8 @@ export class Main{
 
             if (operations) {
                 if (operations.error || !operations) {
-                    throw new Error();
+                    await this.showResult(operations.message);
+                    throw new Error(operations.message);
                 }
             }
 
@@ -92,7 +55,8 @@ export class Main{
 
             if (income) {
                 if (income.error || !income) {
-                    throw new Error();
+                    await this.showResult(income.message);
+                    throw new Error(income.message);
                 }
             }
 
@@ -106,7 +70,8 @@ export class Main{
 
             if (expenses) {
                 if (expenses.error || !expenses) {
-                    throw new Error();
+                    await this.showResult(expenses.message)
+                    throw new Error(expenses.message);
                 }
             }
 
@@ -122,7 +87,6 @@ export class Main{
         if (operations.length === 0) {
             this.charts.style.display = 'none';
             this.emptyText.style.display = 'flex';
-            this.sidebar.style.height = '100vh';
         } else {
             this.charts.style.display = 'flex';
             this.emptyText.style.display = 'none';
@@ -205,12 +169,25 @@ export class Main{
                 },
             });
 
-            // попытка увеличить высоту sidebar посли отрисовки диаграмм
-            this.sidebar.style.height = '100vh';
 
             // Сохраняем ссылки на объекты графиков
             this.earningsChart.chart = earningsChart;
             this.expensesChart.chart = expensesChart;
         }
+    };
+    async showResult(message) {
+        return new Promise((resolve) => {
+            this.textMessage = message.error ? message.message :
+                "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            this.modalMessageField.innerText = this.textMessage;
+
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     };
 }
