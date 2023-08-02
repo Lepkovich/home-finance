@@ -1,4 +1,3 @@
-import {ShowUserBalance} from "../services/show-user-balance.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {ShowCategories} from "../services/show-categories.js";
@@ -35,7 +34,6 @@ export class Earnings {
     }
 
     async dataInit(){
-        // await ShowUserBalance.init();
         await Sidebar.showSidebar('earnings');
         await this.getCategories();
     }

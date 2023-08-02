@@ -1,4 +1,3 @@
-import {ShowUserBalance} from "../services/show-user-balance.js";
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Sidebar} from "./sidebar.js";
@@ -48,7 +47,6 @@ export class PL {
     }
 
     async dataInit(){
-        // await ShowUserBalance.init();
         await Sidebar.showSidebar('pl');
         await this.processForm();
     }

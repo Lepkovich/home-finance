@@ -1,6 +1,6 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
-import {ShowUserBalance} from "../services/show-user-balance.js";
+import {Sidebar} from "./sidebar.js";
 
 export class EditPL {
     constructor() {
@@ -67,24 +67,24 @@ export class EditPL {
 
 
         // обрабатываем кнопку меню на sidebar
-        this.categoriesMenuItem = document.getElementById("categories-menu");
-        this.subMenu = document.querySelector(".sub-menu");
-
-        this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-
-
-        this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-
-        this.subMenu.style.display = "block";
-        this.subMenuLink = this.subMenu.querySelector(".nav-link");
-        this.expensesMenuLink = this.subMenu.querySelector(".expenses");
+        // this.categoriesMenuItem = document.getElementById("categories-menu");
+        // this.subMenu = document.querySelector(".sub-menu");
+        //
+        // this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
+        // this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
+        //
+        //
+        // this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
+        //
+        // this.subMenu.style.display = "block";
+        // this.subMenuLink = this.subMenu.querySelector(".nav-link");
+        // this.expensesMenuLink = this.subMenu.querySelector(".expenses");
 
         this.dataInit();
     }
 
     async dataInit(){
-        await ShowUserBalance.init();
+        await Sidebar.showSidebar('pl');
         await this.init();
     }
 

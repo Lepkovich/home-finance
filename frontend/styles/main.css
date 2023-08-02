@@ -23,38 +23,49 @@
     color: #0D6EFD;
 }
 
-#main .nav-link, #pl  .nav-link  {
+#main.nav-link, #pl.nav-link  {
     padding-left: 30px;
     background-repeat: no-repeat;
 }
 
-#main .nav-link {
+#main.nav-link {
     background-position: 10px 14px;
     background-size: 15px;
 }
 
-#pl  .nav-link {
+#pl.nav-link {
     background-position: 10px center;
     background-size: 16px;
 }
 
-#main .nav-link {
+#main.nav-link {
     background-image: url('../static/images/home-icon-dark.png');
 }
 
-#main .nav-link.active {
+#main.nav-link.active {
     background-image: url('../static/images/home-icon.png');
 }
-#pl .nav-link {
+#pl.nav-link {
     background-image: url('../static/images/p&l-icon.png');
 }
 
-#pl .nav-link.active {
+#pl.nav-link.active {
     background-image: url('../static/images/p&l-icon-white.png');
 }
 
-.nav-item .nav-link.active {
+#earnings.nav-link {
     border-radius: 0;
+}
+#expenses.nav-link.active {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.nav-link.arrow.open {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: white;
+    background-color: #0D6EFD;
 }
 
 
@@ -64,7 +75,7 @@
     vertical-align: middle;
     content: url(../static/images/arrow.png);
 }
-.active.arrow::after {
+.open.arrow::after {
     content: url(../static/images/arrow-down.png);
 
 }
@@ -72,13 +83,10 @@
     border: 1px solid #0D6EFD;
     border-radius: 0 0 5px 5px;
 }
-.nav-pills .nav-link.active.arrow {
+.nav-pills .nav-link.open.arrow {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
-
-
-
 
 #balance {
     padding-left: 20px;
