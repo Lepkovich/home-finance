@@ -156,8 +156,8 @@ export class Form {
 
                     if (result) {
                         if (result.error || !result.user) {
-                            await this.showResult(result);
-                            throw new Error(result.error);
+                            await this.showResult(result.message);
+                            throw new Error(result.message);
                         }
                     }
                 } catch (error) {
@@ -174,7 +174,7 @@ export class Form {
 
                 if (result) {
                     if (result.error) {
-                        await this.showResult(result);
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     if (result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {

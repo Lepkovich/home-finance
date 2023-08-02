@@ -65,40 +65,21 @@ export class AddPL {
         }
         this.processElement.addEventListener('click', this.processForm.bind(this));
 
-        // обрабатываем кнопку меню на sidebar
-        // this.categoriesMenuItem = document.getElementById("categories-menu");
-        // this.subMenu = document.querySelector(".sub-menu");
-        //
-        // this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        //
-        // this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        //
-        // this.subMenu.style.display = "block";
-        // this.subMenuLink = this.subMenu.querySelector(".nav-link");
-        // this.expensesMenuLink = this.subMenu.querySelector(".expenses");
 
 
-        this.dataInit();
-    }
-
-    async dataInit(){
-        await Sidebar.showSidebar('pl');
-        await this.init();
+        this.init();
     }
 
     async init() {
         if (this.type === 'income') {
+            await Sidebar.showSidebar('earnings');
             this.typeValue = 'Доход';
-            this.subMenuLink.removeAttribute("href");
-            this.subMenuLink.classList.add("sub-menu-active");
             try {
                 const result = await CustomHttp.request(config.host + '/categories/income')
 
                 if (result) {
                     if (result.error) {
-                        this.showError(result.message);
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     this.showCategories(result);
@@ -109,14 +90,13 @@ export class AddPL {
 
         } else {
             this.typeValue = 'Расход';
-            this.expensesMenuLink.removeAttribute("href");
-            this.expensesMenuLink.classList.add("sub-menu-active");
+            await Sidebar.showSidebar('expenses');
             try {
                 const result = await CustomHttp.request(config.host + '/categories/expense')
 
                 if (result) {
                     if (result.error) {
-                        await this.showError(result.message);
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     this.showCategories(result);
@@ -196,6 +176,7 @@ export class AddPL {
 
                 if (result) {
                     if (result.error) {
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);

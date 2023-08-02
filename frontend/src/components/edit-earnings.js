@@ -20,32 +20,12 @@ export class EditEarnings {
             this.validateField(this.categoryField.value);
         })
 
-        // обрабатываем кнопку меню на sidebar
-        // const categoriesMenuItem = document.getElementById("categories-menu");
-        // const subMenu = document.querySelector(".sub-menu");
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        //
-        // subMenu.style.display = "block";
-        // const subMenuLink = subMenu.querySelector(".nav-link");
-        // subMenuLink.removeAttribute("href");
-        // subMenuLink.classList.add("sub-menu-active");
-
-        const that = this;
-
-        this.dataInit(that);
-    }
-
-    async dataInit(field){
-        await Sidebar.showSidebar('earnings');
-        await this.init(field);
+        this.init(this);
     }
 
     async init(field) {
+        await Sidebar.showSidebar('earnings');
+
         try {
             const result = await CustomHttp.request(config.host + '/categories/income/' + this.id, 'GET',)
 
@@ -83,6 +63,7 @@ export class EditEarnings {
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.message);
                         throw new Error();
                     }
                     await this.showResult(result);

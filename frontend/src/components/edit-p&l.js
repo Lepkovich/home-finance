@@ -66,26 +66,7 @@ export class EditPL {
         this.processElement.addEventListener('click', this.processForm.bind(this));
 
 
-        // обрабатываем кнопку меню на sidebar
-        // this.categoriesMenuItem = document.getElementById("categories-menu");
-        // this.subMenu = document.querySelector(".sub-menu");
-        //
-        // this.categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // this.categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        //
-        // this.categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        //
-        // this.subMenu.style.display = "block";
-        // this.subMenuLink = this.subMenu.querySelector(".nav-link");
-        // this.expensesMenuLink = this.subMenu.querySelector(".expenses");
-
-        this.dataInit();
-    }
-
-    async dataInit(){
-        await Sidebar.showSidebar('pl');
-        await this.init();
+        this.init();
     }
 
     async init() {
@@ -95,7 +76,7 @@ export class EditPL {
 
             if (result) {
                 if (result.error) {
-                    this.showError(result.message);
+                    await this.showResult(result.message);
                     throw new Error(result.message);
                 }
                 await this.fillFields(result);
@@ -109,16 +90,14 @@ export class EditPL {
         try {
             if (fields.type === 'income') {
                 this.typeValue = 'income';
-                this.subMenuLink.removeAttribute("href");
-                this.subMenuLink.classList.add("sub-menu-active");
+                await Sidebar.showSidebar('earnings');
                 const result = await CustomHttp.request(config.host + '/categories/income');
                 if (result && !result.error) {
                     this.showCategories(result);
                 }
             } else {
                 this.typeValue = 'expense';
-                this.expensesMenuLink.removeAttribute("href");
-                this.expensesMenuLink.classList.add("sub-menu-active");
+                await Sidebar.showSidebar('expenses');
                 const result = await CustomHttp.request(config.host + '/categories/expense');
                 if (result && !result.error) {
                     this.showCategories(result);
@@ -206,7 +185,7 @@ export class EditPL {
             //     "type": "expense",
             //     "amount": 150,
             //     "date": "2022-02-02",
-            //     "comment": "wtf",
+            //     "comment": "any",
             //     "category_id": 3
 
 
@@ -228,6 +207,7 @@ export class EditPL {
 
                 if (result) {
                     if (result.error) {
+                        await this.showResult(result.message);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);

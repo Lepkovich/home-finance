@@ -25,24 +25,6 @@ export class PL {
         this.periodFrom = null;
         this.periodTo = null;
 
-
-        // обрабатываем кнопку меню на sidebar
-        // const homeMenuItem = document.getElementById("pl");
-        // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // homeMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        // homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        // const iconElement = homeMenuItem.querySelector("img");
-        // iconElement.src = "static/images/p&l-icon-white.png";
-
-        // const navLinks = document.querySelectorAll(".nav-link");
-        // navLinks.forEach(link => {
-        //     link.classList.remove("active");
-        //     link.classList.add("link-body-emphasis");
-        // });
-        // navLinks[1].classList.add("active");
-        // navLinks[1].classList.remove("link-body-emphasis");
-
         this.dataInit();
     }
 
@@ -112,9 +94,7 @@ export class PL {
 
         this.periodButton = document.getElementById('period');
         this.periodButton.onclick = () => {
-
             const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
-
             this.getTable(queryString);
         };
     }

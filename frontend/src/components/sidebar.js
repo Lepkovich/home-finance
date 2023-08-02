@@ -27,14 +27,12 @@ export class Sidebar {
 
         // обрабатываем кнопки меню на sidebar
         this.previousActiveMenuItem = document.querySelector('.active');
-        console.log(this.previousActiveMenuItem);
         this.previousActiveMenuItem.classList.remove("active");
         this.categoriesElement = document.getElementById('categories');
         this.categoriesSubmenu = document.querySelector('.sub-menu');
 
 
         this.selectedMenuItem = document.getElementById(newActiveMenuItem);
-        console.log(this.selectedMenuItem);
         this.selectedMenuItem.classList.add("active");
         if (newActiveMenuItem === 'pl' || newActiveMenuItem === 'main') {
             this.categoriesSubmenu.style.display = 'none';
@@ -44,12 +42,5 @@ export class Sidebar {
             this.categoriesSubmenu.style.display = 'block';
             this.categoriesElement.classList.add('open');
         }
-
-
-        // this.selectedMenuItem.querySelector("a.nav-link").removeAttribute("href");
-
-
-
-
     }
 }

@@ -26,31 +26,12 @@ export class AddExpenses {
             await this.init(this.categoryField.value);
         }
 
-        // обрабатываем кнопку меню на sidebar
-        // const categoriesMenuItem = document.getElementById("categories-menu");
-        // const subMenu = document.querySelector(".sub-menu");
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        //
-        // subMenu.style.display = "block";
-        // const subMenuLink = subMenu.querySelector(".expenses");
-        // subMenuLink.removeAttribute("href");
-        // subMenuLink.classList.add("sub-menu-active");
 
-        this.dataInit();
-    }
-
-    async dataInit(){
-        // await ShowUserBalance.init();
-        await Sidebar.showSidebar('expenses');
-
+        this.init();
     }
 
     async init(title) {
+        await Sidebar.showSidebar('expenses');
         if(title){
             try {
                 const result = await CustomHttp.request(config.host + '/categories/expense/', 'POST',{
@@ -59,6 +40,7 @@ export class AddExpenses {
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.message)
                         throw new Error();
                     }
                     await this.showResult(result);

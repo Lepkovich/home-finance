@@ -15,36 +15,19 @@ export class Earnings {
         this.textMessage = null;
 
 
-        // обрабатываем кнопку меню на sidebar
-        // const categoriesMenuItem = document.getElementById("categories-menu");
-        // const subMenu = document.querySelector(".sub-menu");
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // categoriesMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        //
-        // categoriesMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        //
-        // subMenu.style.display = "block";
-        // const subMenuLink = subMenu.querySelector(".nav-link");
-        // subMenuLink.removeAttribute("href");
-        // subMenuLink.classList.add("sub-menu-active");
-
-        this.dataInit();
-    }
-
-    async dataInit(){
-        await Sidebar.showSidebar('earnings');
-        await this.getCategories();
+        this.getCategories();
     }
 
     async getCategories() {
+        await Sidebar.showSidebar('earnings');
+
         try {
             const result = await CustomHttp.request(config.host + '/categories/income', 'GET',)
 
             if (result) {
                 if (result.error || !result) {
-                    throw new Error();
+                    await this.showResult(result.message)
+                    throw new Error(result.message);
                 }
                 await ShowCategories.init(result); //отрисуем карточки категорий
                 await this.processCategories();
@@ -111,7 +94,8 @@ export class Earnings {
 
                 if (result) {
                     if (result.error || !result) {
-                        throw new Error();
+                        await this.showResult(result.message)
+                        throw new Error(result.message);
                     }
                     await this.showResult(result);
                 }

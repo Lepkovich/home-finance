@@ -21,29 +21,13 @@ export class Main{
         this.periodFrom = null;
         this.periodTo = null;
 
-        // обрабатываем кнопку меню на sidebar
-        // const homeMenuItem = document.getElementById("main");
-        // homeMenuItem.querySelector("a.nav-link").classList.remove("link-body-emphasis");
-        // homeMenuItem.querySelector("a.nav-link").classList.add("active");
-        //
-        // homeMenuItem.querySelector("a.nav-link").removeAttribute("href");
-        // const iconElement = homeMenuItem.querySelector("img");
-        // iconElement.src = "static/images/home-icon.png";
-
-
-        this.dataInit();
+        this.processForm();
     }
-
-    async dataInit(){
-
-        await Sidebar.showSidebar('main');
-        await this.processForm();
-    }
-
-
     async processForm() {
+        await Sidebar.showSidebar('main');
 
         const buttons = document.querySelectorAll('.medium'); //выберем все кнопки
+
         let activeButton = null;
         // меняем оформление активных и неактивных кнопок
         buttons.forEach(button => {
