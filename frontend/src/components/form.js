@@ -120,7 +120,9 @@ export class Form {
 
     async showResult(message){
         return new Promise((resolve) => {
-
+            console.log(message.message);
+            console.log(message.error);
+            console.log(message);
             this.textMessage = message.error ? message.message :
                 "Вход под именем " + message.user.name + " успешно выполнен";
 
