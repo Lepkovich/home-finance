@@ -118,24 +118,6 @@ export class Form {
         return validForm;
     };
 
-    async showResult(message){
-        return new Promise((resolve) => {
-            console.log(message.message);
-            console.log(message.error);
-            console.log(message);
-            this.textMessage = message.error ? message.message :
-                "Вход под именем " + message.user.name + " успешно выполнен";
-
-            this.modalMessageField.innerText = this.textMessage;
-            this.resultModal.show();
-
-            // Обработчик события при закрытии попапа
-            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
-                resolve(); // Разрешаем обещание при закрытии попапа
-            });
-        });
-    }
-
     async processForm(event) {
         event.preventDefault();
         if (this.validateForm()) {
@@ -158,7 +140,7 @@ export class Form {
 
                     if (result) {
                         if (result.error || !result.user) {
-                            await this.showResult(result.message);
+                            await this.showResult(result);
                             throw new Error(result.message);
                         }
                     }
@@ -176,11 +158,13 @@ export class Form {
 
                 if (result) {
                     if (result.error) {
-                        await this.showResult(result.message);
+                        await this.showResult(result); //вот тут мы не видим модальное окно
                         throw new Error(result.message);
                     }
-                    if (result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {
+
+                    if (!result.error && result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {
                         await this.showResult(result);
+
                         let userFullName = result.user.name + ' ' + result.user.lastName;
                         Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                         Auth.setUserData(result.user.id, userFullName);
@@ -189,8 +173,23 @@ export class Form {
                 }
 
             } catch (error) {
-                console.log(error);
+               console.log(error);
             }
         }
+    }
+    async showResult(message){
+        return new Promise((resolve) => {
+
+            this.textMessage = message.error ? message.message :
+                "Вход под именем " + message.user.name + " успешно выполнен";
+
+            this.modalMessageField.innerText = this.textMessage;
+            this.resultModal.show();
+
+            // Обработчик события при закрытии попапа
+            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                resolve(); // Разрешаем обещание при закрытии попапа
+            });
+        });
     }
 }
