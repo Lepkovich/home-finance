@@ -1,7 +1,7 @@
-import {CustomHttp} from "../services/custom-http.js";
-import config from "../../config/config.js";
-import {Sidebar} from "./sidebar.js";
-import {ShowButtons} from "../services/show-buttons.js";
+import {CustomHttp} from "../services/custom-http.ts";
+import config from "../../config/config";
+import {Sidebar} from "./sidebar";
+import {ShowButtons} from "../services/show-buttons.ts";
 
 export class PL extends ShowButtons{
     constructor() {

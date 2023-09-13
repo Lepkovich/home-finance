@@ -1,18 +1,32 @@
-import {Form} from "./components/form.js";
-import {Main} from "./components/main.js";
-import {PL} from "./components/p&l.js";
-import {Auth} from "./services/auth.js";
-import {AddPL} from "./components/add-p&l.js";
-import {EditPL} from "./components/edit-p&l.js";
-import {Earnings} from "./components/earnings.js";
-import {Expenses} from "./components/expenses.js";
-import {EditExpenses} from "./components/edit-expenses.js";
-import {EditEarnings} from "./components/edit-earnings.js";
-import {AddEarnings} from "./components/add-earnings.js";
-import {AddExpenses} from "./components/add-expenses.js";
+import {Form} from "./components/form";
+import {Main} from "./components/main";
+import {PL} from "./components/p&l";
+import {Auth} from "./services/auth";
+import {AddPL} from "./components/add-p&l";
+import {EditPL} from "./components/edit-p&l";
+import {Earnings} from "./components/earnings";
+import {Expenses} from "./components/expenses";
+import {EditExpenses} from "./components/edit-expenses";
+import {EditEarnings} from "./components/edit-earnings";
+import {AddEarnings} from "./components/add-earnings";
+import {AddExpenses} from "./components/add-expenses";
+import {RouteType} from "./types/route.type";
 
 export class Router {
+
+    readonly sidebarElement: HTMLElement;
+    readonly contentElement: HTMLElement;
+    readonly popupElement: HTMLElement;
+    readonly stylesElement: HTMLElement;
+    readonly titleElement: HTMLElement;
+    private routes: RouteType[];
     constructor() {
+        this.sidebarElement = document.getElementById('sidebar') as HTMLElement;
+        this.contentElement = document.getElementById('content') as HTMLElement;
+        this.popupElement = document.getElementById('popup') as HTMLElement;
+        this.stylesElement = document.getElementById('styles') as HTMLElement;
+        this.titleElement = document.getElementById('title') as HTMLElement;
+
         this.routes = [
             {
                 route: '#/',
@@ -126,40 +140,39 @@ export class Router {
         ]
     }
 
-    async openRoute(){
-        const urlRoute =  window.location.hash.split('?')[0];//split разделит адресную строку до ?, а [0] возьмет первую часть
+    public async openRoute(): Promise<void> {
+        const urlRoute: string =  window.location.hash.split('?')[0];//split разделит адресную строку до ?, а [0] возьмет первую часть
         if (urlRoute === '#/logout') {
-            await Auth.logOut();
-            window.location.href = '#/login';
-            return;
+            const result: boolean =  await Auth.logOut();
+            if (result) {
+                window.location.href = '#/login';
+                return;
+            }
+
         }
 
-
-
-        const newRoute = this.routes.find(item => {
+        const newRoute: RouteType | undefined = this.routes.find(item => {
             return item.route === urlRoute;
         });
         if(!newRoute) {
             window.location.href = '#/login';
             return;
         } else if (urlRoute === '#/login' || urlRoute === '#/signup') {
-            document.getElementById('sidebar').style.display = 'none';
-            const content = document.getElementById('content');
-            content.style.display = 'contents';
-            content.innerHTML = await fetch(newRoute.template).then(response => response.text());
-            document.getElementById('popup').innerHTML = await fetch('templates/modal.html').then(response => response.text());
-            document.getElementById('styles').setAttribute('href', newRoute.styles);
-            document.getElementById('title').innerText = newRoute.title;
+            this.sidebarElement.style.display = 'none';
+            this.contentElement.style.display = 'contents';
+            this.contentElement.innerHTML = await fetch(newRoute.template).then(response => response.text());
+            this.popupElement.innerHTML = await fetch('templates/modal.html').then(response => response.text());
+            this.stylesElement.setAttribute('href', newRoute.styles);
+            this.titleElement.innerText = newRoute.title;
             newRoute.load();
             return;
         }
 
 
-        // document.getElementById('sidebar').innerHTML = await fetch('templates/sidebar.html').then(response => response.text());
-        document.getElementById('popup').innerHTML = await fetch('templates/modal.html').then(response => response.text());
-        document.getElementById('content').innerHTML = await fetch(newRoute.template).then(response => response.text());
-        document.getElementById('styles').setAttribute('href', newRoute.styles);
-        document.getElementById('title').innerText = newRoute.title;
+        this.popupElement.innerHTML = await fetch('templates/modal.html').then(response => response.text());
+        this.contentElement.innerHTML = await fetch(newRoute.template).then(response => response.text());
+        this.stylesElement.setAttribute('href', newRoute.styles);
+        this.titleElement.innerText = newRoute.title;
         newRoute.load();
     }
 }

@@ -1,9 +1,9 @@
-import {CustomHttp} from "../services/custom-http.js";
-import config from "../../config/config.js";
-import {ShowCategories} from "../services/show-categories.js";
-import {Sidebar} from "./sidebar.js";
+import {CustomHttp} from "../services/custom-http.ts";
+import config from "../../config/config";
+import {ShowCategories} from "../services/show-categories.ts";
+import {Sidebar} from "./sidebar";
 
-export class Earnings {
+export class Expenses {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
@@ -14,19 +14,19 @@ export class Earnings {
         this.modalMessageField = document.getElementById('textModal-message');
         this.textMessage = null;
 
-
         this.getCategories();
+
     }
 
     async getCategories() {
-        await Sidebar.showSidebar('earnings');
+        await Sidebar.showSidebar('expenses');
 
         try {
-            const result = await CustomHttp.request(config.host + '/categories/income', 'GET',)
+            const result = await CustomHttp.request(config.host + '/categories/expense', 'GET',)
 
             if (result) {
                 if (result.error || !result) {
-                    await this.showResult(result.message)
+                    await this.showResult(result.message);
                     throw new Error(result.message);
                 }
                 await ShowCategories.init(result); //отрисуем карточки категорий
@@ -38,6 +38,7 @@ export class Earnings {
         }
     };
 
+
     async processCategories() {
 
         this.editCategoryButtons = document.querySelectorAll('[id^="edit-"]');
@@ -45,17 +46,16 @@ export class Earnings {
         this.addCategoryButton = document.getElementById('add-category');
 
         this.addCategoryButton.onclick = () => {
-            location.href = "#/add-earnings"
+            location.href = "#/add-expenses";
         };
 
         this.editCategoryButtons.forEach((element) => {
             element.addEventListener("click", () => {
                 const id = element.id;
                 const number = parseInt(id.split('-')[1]);
-                location.href = '#/edit-earnings?=' + number
+                location.href = '#/edit-expenses?=' + number
             });
         });
-
         for (const element of this.deleteCategoryButtons) {
             element.addEventListener("click", async () => {
                 const id = element.id;
@@ -65,7 +65,6 @@ export class Earnings {
             });
         }
     }
-
     async confirmDeleting(categoryId) {
         return new Promise((resolve) => {
             const deleteButton = document.getElementById('delete');
@@ -90,12 +89,11 @@ export class Earnings {
     async deleteCategory(categoryId){
         if(categoryId){
             try {
-                const result = await CustomHttp.request(config.host + '/categories/income/' + categoryId, 'DELETE',)
+                const result = await CustomHttp.request(config.host + '/categories/expense/' + categoryId, 'DELETE',)
 
                 if (result) {
                     if (result.error || !result) {
-                        await this.showResult(result.message)
-                        throw new Error(result.message);
+                        throw new Error();
                     }
                     await this.showResult(result);
                 }

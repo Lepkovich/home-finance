@@ -1,6 +1,6 @@
-import {CustomHttp} from "../services/custom-http.js";
-import {Auth} from "../services/auth.js";
-import config from "../../config/config.js";
+import {CustomHttp} from "../services/custom-http.ts";
+import {Auth} from "../services/auth.ts";
+import config from "../../config/config";
 
 export class Form {
     constructor(page) {

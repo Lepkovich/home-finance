@@ -1,12 +1,12 @@
-import {CustomHttp} from "../services/custom-http.js";
-import config from "../../config/config.js";
-import {Sidebar} from "./sidebar.js";
+import {CustomHttp} from "../services/custom-http.ts";
+import config from "../../config/config";
+import {Sidebar} from "./sidebar";
 
-export class AddEarnings {
+export class AddExpenses {
     constructor() {
         this.saveCategoryButton = document.getElementById('create-button');
         this.cancelCategoryButton = document.getElementById('cancel-button');
-        this.categoryField = document.getElementById('add-profit-cat');
+        this.categoryField = document.getElementById('add-expense-cat');
         this.errorText = document.getElementById('invalid-filed-text');
 
         //определяем параметры модального окна
@@ -15,7 +15,7 @@ export class AddEarnings {
         this.modalMessageField = document.getElementById('textModal-message');
 
         this.cancelCategoryButton.onclick = function () {
-            location.href = '#/earnings';
+            location.href = '#/expenses';
         }
 
         this.categoryField.addEventListener('input', () => {
@@ -26,25 +26,25 @@ export class AddEarnings {
             await this.init(this.categoryField.value);
         }
 
-        this.init();
 
+        this.init();
     }
 
     async init(title) {
-        await Sidebar.showSidebar('earnings');
-
+        await Sidebar.showSidebar('expenses');
         if(title){
             try {
-                const result = await CustomHttp.request(config.host + '/categories/income/', 'POST',{
+                const result = await CustomHttp.request(config.host + '/categories/expense/', 'POST',{
                     title: title
                 })
 
                 if (result) {
                     if (result.error || !result) {
+                        await this.showResult(result.message)
                         throw new Error();
                     }
                     await this.showResult(result);
-                    location.href = '#/earnings';
+                    location.href = '#/expenses';
                 }
 
             } catch (error) {
@@ -65,12 +65,10 @@ export class AddEarnings {
             this.saveCategoryButton.classList.remove('disabled');
         }
     }
-
-
-    async showResult(message) {
+    showResult(message) {
         return new Promise((resolve) => {
             this.textMessage = message.error ? message.message :
-            "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+                "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
 
 
             this.modalMessageField.innerText = this.textMessage;

@@ -1,6 +1,6 @@
-import {CustomHttp} from "../services/custom-http.js";
-import config from "../../config/config.js";
-import {Sidebar} from "./sidebar.js";
+import {CustomHttp} from "../services/custom-http.ts";
+import config from "../../config/config";
+import {Sidebar} from "./sidebar";
 
 export class EditExpenses {
     constructor() {
