@@ -1,9 +1,14 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
-import { ShowButtons } from '../services/show-buttons.ts'
+import { ShowButtons } from '../services/show-buttons'
+import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 
 export class Main extends ShowButtons{
+    private readonly earningsChart: HTMLElement | null;
+    private readonly expensesChart: HTMLElement | null;
+    private emptyText: HTMLElement | null;
+    private charts: HTMLElement | null;
 
     constructor() {
         super();
@@ -14,10 +19,37 @@ export class Main extends ShowButtons{
 
         this.dataInit();
     }
-    async dataInit(){
+    private async dataInit(): Promise<void>{
         await Sidebar.showSidebar('main');
         this.processButtons();
 
+        // Создаем массив кнопок и их соответствующих обработчиков
+        const buttons = [
+            { button: this.todayButton, handler: 'today' },
+            { button: this.weekButton, handler: 'week' },
+            { button: this.monthButton, handler: 'month' },
+            { button: this.yearButton, handler: 'year' },
+            { button: this.allButton, handler: 'all' },
+        ];
+
+        // Добавляем обработчики для существующих кнопок
+        buttons.forEach(({ button, handler }) => {
+            if (button) {
+                button.onclick = this.getTable.bind(this, handler);
+            }
+        });
+        // Добавляем обработчик для periodButton, если он существует
+        if (this.periodButton) {
+
+            this.periodButton.onclick = () => {
+                if (this.periodFrom && this.periodTo) {
+                    const queryString = `interval&dateFrom=${(this.periodFrom as HTMLInputElement).value}&dateTo=${(this.periodTo as HTMLInputElement).value}`;
+                    this.getTable(queryString);
+                }
+            };
+        }
+
+/*      предыдущая версия функции
         this.todayButton.onclick = this.getTable.bind(this, 'today');
         this.weekButton.onclick = this.getTable.bind(this, 'week');
         this.monthButton.onclick = this.getTable.bind(this, 'month');
@@ -26,22 +58,54 @@ export class Main extends ShowButtons{
         this.periodButton.onclick = () => {
             const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
             this.getTable(queryString);
-        };
+        };*/
     }
 
-    async getTable(period){
-        let  income = null;
+    async getTable(period?: string){
+        try {
+            const [operations, income, expenses] = await Promise.all([
+                CustomHttp.request(config.host + '/operations/?period=' + period, 'GET'),
+                CustomHttp.request(config.host + '/categories/income', 'GET'),
+                CustomHttp.request(config.host + '/categories/expense', 'GET'),
+            ]);
+
+            if (operations && !('error' in operations) && income && !('error' in income) && expenses && !('error' in expenses)) {
+                await this.showOperations(
+                    income as GetCategoryIncomeType[],
+                    expenses as GetCategoryIncomeType[],
+                    operations as GetOperationsPeriodType[]
+                );
+            } else {
+                if (operations && 'error' in operations) {
+                    await this.showResult(operations as GetErrorResponseType);
+                    throw new Error((operations as GetErrorResponseType).message);
+                }
+                if (income && 'error' in income) {
+                    await this.showResult(income as GetErrorResponseType);
+                    throw new Error((income as GetErrorResponseType).message);
+                }
+                if (expenses && 'error' in expenses) {
+                    await this.showResult(expenses as GetErrorResponseType);
+                    throw new Error((expenses as GetErrorResponseType).message);
+                }
+            }
+        } catch (error) {
+            console.log('Ошибка: ' + error);
+        }
+
+/*      предыдущая версия функции:
+        let income = null;
         let expenses = null;
         let operations = null;
 
         //забираем Записи за период
         try {
-            operations = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
+            const operations: GetOperationsPeriodType[] | GetErrorResponseType = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
 
             if (operations) {
-                if (operations.error || !operations) {
-                    await this.showResult(operations.message);
-                    throw new Error(operations.message);
+                if ((operations as GetErrorResponseType).error || !operations) {
+                    await this.showResult(operations as GetErrorResponseType);
+                    throw new Error((operations as GetErrorResponseType).message);
                 }
             }
 
@@ -51,12 +115,12 @@ export class Main extends ShowButtons{
 
         //забираем Категории доходов
         try {
-            income = await CustomHttp.request(config.host +  '/categories/income', 'GET', )
+            const income: GetCategoryIncomeType[] | GetErrorResponseType = await CustomHttp.request(config.host +  '/categories/income', 'GET', )
 
             if (income) {
-                if (income.error || !income) {
-                    await this.showResult(income.message);
-                    throw new Error(income.message);
+                if ((income as GetErrorResponseType).error || !income) {
+                    await this.showResult((income as GetErrorResponseType));
+                    throw new Error((income as GetErrorResponseType).message);
                 }
             }
 
@@ -66,23 +130,24 @@ export class Main extends ShowButtons{
 
         //забираем Категории расходов
         try {
-            expenses = await CustomHttp.request(config.host +  '/categories/expense', 'GET', )
+            const expenses: GetCategoryIncomeType[] | GetErrorResponseType  = await CustomHttp.request(config.host +  '/categories/expense', 'GET', )
 
             if (expenses) {
-                if (expenses.error || !expenses) {
-                    await this.showResult(expenses.message)
-                    throw new Error(expenses.message);
+                if ((expenses as GetErrorResponseType).error || !expenses) {
+                    await this.showResult(expenses as GetErrorResponseType)
+                    throw new Error((expenses as GetErrorResponseType).message);
                 }
             }
 
         } catch (error) {
             console.log(error);
         }
-
-        await this.showOperations(income, expenses, operations);
+        if (income && expenses && operations) {
+            await this.showOperations(income, expenses, operations);
+        }*/
     };
 
-    async showOperations(income, expenses, operations) {
+    async showOperations(income: GetCategoryIncomeType[], expenses: GetCategoryIncomeType[], operations: GetOperationsPeriodType[]) {
 
         if (operations.length === 0) {
             this.charts.style.display = 'none';

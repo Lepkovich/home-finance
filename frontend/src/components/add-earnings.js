@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddEarnings = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
 var AddEarnings = /** @class */ (function () {
@@ -84,7 +84,7 @@ var AddEarnings = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         _a.trys.push([2, 6, , 7]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/income/', 'POST', {
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income/', 'POST', {
                                 title: title
                             })];
                     case 3:

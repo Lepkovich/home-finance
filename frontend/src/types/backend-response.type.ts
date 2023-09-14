@@ -1,3 +1,4 @@
+
 export type RefreshResponseType = {
     error: boolean,
     message: string,
@@ -15,4 +16,13 @@ export type GetErrorResponseType = {
 export type GetCategoryIncomeType = {
     id: number,
     title: string
+}
+
+export type GetOperationsPeriodType = {
+        id: number,
+        type: string,
+        amount: number,
+        date: string,
+        comment: string,
+        category: string
 }

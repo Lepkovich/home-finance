@@ -45,44 +45,46 @@ var ShowCategories = /** @class */ (function () {
             var categoriesBlock, i, item, card_1, heading, buttonWrapper, editButton, deleteButton, card, innerDiv, link;
             return __generator(this, function (_a) {
                 categoriesBlock = document.getElementById("categories-block");
-                categoriesBlock.innerHTML = ""; //сначала очистим блок
-                // Перебор каждого объекта в массиве и создание соответствующих блоков категорий
-                for (i = 0; i < categories.length; i++) {
-                    item = categories[i];
-                    card_1 = document.createElement("div");
-                    card_1.className = "card mb-4 rounded-3 p-4";
-                    heading = document.createElement("h2");
-                    heading.textContent = item.title;
-                    buttonWrapper = document.createElement("div");
-                    buttonWrapper.className = "d-flex";
-                    editButton = document.createElement("button");
-                    editButton.className = "btn btn-primary px-2 me-3 edit btn-earnings";
-                    editButton.type = "button";
-                    editButton.id = "edit-" + item.id;
-                    editButton.textContent = "Редактировать";
-                    deleteButton = document.createElement("button");
-                    deleteButton.className = "btn btn-danger px-2 btn-earnings";
-                    deleteButton.type = "button";
-                    deleteButton.id = "delete-" + item.id;
-                    deleteButton.textContent = "Удалить";
-                    // Собираем элементы вместе
-                    buttonWrapper.appendChild(editButton);
-                    buttonWrapper.appendChild(deleteButton);
-                    card_1.appendChild(heading);
-                    card_1.appendChild(buttonWrapper);
+                if (categoriesBlock) {
+                    categoriesBlock.innerHTML = ""; //сначала очистим блок
+                    // Перебор каждого объекта в массиве и создание соответствующих блоков категорий
+                    for (i = 0; i < categories.length; i++) {
+                        item = categories[i];
+                        card_1 = document.createElement("div");
+                        card_1.className = "card mb-4 rounded-3 p-4";
+                        heading = document.createElement("h2");
+                        heading.textContent = item.title;
+                        buttonWrapper = document.createElement("div");
+                        buttonWrapper.className = "d-flex";
+                        editButton = document.createElement("button");
+                        editButton.className = "btn btn-primary px-2 me-3 edit btn-earnings";
+                        editButton.type = "button";
+                        editButton.id = "edit-" + item.id;
+                        editButton.textContent = "Редактировать";
+                        deleteButton = document.createElement("button");
+                        deleteButton.className = "btn btn-danger px-2 btn-earnings";
+                        deleteButton.type = "button";
+                        deleteButton.id = "delete-" + item.id;
+                        deleteButton.textContent = "Удалить";
+                        // Собираем элементы вместе
+                        buttonWrapper.appendChild(editButton);
+                        buttonWrapper.appendChild(deleteButton);
+                        card_1.appendChild(heading);
+                        card_1.appendChild(buttonWrapper);
+                        // добавляем созданный блок на страницу
+                        categoriesBlock.appendChild(card_1);
+                    }
+                    card = document.createElement("div");
+                    card.className = "card mb-4 rounded-3 d-flex align-items-center justify-content-center add-cart";
+                    innerDiv = document.createElement("div");
+                    link = document.createElement("a");
+                    link.id = "add-category";
+                    link.textContent = "+";
+                    innerDiv.appendChild(link);
+                    card.appendChild(innerDiv);
                     // добавляем созданный блок на страницу
-                    categoriesBlock.appendChild(card_1);
+                    categoriesBlock.appendChild(card);
                 }
-                card = document.createElement("div");
-                card.className = "card mb-4 rounded-3 d-flex align-items-center justify-content-center add-cart";
-                innerDiv = document.createElement("div");
-                link = document.createElement("a");
-                link.id = "add-category";
-                link.textContent = "+";
-                innerDiv.appendChild(link);
-                card.appendChild(innerDiv);
-                // добавляем созданный блок на страницу
-                categoriesBlock.appendChild(card);
                 return [2 /*return*/];
             });
         });
