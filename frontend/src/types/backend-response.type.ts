@@ -6,3 +6,13 @@ export type RefreshResponseType = {
         refreshToken?: string,
     }
 }
+
+export type GetErrorResponseType = {
+    error?: boolean,
+    message: string,
+}
+
+export type GetCategoryIncomeType = {
+    id: number,
+    title: string
+}

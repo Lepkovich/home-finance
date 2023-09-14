@@ -1,4 +1,4 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 

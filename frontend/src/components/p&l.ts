@@ -1,7 +1,7 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
-import {ShowButtons} from "../services/show-buttons.ts";
+import {ShowButtons} from "../services/show-buttons";
 
 export class PL extends ShowButtons{
     constructor() {

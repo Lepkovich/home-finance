@@ -1,5 +1,5 @@
 import config from "../../config/config";
-import {RefreshResponseType} from "../types/refresh-response.type";
+import {RefreshResponseType} from "../types/backend-response.type";
 
 export class Auth{
     public static accessTokenKey: string = 'accessToken';

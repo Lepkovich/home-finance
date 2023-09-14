@@ -1,8 +1,10 @@
+import {GetCategoryIncomeType} from "../types/backend-response.type";
+
 export class ShowCategories {
     constructor() {
 
     }
-    static async init(categories){
+    static async init(categories: GetCategoryIncomeType[]): Promise<void>{
 
         //создаем структуру html
         // <div className="card mb-4 rounded-3 p-4">
@@ -15,8 +17,10 @@ export class ShowCategories {
 
 
         // Получение ссылки на элемент таблицы
-        let categoriesBlock = document.getElementById("categories-block");
-        categoriesBlock.innerHTML = ""; //сначала очистим блок
+        let categoriesBlock: HTMLElement | null = document.getElementById("categories-block");
+        if (categoriesBlock) {
+            categoriesBlock.innerHTML = ""; //сначала очистим блок
+
         // Перебор каждого объекта в массиве и создание соответствующих блоков категорий
         for (let i = 0; i < categories.length; i++) {
             let item = categories[i];
@@ -53,6 +57,7 @@ export class ShowCategories {
             // добавляем созданный блок на страницу
             categoriesBlock.appendChild(card);
         }
+
         // Создаем карточку с добавлением категории
         let card = document.createElement("div");
         card.className = "card mb-4 rounded-3 d-flex align-items-center justify-content-center add-cart";
@@ -68,5 +73,6 @@ export class ShowCategories {
 
         // добавляем созданный блок на страницу
         categoriesBlock.appendChild(card);
+        }
     };
 }

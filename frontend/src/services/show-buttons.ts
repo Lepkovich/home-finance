@@ -1,4 +1,16 @@
 export class ShowButtons {
+    public activeButton: HTMLElement | null;
+    private todayButton: HTMLElement | null;
+    private weekButton: HTMLElement | null;
+    private monthButton: HTMLElement | null;
+    private yearButton: HTMLElement | null;
+    private allButton: HTMLElement | null;
+    private periodFrom: HTMLElement | null;
+    private periodTo: HTMLElement | null;
+    private periodButton: HTMLElement | null;
+    private buttons: NodeListOf<HTMLElement>;
+    
+    
     constructor() {
         this.activeButton = null;
         this.todayButton = document.getElementById('today');
