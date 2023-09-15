@@ -7,8 +7,8 @@ import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} fr
 export class Main extends ShowButtons{
     private readonly earningsChart: HTMLElement | null;
     private readonly expensesChart: HTMLElement | null;
-    private emptyText: HTMLElement | null;
-    private charts: HTMLElement | null;
+    private readonly emptyText: HTMLElement | null;
+    private readonly charts: HTMLElement | null;
 
     constructor() {
         super();
@@ -149,97 +149,101 @@ export class Main extends ShowButtons{
 
     async showOperations(income: GetCategoryIncomeType[], expenses: GetCategoryIncomeType[], operations: GetOperationsPeriodType[]) {
 
-        if (operations.length === 0) {
-            this.charts.style.display = 'none';
-            this.emptyText.style.display = 'flex';
-        } else {
-            this.charts.style.display = 'flex';
-            this.emptyText.style.display = 'none';
+        if (this.charts && this.emptyText && this.earningsChart && this.expensesChart) {
+            if (operations.length === 0) {
+                this.charts.style.display = 'none';
+                this.emptyText.style.display = 'flex';
+            } else {
+                this.charts.style.display = 'flex';
+                this.emptyText.style.display = 'none';
 
-            // Очищаем канвасы и уничтожаем объекты графиков
-            if (this.earningsChart.chart) {
-                this.earningsChart.chart.destroy();
-            }
-            const earningsContext = this.earningsChart.getContext("2d");
-            earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
+                // Очищаем канвасы и уничтожаем объекты графиков
+                if (this.earningsChart.chart) {
+                    this.earningsChart.chart.destroy();
+                }
+                const earningsContext = this.earningsChart.getContext("2d");
+                earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
 
-            if (this.expensesChart.chart) {
-                this.expensesChart.chart.destroy();
-            }
-            const expensesContext = this.expensesChart.getContext("2d");
-            expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
+                if (this.expensesChart.chart) {
+                    this.expensesChart.chart.destroy();
+                }
+                const expensesContext = this.expensesChart.getContext("2d");
+                expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
 
 
 
-            //отсортируем из операций только доходы, оставим только непустые категории и просуммируем все доходы в них
-            const incomeData = operations.reduce((data, operation) => {
-                if (operation.type === 'income') {
-                    const categoryIndex = data.labels.indexOf(operation.category);
-                    if (categoryIndex !== -1) {
-                        data.amounts[categoryIndex] += operation.amount;
-                    } else {
-                        data.labels.push(operation.category);
-                        data.amounts.push(operation.amount);
+                //отсортируем из операций только доходы, оставим только непустые категории и просуммируем все доходы в них
+                const incomeData = operations.reduce((data, operation) => {
+                    if (operation.type === 'income') {
+                        const categoryIndex = data.labels.indexOf(operation.category);
+                        if (categoryIndex !== -1) {
+                            data.amounts[categoryIndex] += operation.amount;
+                        } else {
+                            data.labels.push(operation.category);
+                            data.amounts.push(operation.amount);
+                        }
                     }
-                }
-                return data;
-            }, { labels: [], amounts: [] });
+                    return data;
+                }, { labels: [], amounts: [] });
 
-            const earningsChart = new Chart(this.earningsChart, {
-                type: 'pie',
-                data: {
-                    labels: incomeData.labels,
-                    // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [{
-                        label: 'Сумма Доходов',
-                        data: incomeData.amounts,
-                        // data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1
-                    }]
-                },
+                const earningsChart = new Chart(this.earningsChart, {
+                    type: 'pie',
+                    data: {
+                        labels: incomeData.labels,
+                        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        datasets: [{
+                            label: 'Сумма Доходов',
+                            data: incomeData.amounts,
+                            // data: [12, 19, 3, 5, 2, 3],
+                            borderWidth: 1
+                        }]
+                    },
 
-                options: {
-                    // scales: {
-                    //     y: {
-                    //         beginAtZero: true
-                    //     }
-                    // }
-                }
-            });
-
-            //отсортируем из операций только расходы, оставим только непустые категории и просуммируем все расходы в них
-            const expensesData = operations.reduce((data, operation) => {
-                if (operation.type === 'expense') {
-                    const categoryIndex = data.labels.indexOf(operation.category);
-                    if (categoryIndex !== -1) {
-                        data.amounts[categoryIndex] += operation.amount;
-                    } else {
-                        data.labels.push(operation.category);
-                        data.amounts.push(operation.amount);
+                    options: {
+                        // scales: {
+                        //     y: {
+                        //         beginAtZero: true
+                        //     }
+                        // }
                     }
-                }
-                return data;
-            }, { labels: [], amounts: [] });
+                });
+
+                //отсортируем из операций только расходы, оставим только непустые категории и просуммируем все расходы в них
+                const expensesData = operations.reduce((data, operation) => {
+                    if (operation.type === 'expense') {
+                        const categoryIndex = data.labels.indexOf(operation.category);
+                        if (categoryIndex !== -1) {
+                            data.amounts[categoryIndex] += operation.amount;
+                        } else {
+                            data.labels.push(operation.category);
+                            data.amounts.push(operation.amount);
+                        }
+                    }
+                    return data;
+                }, { labels: [], amounts: [] });
 
 
-            const expensesChart = new Chart(this.expensesChart, {
-                type: 'pie',
-                data: {
-                    labels: expensesData.labels,
-                    datasets: [{
-                        label: 'Сумма расходов',
-                        data: expensesData.amounts,
-                        borderWidth: 1
-                    }]
-                },
-            });
+                const expensesChart = new Chart(this.expensesChart, {
+                    type: 'pie',
+                    data: {
+                        labels: expensesData.labels,
+                        datasets: [{
+                            label: 'Сумма расходов',
+                            data: expensesData.amounts,
+                            borderWidth: 1
+                        }]
+                    },
+                });
 
 
-            // Сохраняем ссылки на объекты графиков
-            this.earningsChart.chart = earningsChart;
-            this.expensesChart.chart = expensesChart;
+                // Сохраняем ссылки на объекты графиков
+                this.earningsChart.chart = earningsChart;
+                this.expensesChart.chart = expensesChart;
+            }
         }
     };
+
+
     async showResult(message) {
         return new Promise((resolve) => {
             this.textMessage = message.error ? message.message :
