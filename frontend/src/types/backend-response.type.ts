@@ -18,6 +18,11 @@ export type GetCategoryIncomeType = {
     title: string
 }
 
+export type GetCategoryExpenseType = {
+    id: number,
+    title: string
+}
+
 export type GetOperationsPeriodType = {
         id: number,
         type: string,
@@ -25,4 +30,13 @@ export type GetOperationsPeriodType = {
         date: string,
         comment: string,
         category: string
+}
+
+export type PostIncomeCategoryType = {
+    id: number,
+    title: string
+}
+export type PostExpenseCategoryType = {
+    id: number,
+    title: string
 }

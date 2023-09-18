@@ -1,5 +1,5 @@
-import {CustomHttp} from "../services/custom-http.ts";
-import {Auth} from "../services/auth.ts";
+import {CustomHttp} from "../services/custom-http";
+import {Auth} from "../services/auth";
 import config from "../../config/config";
 
 export class Form {

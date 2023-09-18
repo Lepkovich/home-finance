@@ -3,15 +3,17 @@ import config from "../../config/config";
 import {ShowCategories} from "../services/show-categories";
 import {Sidebar} from "./sidebar";
 import {GetErrorResponseType, GetCategoryIncomeType} from "../types/backend-response.type";
-import * as bootstrap from 'bootstrap';
+import bootstrap from "bootstrap";
+
 
 export class Earnings {
     private editCategoryButtons: NodeListOf<HTMLElement> | null;
-    private deleteCategoryButtons: NodeListOf<Element> | null;
+    private deleteCategoryButtons: NodeListOf<HTMLElement> | null;
+    private readonly addCategoryButton: HTMLElement | null;
+
     private resultModal!: bootstrap.Modal;
     private confirmationModal!: bootstrap.Modal;
     private readonly modalMessageField: HTMLElement | null;
-    private readonly addCategoryButton: HTMLElement | null;
     private textMessage: string | null;
 
     constructor() {
@@ -117,7 +119,7 @@ export class Earnings {
 
                 if (result) {
                     if (result.error || !result) {
-                        await this.showResult(result)
+                        await this.showResult(result);
                         throw new Error(result.message);
                     }
                     await this.showResult(result);
@@ -127,7 +129,7 @@ export class Earnings {
             }
         }
     }
-    async showResult(message:GetErrorResponseType) {
+    async showResult(message:GetErrorResponseType): Promise<void> {
         return new Promise<void>((resolve) => {
             this.textMessage = message.error ? message.message :
                 "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message.message);
@@ -139,9 +141,11 @@ export class Earnings {
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа
+
             this.resultModal.getElement()?.addEventListener('hidden.bs.modal', () => {
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
+
         });
     }
 }

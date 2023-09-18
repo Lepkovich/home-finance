@@ -1,8 +1,19 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
+import bootstrap, {Modal} from "bootstrap";
+import {GetErrorResponseType, PostExpenseCategoryType} from "../types/backend-response.type";
+
 
 export class AddExpenses {
+    private readonly saveCategoryButton: HTMLElement | null;
+    private readonly cancelCategoryButton: HTMLElement | null;
+    private readonly categoryField: HTMLElement | null;
+    private readonly errorText: HTMLElement | null;
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
+
     constructor() {
         this.saveCategoryButton = document.getElementById('create-button');
         this.cancelCategoryButton = document.getElementById('cancel-button');
@@ -10,41 +21,55 @@ export class AddExpenses {
         this.errorText = document.getElementById('invalid-filed-text');
 
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        const textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
 
-        this.cancelCategoryButton.onclick = function () {
-            location.href = '#/expenses';
+        if (this.cancelCategoryButton) {
+            this.cancelCategoryButton.onclick = function () {
+                location.href = '#/expenses';
+            }
         }
 
-        this.categoryField.addEventListener('input', () => {
-            this.validateField(this.categoryField.value);
-        })
+        if (this.categoryField) {
+            this.categoryField.addEventListener('input', () => {
+                if (this.categoryField instanceof HTMLInputElement) {
+                    this.validateField(this.categoryField.value);
+                }
+            });
+        }
 
-        this.saveCategoryButton.onclick = async () => {
-            await this.init(this.categoryField.value);
+        if (this.saveCategoryButton) {
+            this.saveCategoryButton.onclick = async () => {
+                if (this.categoryField instanceof HTMLInputElement) {
+                    await this.init(this.categoryField.value);
+                }
+            }
         }
 
 
         this.init();
     }
 
-    async init(title) {
+    private async init(title?: string): Promise<void> {
         await Sidebar.showSidebar('expenses');
         if(title){
             try {
-                const result = await CustomHttp.request(config.host + '/categories/expense/', 'POST',{
-                    title: title
-                })
+                const data: object = { title: title};
+                const result: GetErrorResponseType | PostExpenseCategoryType = await CustomHttp.request(config.host + '/categories/expense/', 'POST',data)
 
                 if (result) {
-                    if (result.error || !result) {
-                        await this.showResult(result.message)
+                    if ((result as GetErrorResponseType).error || !result) {
+                        await this.showResult(result as GetErrorResponseType)
                         throw new Error();
+                    } else {
+                        await this.showResult(result as PostExpenseCategoryType);
+                        location.href = '#/expenses';
                     }
-                    await this.showResult(result);
-                    location.href = '#/expenses';
+
                 }
 
             } catch (error) {
@@ -54,24 +79,31 @@ export class AddExpenses {
 
     };
 
-    validateField(newCategory) {
-        if (newCategory.length === 0) {
-            this.errorText.style.display = "flex";
-            this.categoryField.classList.add('is-invalid');
-            this.saveCategoryButton.classList.add('disabled');
-        } else {
-            this.errorText.style.display = "none";
-            this.categoryField.classList.remove('is-invalid');
-            this.saveCategoryButton.classList.remove('disabled');
+    private validateField(newCategory: string): void {
+        if (this.errorText && this.categoryField && this.saveCategoryButton) {
+            if (newCategory.length === 0) {
+                this.errorText.style.display = "flex";
+                this.categoryField.classList.add('is-invalid');
+                this.saveCategoryButton.classList.add('disabled');
+            } else {
+                this.errorText.style.display = "none";
+                this.categoryField.classList.remove('is-invalid');
+                this.saveCategoryButton.classList.remove('disabled');
+            }
         }
     }
-    showResult(message) {
+
+
+    private async showResult(message: GetErrorResponseType | PostExpenseCategoryType): Promise<void>  {
         return new Promise((resolve) => {
-            this.textMessage = message.error ? message.message :
-                "Название категории: " + this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
+
+            this.textMessage = (message as GetErrorResponseType).error ? (message as GetErrorResponseType).message :
+                "Категория  " + (this.categoryField as HTMLInputElement).value + " успешно создана." + "\nСообщение сервера: " + JSON.stringify(message);
 
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (this.modalMessageField) {
+                this.modalMessageField.innerText = this.textMessage;
+            }
 
             this.resultModal.show();
 
