@@ -1,4 +1,5 @@
 "use strict";
+// ------ done the same as in quiz ------
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomHttp = void 0;
-var auth_ts_1 = require("./auth.ts");
+var auth_1 = require("./auth");
 var CustomHttp = /** @class */ (function () {
     function CustomHttp() {
     }
@@ -56,7 +57,7 @@ var CustomHttp = /** @class */ (function () {
                                 'Accept': 'application/json'
                             }
                         };
-                        token = localStorage.getItem(auth_ts_1.Auth.accessTokenKey);
+                        token = localStorage.getItem(auth_1.Auth.accessTokenKey);
                         if (token) {
                             params.headers['x-auth-token'] = token;
                         }
@@ -68,7 +69,7 @@ var CustomHttp = /** @class */ (function () {
                         response = _a.sent();
                         if (!(response.status < 200 || response.status >= 300)) return [3 /*break*/, 6];
                         if (!(response.status === 401)) return [3 /*break*/, 5];
-                        return [4 /*yield*/, auth_ts_1.Auth.processUnauthorizedResponse()];
+                        return [4 /*yield*/, auth_1.Auth.processUnauthorizedResponse()];
                     case 2:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 4];
@@ -77,7 +78,7 @@ var CustomHttp = /** @class */ (function () {
                     return [2 /*return*/, _a.sent()]; //повторяем запрос на логин
                     case 4: return [2 /*return*/, response.json()];
                     case 5:
-                        console.log(response.message);
+                        console.log(response.statusText);
                         _a.label = 6;
                     case 6: return [4 /*yield*/, response.json()];
                     case 7: return [2 /*return*/, _a.sent()];

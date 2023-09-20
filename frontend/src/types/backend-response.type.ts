@@ -40,3 +40,12 @@ export type PostExpenseCategoryType = {
     id: number,
     title: string
 }
+
+export type PostOperationResponseType = {
+    "id": number,
+    "type": string,
+    "amount": number,
+    "date": Date,
+    "comment": string,
+    "category": string
+}

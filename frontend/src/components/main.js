@@ -55,10 +55,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Main = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
-var show_buttons_ts_1 = require("../services/show-buttons.ts");
+var show_buttons_1 = require("../services/show-buttons");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -72,6 +72,7 @@ var Main = /** @class */ (function (_super) {
     }
     Main.prototype.dataInit = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var buttons;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -79,15 +80,29 @@ var Main = /** @class */ (function (_super) {
                     case 1:
                         _a.sent();
                         this.processButtons();
-                        this.todayButton.onclick = this.getTable.bind(this, 'today');
-                        this.weekButton.onclick = this.getTable.bind(this, 'week');
-                        this.monthButton.onclick = this.getTable.bind(this, 'month');
-                        this.yearButton.onclick = this.getTable.bind(this, 'year');
-                        this.allButton.onclick = this.getTable.bind(this, 'all');
-                        this.periodButton.onclick = function () {
-                            var queryString = "interval&dateFrom=".concat(_this.periodFrom.value, "&dateTo=").concat(_this.periodTo.value);
-                            _this.getTable(queryString);
-                        };
+                        buttons = [
+                            { button: this.todayButton, handler: 'today' },
+                            { button: this.weekButton, handler: 'week' },
+                            { button: this.monthButton, handler: 'month' },
+                            { button: this.yearButton, handler: 'year' },
+                            { button: this.allButton, handler: 'all' },
+                        ];
+                        // Добавляем обработчики для существующих кнопок
+                        buttons.forEach(function (_a) {
+                            var button = _a.button, handler = _a.handler;
+                            if (button) {
+                                button.onclick = _this.getTable.bind(_this, handler);
+                            }
+                        });
+                        // Добавляем обработчик для periodButton, если он существует
+                        if (this.periodButton) {
+                            this.periodButton.onclick = function () {
+                                if (_this.periodFrom && _this.periodTo) {
+                                    var queryString = "interval&dateFrom=".concat(_this.periodFrom.value, "&dateTo=").concat(_this.periodTo.value);
+                                    _this.getTable(queryString);
+                                }
+                            };
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -95,66 +110,47 @@ var Main = /** @class */ (function (_super) {
     };
     Main.prototype.getTable = function (period) {
         return __awaiter(this, void 0, void 0, function () {
-            var income, expenses, operations, error_1, error_2, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, operations, income, expenses, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        income = null;
-                        expenses = null;
-                        operations = null;
-                        _a.label = 1;
+                        _b.trys.push([0, 10, , 11]);
+                        return [4 /*yield*/, Promise.all([
+                                custom_http_1.CustomHttp.request(config_1.default.host + '/operations/?period=' + period, 'GET'),
+                                custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income', 'GET'),
+                                custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense', 'GET'),
+                            ])];
                     case 1:
-                        _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/operations/?period=' + period, 'GET')];
+                        _a = _b.sent(), operations = _a[0], income = _a[1], expenses = _a[2];
+                        if (!(operations && !('error' in operations) && income && !('error' in income) && expenses && !('error' in expenses))) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.showOperations(income, expenses, operations)];
                     case 2:
-                        operations = _a.sent();
-                        if (!operations) return [3 /*break*/, 4];
-                        if (!(operations.error || !operations)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.showResult(operations.message)];
+                        _b.sent();
+                        return [3 /*break*/, 9];
                     case 3:
-                        _a.sent();
+                        if (!(operations && 'error' in operations)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.showResult(operations)];
+                    case 4:
+                        _b.sent();
                         throw new Error(operations.message);
-                    case 4: return [3 /*break*/, 6];
                     case 5:
-                        error_1 = _a.sent();
-                        console.log('ошибка' + error_1);
-                        return [3 /*break*/, 6];
+                        if (!(income && 'error' in income)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.showResult(income)];
                     case 6:
-                        _a.trys.push([6, 10, , 11]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/income', 'GET')];
-                    case 7:
-                        income = _a.sent();
-                        if (!income) return [3 /*break*/, 9];
-                        if (!(income.error || !income)) return [3 /*break*/, 9];
-                        return [4 /*yield*/, this.showResult(income.message)];
-                    case 8:
-                        _a.sent();
+                        _b.sent();
                         throw new Error(income.message);
+                    case 7:
+                        if (!(expenses && 'error' in expenses)) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.showResult(expenses)];
+                    case 8:
+                        _b.sent();
+                        throw new Error(expenses.message);
                     case 9: return [3 /*break*/, 11];
                     case 10:
-                        error_2 = _a.sent();
-                        console.log(error_2);
+                        error_1 = _b.sent();
+                        console.log('Ошибка: ' + error_1);
                         return [3 /*break*/, 11];
-                    case 11:
-                        _a.trys.push([11, 15, , 16]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense', 'GET')];
-                    case 12:
-                        expenses = _a.sent();
-                        if (!expenses) return [3 /*break*/, 14];
-                        if (!(expenses.error || !expenses)) return [3 /*break*/, 14];
-                        return [4 /*yield*/, this.showResult(expenses.message)];
-                    case 13:
-                        _a.sent();
-                        throw new Error(expenses.message);
-                    case 14: return [3 /*break*/, 16];
-                    case 15:
-                        error_3 = _a.sent();
-                        console.log(error_3);
-                        return [3 /*break*/, 16];
-                    case 16: return [4 /*yield*/, this.showOperations(income, expenses, operations)];
-                    case 17:
-                        _a.sent();
-                        return [2 /*return*/];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
@@ -164,84 +160,86 @@ var Main = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var earningsContext, expensesContext, incomeData, earningsChart, expensesData, expensesChart;
             return __generator(this, function (_a) {
-                if (operations.length === 0) {
-                    this.charts.style.display = 'none';
-                    this.emptyText.style.display = 'flex';
-                }
-                else {
-                    this.charts.style.display = 'flex';
-                    this.emptyText.style.display = 'none';
-                    // Очищаем канвасы и уничтожаем объекты графиков
-                    if (this.earningsChart.chart) {
-                        this.earningsChart.chart.destroy();
+                if (this.charts && this.emptyText && this.earningsChart && this.expensesChart) {
+                    if (operations.length === 0) {
+                        this.charts.style.display = 'none';
+                        this.emptyText.style.display = 'flex';
                     }
-                    earningsContext = this.earningsChart.getContext("2d");
-                    earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
-                    if (this.expensesChart.chart) {
-                        this.expensesChart.chart.destroy();
+                    else {
+                        this.charts.style.display = 'flex';
+                        this.emptyText.style.display = 'none';
+                        // Очищаем канвасы и уничтожаем объекты графиков
+                        if (this.earningsChart.chart) {
+                            this.earningsChart.chart.destroy();
+                        }
+                        earningsContext = this.earningsChart.getContext("2d");
+                        earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
+                        if (this.expensesChart.chart) {
+                            this.expensesChart.chart.destroy();
+                        }
+                        expensesContext = this.expensesChart.getContext("2d");
+                        expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
+                        incomeData = operations.reduce(function (data, operation) {
+                            if (operation.type === 'income') {
+                                var categoryIndex = data.labels.indexOf(operation.category);
+                                if (categoryIndex !== -1) {
+                                    data.amounts[categoryIndex] += operation.amount;
+                                }
+                                else {
+                                    data.labels.push(operation.category);
+                                    data.amounts.push(operation.amount);
+                                }
+                            }
+                            return data;
+                        }, { labels: [], amounts: [] });
+                        earningsChart = new Chart(this.earningsChart, {
+                            type: 'pie',
+                            data: {
+                                labels: incomeData.labels,
+                                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                                datasets: [{
+                                        label: 'Сумма Доходов',
+                                        data: incomeData.amounts,
+                                        // data: [12, 19, 3, 5, 2, 3],
+                                        borderWidth: 1
+                                    }]
+                            },
+                            options: {
+                            // scales: {
+                            //     y: {
+                            //         beginAtZero: true
+                            //     }
+                            // }
+                            }
+                        });
+                        expensesData = operations.reduce(function (data, operation) {
+                            if (operation.type === 'expense') {
+                                var categoryIndex = data.labels.indexOf(operation.category);
+                                if (categoryIndex !== -1) {
+                                    data.amounts[categoryIndex] += operation.amount;
+                                }
+                                else {
+                                    data.labels.push(operation.category);
+                                    data.amounts.push(operation.amount);
+                                }
+                            }
+                            return data;
+                        }, { labels: [], amounts: [] });
+                        expensesChart = new Chart(this.expensesChart, {
+                            type: 'pie',
+                            data: {
+                                labels: expensesData.labels,
+                                datasets: [{
+                                        label: 'Сумма расходов',
+                                        data: expensesData.amounts,
+                                        borderWidth: 1
+                                    }]
+                            },
+                        });
+                        // Сохраняем ссылки на объекты графиков
+                        this.earningsChart.chart = earningsChart;
+                        this.expensesChart.chart = expensesChart;
                     }
-                    expensesContext = this.expensesChart.getContext("2d");
-                    expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
-                    incomeData = operations.reduce(function (data, operation) {
-                        if (operation.type === 'income') {
-                            var categoryIndex = data.labels.indexOf(operation.category);
-                            if (categoryIndex !== -1) {
-                                data.amounts[categoryIndex] += operation.amount;
-                            }
-                            else {
-                                data.labels.push(operation.category);
-                                data.amounts.push(operation.amount);
-                            }
-                        }
-                        return data;
-                    }, { labels: [], amounts: [] });
-                    earningsChart = new Chart(this.earningsChart, {
-                        type: 'pie',
-                        data: {
-                            labels: incomeData.labels,
-                            // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                            datasets: [{
-                                    label: 'Сумма Доходов',
-                                    data: incomeData.amounts,
-                                    // data: [12, 19, 3, 5, 2, 3],
-                                    borderWidth: 1
-                                }]
-                        },
-                        options: {
-                        // scales: {
-                        //     y: {
-                        //         beginAtZero: true
-                        //     }
-                        // }
-                        }
-                    });
-                    expensesData = operations.reduce(function (data, operation) {
-                        if (operation.type === 'expense') {
-                            var categoryIndex = data.labels.indexOf(operation.category);
-                            if (categoryIndex !== -1) {
-                                data.amounts[categoryIndex] += operation.amount;
-                            }
-                            else {
-                                data.labels.push(operation.category);
-                                data.amounts.push(operation.amount);
-                            }
-                        }
-                        return data;
-                    }, { labels: [], amounts: [] });
-                    expensesChart = new Chart(this.expensesChart, {
-                        type: 'pie',
-                        data: {
-                            labels: expensesData.labels,
-                            datasets: [{
-                                    label: 'Сумма расходов',
-                                    data: expensesData.amounts,
-                                    borderWidth: 1
-                                }]
-                        },
-                    });
-                    // Сохраняем ссылки на объекты графиков
-                    this.earningsChart.chart = earningsChart;
-                    this.expensesChart.chart = expensesChart;
                 }
                 return [2 /*return*/];
             });
@@ -267,6 +265,6 @@ var Main = /** @class */ (function (_super) {
     };
     ;
     return Main;
-}(show_buttons_ts_1.ShowButtons));
+}(show_buttons_1.ShowButtons));
 exports.Main = Main;
 //# sourceMappingURL=main.js.map

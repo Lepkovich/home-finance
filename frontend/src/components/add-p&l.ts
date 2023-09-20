@@ -1,8 +1,26 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
+import {FieldsType} from "../types/fields.type";
+import bootstrap, {Modal} from "bootstrap";
+import {
+    GetCategoryExpenseType,
+    GetCategoryIncomeType,
+    GetErrorResponseType,
+    PostOperationResponseType
+} from "../types/backend-response.type";
 
 export class AddPL {
+    private typeValue: string | null;
+    private readonly type: string;
+    private fields: FieldsType[];
+    private processElement: HTMLElement | null;
+    private cancelElement: HTMLElement | null;
+    private typeElement: HTMLElement | null;
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
+
     constructor() {
 
         this.typeValue = null;
@@ -47,25 +65,33 @@ export class AddPL {
         const that = this;
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id);
-            item.element.onchange = function () {
-                that.validateField.call(that, item, this)
+            if (item.element) {
+                item.element.onchange = function () {
+                    that.validateField.call(that, item, this)
+                }
             }
         });
         this.processElement = document.getElementById('process');
+        if (this.processElement) {
+            this.processElement.addEventListener('click', this.processForm.bind(this));
+        }
         this.cancelElement = document.getElementById('cancel');
+        if (this.cancelElement) {
+            this.cancelElement.onclick = function () {
+                location.href = '#/p&l';
+            }
+        }
+
         this.typeElement = document.getElementById('type');
 
+
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        const textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
-
-        this.cancelElement.onclick = function () {
-            location.href = '#/p&l';
-        }
-        this.processElement.addEventListener('click', this.processForm.bind(this));
-
-
 
         this.init();
     }
@@ -75,14 +101,14 @@ export class AddPL {
             await Sidebar.showSidebar('earnings');
             this.typeValue = 'Доход';
             try {
-                const result = await CustomHttp.request(config.host + '/categories/income')
+                const result: GetErrorResponseType | GetCategoryIncomeType[] = await CustomHttp.request(config.host + '/categories/income')
 
                 if (result) {
-                    if (result.error) {
-                        await this.showResult(result.message);
-                        throw new Error(result.message);
+                    if ((result as GetErrorResponseType).error) {
+                        await this.showResult(result as GetErrorResponseType);
+                        throw new Error((result as GetErrorResponseType).message);
                     }
-                    this.showCategories(result);
+                    this.showCategories(result as GetCategoryIncomeType[]);
                 }
             } catch (error) {
                 return console.log(error);
@@ -92,49 +118,58 @@ export class AddPL {
             this.typeValue = 'Расход';
             await Sidebar.showSidebar('expenses');
             try {
-                const result = await CustomHttp.request(config.host + '/categories/expense')
+                const result: GetErrorResponseType | GetCategoryIncomeType[] = await CustomHttp.request(config.host + '/categories/expense')
 
                 if (result) {
-                    if (result.error) {
-                        await this.showResult(result.message);
-                        throw new Error(result.message);
+                    if ((result as GetErrorResponseType).error) {
+                        await this.showResult(result as GetErrorResponseType);
+                        throw new Error((result as GetErrorResponseType).message);
                     }
-                    this.showCategories(result);
+                    this.showCategories(result as GetCategoryIncomeType[]);
                 }
             } catch (error) {
                 return console.log(error);
             }
         }
-        this.typeElement.value = this.typeValue;
+        if (this.typeElement) {
+            (this.typeElement as HTMLInputElement).value = this.typeValue;
+        }
     };
 
-    showCategories(categories){
+    private showCategories(categories: GetCategoryExpenseType[]){
         // Получение ссылки на элемент <select>
         const selectElement = document.getElementById("category");
 
-// Создание строк <option> на основе массива categories
-        categories.forEach(function(category) {
-            const optionElement = document.createElement("option");
-            optionElement.value = category.id;
-            optionElement.textContent = category.title;
-            selectElement.appendChild(optionElement);
-        });
+        if (selectElement) {
+            // Создание строк <option> на основе массива categories
+            categories.forEach(function(category) {
+                const optionElement: HTMLElement = document.createElement("option");
+                (optionElement as HTMLInputElement).value = category.id.toString();
+                optionElement.textContent = category.title;
+                selectElement.appendChild(optionElement);
+            });
+        }
     }
 
 
-    validateField(field, element) {
+    private validateField(field: FieldsType , element: HTMLElement) {
 
-        if (!element.value || !element.value.match(field.regex)) {
+        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element.validationMessage) {
-                element.nextElementSibling.innerText = element.validationMessage;
+            if (element instanceof HTMLInputElement && element.validationMessag) {
+                const nextElement = element.nextElementSibling;
+                if (nextElement instanceof HTMLElement) {
+                    nextElement.innerText = element.validationMessage;
+                }
             }
-            element.nextElementSibling.style.display = "flex";
+            if (element.nextElementSibling) {
+                (element.nextElementSibling as HTMLElement).style.display = "flex";
+            }
         } else {
             field.valid = true;
             element.classList.remove('is-invalid');
-            element.nextElementSibling.style.display = "none";
+            (element.nextElementSibling as HTMLElement).style.display = "none";
         }
 
         this.validateForm();
@@ -142,15 +177,15 @@ export class AddPL {
 
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
-        if (validForm) {
+        if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
-        } else {
+        } else if (this.processElement) {
             this.processElement.classList.add('disabled');
         }
         return validForm;
     };
 
-    async processForm(event) {
+    async processForm(event: SubmitEvent) {
         event.preventDefault();
         if (this.validateForm()) {
 
@@ -160,13 +195,32 @@ export class AddPL {
                 // "comment": "new comment",
                 // "category_id": 2
 
-            const amount = this.fields.find(item => item.name === 'sum').element.value;
-            const date = this.fields.find(item => item.name === 'date').element.value;
-            const comment = this.fields.find(item => item.name === 'comment').element.value;
-            const categoryId = this.fields.find(item => item.name === 'category').element.value;
+            // предыдущий код на JS
+            // const amount = this.fields.find(item => item.name === 'sum').element.value;
+            // const date = this.fields.find(item => item.name === 'date').element.value;
+            // const comment = this.fields.find(item => item.name === 'comment').element.value;
+            // const categoryId = this.fields.find(item => item.name === 'category').element.value;
+
+            // реализация на TS:
+            const values: Record<string, string> = {};
+
+            ['sum', 'date', 'comment', 'category'].forEach(fieldName => {
+                const field = this.fields.find(item => item.name === fieldName);
+                if (field && field.element) {
+                    values[fieldName] = (field.element as HTMLInputElement).value;
+                }
+            });
+
+// Теперь объект `values` содержит значения всех полей, где ключи - это имена полей, а значения - их значения
+            const amount = values['sum'];
+            const date = values['date'];
+            const comment = values['comment'];
+            const categoryId = values['category'];
+
+
 
             try {
-                const result = await CustomHttp.request(config.host + '/operations', 'POST', {
+                const result: GetErrorResponseType | PostOperationResponseType = await CustomHttp.request(config.host + '/operations', 'POST', {
                     type: this.type,
                     amount: amount,
                     date: date,
@@ -175,11 +229,11 @@ export class AddPL {
                 })
 
                 if (result) {
-                    if (result.error) {
-                        await this.showResult(result.message);
-                        throw new Error(result.message);
+                    if ((result as GetErrorResponseType).error) {
+                        await this.showResult(result as GetErrorResponseType);
+                        throw new Error((result as GetErrorResponseType).message);
                     }
-                    await this.showResult(result);
+                    await this.showResult(result as PostOperationResponseType);
                     location.href = '#/p&l';
                 }
             } catch (error) {
@@ -189,13 +243,15 @@ export class AddPL {
         }
     }
 
-    async showResult(message) {
+    private async showResult(message: GetErrorResponseType | PostOperationResponseType): Promise<void> {
         return new Promise((resolve) => {
-            this.textMessage = message.error ? message.message :
+            this.textMessage = (message as GetErrorResponseType).error ? (message as GetErrorResponseType).message :
                 "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
 
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (this.modalMessageField) {
+                this.modalMessageField.innerText = this.textMessage;
+            }
 
             this.resultModal.show();
 

@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddExpenses = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var AddExpenses = /** @class */ (function () {
     function AddExpenses() {
         var _this = this;
@@ -51,30 +52,44 @@ var AddExpenses = /** @class */ (function () {
         this.categoryField = document.getElementById('add-expense-cat');
         this.errorText = document.getElementById('invalid-filed-text');
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        var textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
-        this.cancelCategoryButton.onclick = function () {
-            location.href = '#/expenses';
-        };
-        this.categoryField.addEventListener('input', function () {
-            _this.validateField(_this.categoryField.value);
-        });
-        this.saveCategoryButton.onclick = function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.init(this.categoryField.value)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+        if (this.cancelCategoryButton) {
+            this.cancelCategoryButton.onclick = function () {
+                location.href = '#/expenses';
+            };
+        }
+        if (this.categoryField) {
+            this.categoryField.addEventListener('input', function () {
+                if (_this.categoryField instanceof HTMLInputElement) {
+                    _this.validateField(_this.categoryField.value);
                 }
             });
-        }); };
+        }
+        if (this.saveCategoryButton) {
+            this.saveCategoryButton.onclick = function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!(this.categoryField instanceof HTMLInputElement)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.init(this.categoryField.value)];
+                        case 1:
+                            _a.sent();
+                            _a.label = 2;
+                        case 2: return [2 /*return*/];
+                    }
+                });
+            }); };
+        }
         this.init();
     }
     AddExpenses.prototype.init = function (title) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_1;
+            var data, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, sidebar_1.Sidebar.showSidebar('expenses')];
@@ -84,14 +99,13 @@ var AddExpenses = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         _a.trys.push([2, 8, , 9]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense/', 'POST', {
-                                title: title
-                            })];
+                        data = { title: title };
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense/', 'POST', data)];
                     case 3:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 7];
                         if (!(result.error || !result)) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 4:
                         _a.sent();
                         throw new Error();
@@ -112,27 +126,35 @@ var AddExpenses = /** @class */ (function () {
     };
     ;
     AddExpenses.prototype.validateField = function (newCategory) {
-        if (newCategory.length === 0) {
-            this.errorText.style.display = "flex";
-            this.categoryField.classList.add('is-invalid');
-            this.saveCategoryButton.classList.add('disabled');
-        }
-        else {
-            this.errorText.style.display = "none";
-            this.categoryField.classList.remove('is-invalid');
-            this.saveCategoryButton.classList.remove('disabled');
+        if (this.errorText && this.categoryField && this.saveCategoryButton) {
+            if (newCategory.length === 0) {
+                this.errorText.style.display = "flex";
+                this.categoryField.classList.add('is-invalid');
+                this.saveCategoryButton.classList.add('disabled');
+            }
+            else {
+                this.errorText.style.display = "none";
+                this.categoryField.classList.remove('is-invalid');
+                this.saveCategoryButton.classList.remove('disabled');
+            }
         }
     };
     AddExpenses.prototype.showResult = function (message) {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this.textMessage = message.error ? message.message :
-                "Название категории: " + _this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
-            _this.modalMessageField.innerText = _this.textMessage;
-            _this.resultModal.show();
-            // Обработчик события при закрытии попапа
-            _this.resultModal._element.addEventListener('hidden.bs.modal', function () {
-                resolve(); // Разрешаем обещание при закрытии попапа
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.textMessage = message.error ? message.message :
+                            "Категория  " + _this.categoryField.value + " успешно создана." + "\nСообщение сервера: " + JSON.stringify(message);
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
+                        _this.resultModal.show();
+                        // Обработчик события при закрытии попапа
+                        _this.resultModal._element.addEventListener('hidden.bs.modal', function () {
+                            resolve(); // Разрешаем обещание при закрытии попапа
+                        });
+                    })];
             });
         });
     };

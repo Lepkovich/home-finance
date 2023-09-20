@@ -43,6 +43,7 @@ exports.AddEarnings = void 0;
 var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var AddEarnings = /** @class */ (function () {
     function AddEarnings() {
         var _this = this;
@@ -51,74 +52,91 @@ var AddEarnings = /** @class */ (function () {
         this.categoryField = document.getElementById('add-profit-cat');
         this.errorText = document.getElementById('invalid-filed-text');
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        var textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
-        this.cancelCategoryButton.onclick = function () {
-            location.href = '#/earnings';
-        };
-        this.categoryField.addEventListener('input', function () {
-            _this.validateField(_this.categoryField.value);
-        });
-        this.saveCategoryButton.onclick = function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.init(this.categoryField.value)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+        if (this.cancelCategoryButton) {
+            this.cancelCategoryButton.onclick = function () {
+                location.href = '#/earnings';
+            };
+        }
+        if (this.categoryField) {
+            this.categoryField.addEventListener('input', function () {
+                if (_this.categoryField instanceof HTMLInputElement) {
+                    _this.validateField(_this.categoryField.value);
                 }
             });
-        }); };
+        }
+        if (this.saveCategoryButton) {
+            this.saveCategoryButton.onclick = function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!(this.categoryField instanceof HTMLInputElement)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.init(this.categoryField.value)];
+                        case 1:
+                            _a.sent();
+                            _a.label = 2;
+                        case 2: return [2 /*return*/];
+                    }
+                });
+            }); };
+        }
         this.init();
     }
     AddEarnings.prototype.init = function (title) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, error_1;
+            var data, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, sidebar_1.Sidebar.showSidebar('earnings')];
                     case 1:
                         _a.sent();
-                        if (!title) return [3 /*break*/, 7];
+                        if (!title) return [3 /*break*/, 9];
                         _a.label = 2;
                     case 2:
-                        _a.trys.push([2, 6, , 7]);
-                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income/', 'POST', {
-                                title: title
-                            })];
+                        _a.trys.push([2, 8, , 9]);
+                        data = { title: title };
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income/', 'POST', data)];
                     case 3:
                         result = _a.sent();
-                        if (!result) return [3 /*break*/, 5];
-                        if (result.error || !result) {
-                            throw new Error();
-                        }
+                        if (!result) return [3 /*break*/, 7];
+                        if (!(result.error || !result)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.showResult(result)];
                     case 4:
                         _a.sent();
-                        location.href = '#/earnings';
-                        _a.label = 5;
-                    case 5: return [3 /*break*/, 7];
+                        throw new Error();
+                    case 5: return [4 /*yield*/, this.showResult(result)];
                     case 6:
+                        _a.sent();
+                        location.href = '#/earnings';
+                        _a.label = 7;
+                    case 7: return [3 /*break*/, 9];
+                    case 8:
                         error_1 = _a.sent();
                         console.log('ошибка' + error_1);
-                        return [3 /*break*/, 7];
-                    case 7: return [2 /*return*/];
+                        return [3 /*break*/, 9];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
     };
     ;
     AddEarnings.prototype.validateField = function (newCategory) {
-        if (newCategory.length === 0) {
-            this.errorText.style.display = "flex";
-            this.categoryField.classList.add('is-invalid');
-            this.saveCategoryButton.classList.add('disabled');
-        }
-        else {
-            this.errorText.style.display = "none";
-            this.categoryField.classList.remove('is-invalid');
-            this.saveCategoryButton.classList.remove('disabled');
+        if (this.errorText && this.categoryField && this.saveCategoryButton) {
+            if (newCategory.length === 0) {
+                this.errorText.style.display = "flex";
+                this.categoryField.classList.add('is-invalid');
+                this.saveCategoryButton.classList.add('disabled');
+            }
+            else {
+                this.errorText.style.display = "none";
+                this.categoryField.classList.remove('is-invalid');
+                this.saveCategoryButton.classList.remove('disabled');
+            }
         }
     };
     AddEarnings.prototype.showResult = function (message) {
@@ -127,8 +145,10 @@ var AddEarnings = /** @class */ (function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve) {
                         _this.textMessage = message.error ? message.message :
-                            "Название категории: " + _this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
-                        _this.modalMessageField.innerText = _this.textMessage;
+                            "Категория  " + _this.categoryField.value + " успешно создана." + "\nСообщение сервера: " + JSON.stringify(message);
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {

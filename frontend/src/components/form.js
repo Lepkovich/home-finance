@@ -40,8 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Form = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
-var auth_ts_1 = require("../services/auth.ts");
+var custom_http_1 = require("../services/custom-http");
+var auth_1 = require("../services/auth");
 var config_1 = __importDefault(require("../../config/config"));
 var Form = /** @class */ (function () {
     function Form(page) {
@@ -165,7 +165,7 @@ var Form = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/signup', 'POST', {
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/signup', 'POST', {
                                 name: this.name,
                                 lastName: this.lastName,
                                 email: email,
@@ -186,7 +186,7 @@ var Form = /** @class */ (function () {
                         return [2 /*return*/, console.log(error_1)];
                     case 6:
                         _a.trys.push([6, 12, , 13]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/login', 'POST', {
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/login', 'POST', {
                                 email: email,
                                 password: password,
                                 rememberMe: this.rememberMe
@@ -205,8 +205,8 @@ var Form = /** @class */ (function () {
                     case 10:
                         _a.sent();
                         userFullName = result.user.name + ' ' + result.user.lastName;
-                        auth_ts_1.Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
-                        auth_ts_1.Auth.setUserData(result.user.id, userFullName);
+                        auth_1.Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
+                        auth_1.Auth.setUserData(result.user.id, userFullName);
                         location.href = "#/";
                         _a.label = 11;
                     case 11: return [3 /*break*/, 13];
