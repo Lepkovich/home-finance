@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EditExpenses = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var EditExpenses = /** @class */ (function () {
     function EditExpenses() {
         var _this = this;
@@ -52,12 +53,18 @@ var EditExpenses = /** @class */ (function () {
         this.id = document.location.hash.split('=')[1];
         this.errorText = document.getElementById('invalid-filed-text');
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
-        this.textMessage = null;
+        var textModalElement = document.getElementById('textModal');
+        var confirmationModalElement = document.getElementById('confirmationModal');
+        if (textModalElement && confirmationModalElement) {
+            this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
         this.modalMessageField = document.getElementById('textModal-message');
-        this.categoryField.addEventListener('input', function () {
-            _this.validateField(_this.categoryField.value);
-        });
+        this.textMessage = null;
+        if (this.categoryField) {
+            this.categoryField.addEventListener('input', function () {
+                _this.validateField(_this.categoryField.value);
+            });
+        }
         this.init(this);
     }
     EditExpenses.prototype.init = function (field) {
@@ -71,7 +78,7 @@ var EditExpenses = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         _a.trys.push([2, 8, , 9]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense/' + this.id, 'GET')];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense/' + this.id, 'GET')];
                     case 3:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 7];
@@ -79,9 +86,11 @@ var EditExpenses = /** @class */ (function () {
                         return [4 /*yield*/, this.showResult(result)];
                     case 4:
                         _a.sent();
-                        throw new Error();
+                        throw new Error(result.message);
                     case 5:
-                        this.categoryField.value = result.title;
+                        if (this.categoryField) {
+                            this.categoryField.value = result.title;
+                        }
                         return [4 /*yield*/, this.processButtons(result, field)];
                     case 6:
                         _a.sent();
@@ -101,13 +110,17 @@ var EditExpenses = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                this.cancelCategoryButton.onclick = function () {
-                    location.href = '#/expenses';
-                };
-                this.saveCategoryButton.onclick = function () {
-                    var newCategory = field.categoryField.value;
-                    _this.rewriteCategory(newCategory, category.id);
-                };
+                if (this.cancelCategoryButton) {
+                    this.cancelCategoryButton.onclick = function () {
+                        location.href = '#/expenses';
+                    };
+                }
+                if (this.saveCategoryButton) {
+                    this.saveCategoryButton.onclick = function () {
+                        var newCategory = field.categoryField.value;
+                        _this.rewriteCategory(newCategory, category.id);
+                    };
+                }
                 return [2 /*return*/];
             });
         });
@@ -122,14 +135,14 @@ var EditExpenses = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 7, , 8]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense/' + id, 'PUT', {
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense/' + id, 'PUT', {
                                 title: title
                             })];
                     case 2:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 6];
                         if (!(result.error || !result)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 3:
                         _a.sent();
                         throw new Error(result.message);
@@ -167,7 +180,9 @@ var EditExpenses = /** @class */ (function () {
                 return [2 /*return*/, new Promise(function (resolve) {
                         _this.textMessage = message.error ? message.message :
                             "Новое название категории: " + _this.categoryField.value + "." + "\nСообщение сервера: " + JSON.stringify(message);
-                        _this.modalMessageField.innerText = _this.textMessage;
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {

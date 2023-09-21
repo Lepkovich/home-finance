@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EditPL = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var EditPL = /** @class */ (function () {
     function EditPL() {
         this.id = document.location.hash.split('=')[1];
@@ -92,15 +93,22 @@ var EditPL = /** @class */ (function () {
             };
         });
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        var textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
-        this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
-        this.cancelElement.onclick = function () {
-            location.href = '#/p&l';
-        };
-        this.processElement.addEventListener('click', this.processForm.bind(this));
+        if (this.cancelElement) {
+            this.cancelElement.onclick = function () {
+                location.href = '#/p&l';
+            };
+        }
+        this.processElement = document.getElementById('process');
+        if (this.processElement) {
+            this.processElement.addEventListener('click', this.processForm.bind(this));
+        }
         this.init();
     }
     EditPL.prototype.init = function () {
@@ -110,12 +118,12 @@ var EditPL = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/operations/' + this.id)];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/operations/' + this.id)];
                     case 1:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 5];
                         if (!result.error) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 2:
                         _a.sent();
                         throw new Error(result.message);
@@ -144,7 +152,7 @@ var EditPL = /** @class */ (function () {
                         return [4 /*yield*/, sidebar_1.Sidebar.showSidebar('earnings')];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/income')];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income')];
                     case 2:
                         result = _a.sent();
                         if (result && !result.error) {
@@ -156,7 +164,7 @@ var EditPL = /** @class */ (function () {
                         return [4 /*yield*/, sidebar_1.Sidebar.showSidebar('expenses')];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense')];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense')];
                     case 5:
                         result = _a.sent();
                         if (result && !result.error) {
@@ -207,19 +215,26 @@ var EditPL = /** @class */ (function () {
         // Создание строк <option> на основе массива categories
         categories.forEach(function (category) {
             var optionElement = document.createElement("option");
-            optionElement.value = category.id;
+            optionElement.value = category.id.toString();
             optionElement.textContent = category.title;
-            selectElement.appendChild(optionElement);
+            if (selectElement) {
+                selectElement.appendChild(optionElement);
+            }
         });
     };
     EditPL.prototype.validateField = function (field, element) {
         if (!element.value || !element.value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element.validationMessage) {
-                element.nextElementSibling.innerText = element.validationMessage;
+            if (element instanceof HTMLInputElement && element.validationMessage) {
+                var nextElement = element.nextElementSibling;
+                if (nextElement instanceof HTMLElement) {
+                    nextElement.innerText = element.validationMessage;
+                }
             }
-            element.nextElementSibling.style.display = "flex";
+            if (element.nextElementSibling) {
+                element.nextElementSibling.style.display = "flex";
+            }
         }
         else {
             field.valid = true;
@@ -231,33 +246,39 @@ var EditPL = /** @class */ (function () {
     ;
     EditPL.prototype.validateForm = function () {
         var validForm = this.fields.every(function (item) { return item.valid; });
-        if (validForm) {
+        if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
         }
-        else {
+        else if (this.processElement) {
             this.processElement.classList.add('disabled');
         }
         return validForm;
     };
     ;
-    EditPL.prototype.processForm = function (event) {
+    EditPL.prototype.processForm = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var type, amount, date, comment, categoryId, result, error_3;
+            var values_1, amount, date, comment, categoryId, result, error_3;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        event.preventDefault();
                         if (!this.validateForm()) return [3 /*break*/, 8];
-                        type = this.typeValue;
-                        amount = this.fields.find(function (item) { return item.name === 'amount'; }).element.value;
-                        date = this.fields.find(function (item) { return item.name === 'date'; }).element.value;
-                        comment = this.fields.find(function (item) { return item.name === 'comment'; }).element.value;
-                        categoryId = this.fields.find(function (item) { return item.name === 'category'; }).element.value;
+                        values_1 = {};
+                        ['sum', 'date', 'comment', 'category'].forEach(function (fieldName) {
+                            var field = _this.fields.find(function (item) { return item.name === fieldName; });
+                            if (field && field.element) {
+                                values_1[fieldName] = field.element.value;
+                            }
+                        });
+                        amount = values_1['sum'];
+                        date = values_1['date'];
+                        comment = values_1['comment'];
+                        categoryId = values_1['category'];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 7, , 8]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/operations/' + this.id, 'PUT', {
-                                type: type,
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/operations/' + this.id, 'PUT', {
+                                type: this.typeValue,
                                 amount: parseInt(amount),
                                 date: date,
                                 comment: comment,
@@ -267,7 +288,7 @@ var EditPL = /** @class */ (function () {
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 6];
                         if (!result.error) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 3:
                         _a.sent();
                         throw new Error(result.message);
@@ -294,9 +315,11 @@ var EditPL = /** @class */ (function () {
                             _this.textMessage = "Изменена запись от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
                         }
                         else {
-                            _this.textMessage = message;
+                            _this.textMessage = message.message;
                         }
-                        _this.modalMessageField.innerText = _this.textMessage;
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {

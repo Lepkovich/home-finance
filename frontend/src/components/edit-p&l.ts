@@ -6,14 +6,14 @@ import bootstrap, {Modal} from "bootstrap";
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 
 export class EditPL {
-    private id: string;
+    private readonly id: string;
     private typeValue: string | null;
     private fields: FieldsType[];
     private resultModal!: Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
-    private cancelElement: HTMLElement | null;
-    private processElement: HTMLElement | null;
+    private readonly cancelElement: HTMLElement | null;
+    private readonly processElement: HTMLElement | null;
 
     constructor() {
 
@@ -101,14 +101,14 @@ export class EditPL {
                     await this.showResult(result as GetErrorResponseType);
                     throw new Error((result as GetErrorResponseType).message);
                 }
-                await this.fillFields(result);
+                await this.fillFields(result as GetOperationsPeriodType);
             }
         } catch (error) {
             return console.log(error);
         }
     }
 
-    private async fillFields(fields: GetOperationsPeriodType): Promise<void> {
+    private async fillFields(fields: GetOperationsPeriodType ): Promise<void> {
         try {
             if (fields.type === 'income') {
                 this.typeValue = 'income';
@@ -132,11 +132,12 @@ export class EditPL {
                     if (field) {
                         if (field.tagName === 'SELECT') {
                             // Для элемента <select>
-                            const options = field.options;
+                            const selectElement = field as HTMLSelectElement; 
+                            const options = selectElement.options;
                             for (let i = 0; i < options.length; i++) { //пройдемся по всем options
                                 const option = options[i];
-                                if (option.textContent.trim() === fields[key]) { //и сравним текстовые значения {"id": 2, "title": "Жилье"}
-                                    field.selectedIndex = i; //и подставим индекс того, с которым мы перешли на страницу  {category:"Жилье"}
+                                if (option.textContent && option.textContent.trim() === fields[key]) { //и сравним текстовые значения {"id": 2, "title": "Жилье"}
+                                    (field as HTMLSelectElement).selectedIndex = i; //и подставим индекс того, с которым мы перешли на страницу  {category:"Жилье"}
                                     break;
                                 }
                             }
@@ -147,7 +148,7 @@ export class EditPL {
                             } else if(fields[key] === 'expense'){
                                 fields[key] = 'Расход'
                             }
-                            field.value = fields[key];
+                            (field as HTMLInputElement).value = fields[key].toString();
                         }
                     }
                 }
@@ -185,7 +186,7 @@ export class EditPL {
                 }
             }
             if (element.nextElementSibling) {
-                element.nextElementSibling.style.display = "flex";
+                (element.nextElementSibling as HTMLElement).style.display = "flex";
             }
         } else {
             field.valid = true;

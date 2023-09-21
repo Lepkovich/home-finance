@@ -29,7 +29,8 @@ export type GetOperationsPeriodType = {
         amount: number,
         date: string,
         comment: string,
-        category: string
+        category: string, 
+        [key: string]: string | number
 }
 
 export type PostIncomeCategoryType = {
