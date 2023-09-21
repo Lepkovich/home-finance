@@ -94,9 +94,13 @@ var AddPL = /** @class */ (function () {
                 };
             }
         });
+        // this.processForm = this.processForm.bind(this);
         this.processElement = document.getElementById('process');
         if (this.processElement) {
-            this.processElement.addEventListener('click', this.processForm.bind(this));
+            this.processElement.onclick = function () {
+                that.processForm();
+            };
+            // this.processElement.addEventListener('click', this.processForm);
         }
         this.cancelElement = document.getElementById('cancel');
         if (this.cancelElement) {
@@ -196,7 +200,7 @@ var AddPL = /** @class */ (function () {
         if (!element.value || !element.value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element instanceof HTMLInputElement && element.validationMessag) {
+            if (element instanceof HTMLInputElement && element.validationMessage) {
                 var nextElement = element.nextElementSibling;
                 if (nextElement instanceof HTMLElement) {
                     nextElement.innerText = element.validationMessage;
@@ -225,14 +229,13 @@ var AddPL = /** @class */ (function () {
         return validForm;
     };
     ;
-    AddPL.prototype.processForm = function (event) {
+    AddPL.prototype.processForm = function () {
         return __awaiter(this, void 0, void 0, function () {
             var values_1, amount, date, comment, categoryId, result, error_3;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        event.preventDefault();
                         if (!this.validateForm()) return [3 /*break*/, 8];
                         values_1 = {};
                         ['sum', 'date', 'comment', 'category'].forEach(function (fieldName) {

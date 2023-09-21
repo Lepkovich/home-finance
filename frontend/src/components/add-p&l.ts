@@ -100,7 +100,7 @@ export class AddPL {
         this.init();
     }
 
-    async init() {
+    private async init(): Promise<void> {
         if (this.type === 'income') {
             await Sidebar.showSidebar('earnings');
             this.typeValue = 'Доход';

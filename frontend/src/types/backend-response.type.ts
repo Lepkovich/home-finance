@@ -42,10 +42,10 @@ export type PostExpenseCategoryType = {
 }
 
 export type PostOperationResponseType = {
-    "id": number,
-    "type": string,
-    "amount": number,
-    "date": Date,
-    "comment": string,
-    "category": string
+    id: number,
+    type: string,
+    amount: number,
+    date: Date,
+    comment: string,
+    category: string
 }

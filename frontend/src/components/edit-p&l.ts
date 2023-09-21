@@ -1,11 +1,24 @@
-import {CustomHttp} from "../services/custom-http.ts";
+import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
+import {FieldsType} from "../types/fields.type";
+import bootstrap, {Modal} from "bootstrap";
+import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 
 export class EditPL {
+    private id: string;
+    private typeValue: string | null;
+    private fields: FieldsType[];
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
+    private cancelElement: HTMLElement | null;
+    private processElement: HTMLElement | null;
+
     constructor() {
 
         this.id = document.location.hash.split('=')[1];
+
         this.typeValue =null;
         this.fields = [
             {
@@ -46,25 +59,34 @@ export class EditPL {
         ];
         const that = this;
         this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
+            item.element = document.getElementById(item.id) as HTMLInputElement;
             item.element.onchange = function () {
-                that.validateField.call(that, item, this)
+                that.validateField.call(that, item, <HTMLInputElement>this)
             }
         });
 
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        const textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
 
 
-        this.processElement = document.getElementById('process');
         this.cancelElement = document.getElementById('cancel');
-        this.cancelElement.onclick = function () {
-            location.href = '#/p&l';
+        if (this.cancelElement) {
+            this.cancelElement.onclick = function () {
+                location.href = '#/p&l';
+            }
         }
-        this.processElement.addEventListener('click', this.processForm.bind(this));
 
+
+        this.processElement = document.getElementById('process');
+        if (this.processElement) {
+            this.processElement.addEventListener('click', this.processForm.bind(this));
+
+        }
 
         this.init();
     }
@@ -72,12 +94,12 @@ export class EditPL {
     async init() {
 
         try {
-            const result = await CustomHttp.request(config.host + '/operations/' + this.id )
+            const result: GetErrorResponseType | GetOperationsPeriodType = await CustomHttp.request(config.host + '/operations/' + this.id )
 
             if (result) {
-                if (result.error) {
-                    await this.showResult(result.message);
-                    throw new Error(result.message);
+                if ((result as GetErrorResponseType).error) {
+                    await this.showResult(result as GetErrorResponseType);
+                    throw new Error((result as GetErrorResponseType).message);
                 }
                 await this.fillFields(result);
             }
@@ -86,21 +108,21 @@ export class EditPL {
         }
     }
 
-    async fillFields(fields) {
+    private async fillFields(fields: GetOperationsPeriodType): Promise<void> {
         try {
             if (fields.type === 'income') {
                 this.typeValue = 'income';
                 await Sidebar.showSidebar('earnings');
-                const result = await CustomHttp.request(config.host + '/categories/income');
-                if (result && !result.error) {
-                    this.showCategories(result);
+                const result: GetErrorResponseType | GetCategoryIncomeType[] = await CustomHttp.request(config.host + '/categories/income');
+                if (result && !(result as GetErrorResponseType).error) {
+                    this.showCategories(result as GetCategoryIncomeType[]);
                 }
             } else {
                 this.typeValue = 'expense';
                 await Sidebar.showSidebar('expenses');
-                const result = await CustomHttp.request(config.host + '/categories/expense');
-                if (result && !result.error) {
-                    this.showCategories(result);
+                const result: GetErrorResponseType | GetCategoryIncomeType[] = await CustomHttp.request(config.host + '/categories/expense');
+                if (result && !(result as GetErrorResponseType).error) {
+                    this.showCategories(result as GetCategoryIncomeType[]);
                 }
             }
 
@@ -135,51 +157,57 @@ export class EditPL {
         }
     }
 
-    showCategories(categories) {
+    private showCategories(categories: GetCategoryIncomeType[]): void {
         // Получение ссылки на элемент <select>
         const selectElement = document.getElementById("category");
 
 // Создание строк <option> на основе массива categories
         categories.forEach(function (category) {
-            const optionElement = document.createElement("option");
-            optionElement.value = category.id;
+            const optionElement: HTMLElement = document.createElement("option");
+            (optionElement as HTMLInputElement).value = category.id.toString();
             optionElement.textContent = category.title;
-            selectElement.appendChild(optionElement);
+            if (selectElement) {
+                selectElement.appendChild(optionElement);
+            }
         });
     }
 
 
-    validateField(field, element) {
+    validateField(field: FieldsType, element: HTMLElement) {
 
-        if (!element.value || !element.value.match(field.regex)) {
+        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element.validationMessage) {
-                element.nextElementSibling.innerText = element.validationMessage;
+            if (element instanceof HTMLInputElement && element.validationMessage) {
+                const nextElement = element.nextElementSibling;
+                if (nextElement instanceof HTMLElement) {
+                    nextElement.innerText = element.validationMessage;
+                }
             }
-            element.nextElementSibling.style.display = "flex";
+            if (element.nextElementSibling) {
+                element.nextElementSibling.style.display = "flex";
+            }
         } else {
             field.valid = true;
             element.classList.remove('is-invalid');
-            element.nextElementSibling.style.display = "none";
+            (element.nextElementSibling as HTMLElement).style.display = "none";
         }
 
         this.validateForm();
     };
 
     validateForm() {
-
         const validForm = this.fields.every(item => item.valid);
-        if (validForm) {
+        if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
-        } else {
+        } else if (this.processElement) {
             this.processElement.classList.add('disabled');
         }
         return validForm;
     };
 
-    async processForm(event) {
-        event.preventDefault();
+    private async processForm(): Promise<void> {
+        // event.preventDefault();
         if (this.validateForm()) {
 
             //     "type": "expense",
@@ -188,17 +216,33 @@ export class EditPL {
             //     "comment": "any",
             //     "category_id": 3
 
+            // предыдущий код на JS
+            // const type = this.typeValue;
+            // const amount = this.fields.find(item => item.name === 'amount').element.value;
+            // const date = this.fields.find(item => item.name === 'date').element.value;
+            // const comment = this.fields.find(item => item.name === 'comment').element.value;
+            // const categoryId = this.fields.find(item => item.name === 'category').element.value;
 
-            const type = this.typeValue;
-            const amount = this.fields.find(item => item.name === 'amount').element.value;
-            const date = this.fields.find(item => item.name === 'date').element.value;
-            const comment = this.fields.find(item => item.name === 'comment').element.value;
-            const categoryId = this.fields.find(item => item.name === 'category').element.value;
+            // реализация на TS:
+            const values: Record<string, string> = {};
+
+            ['sum', 'date', 'comment', 'category'].forEach(fieldName => {
+                const field = this.fields.find(item => item.name === fieldName);
+                if (field && field.element) {
+                    values[fieldName] = (field.element as HTMLInputElement).value;
+                }
+            });
+
+// Теперь объект `values` содержит значения всех полей, где ключи - это имена полей, а значения - их значения
+            const amount = values['sum'];
+            const date = values['date'];
+            const comment = values['comment'];
+            const categoryId = values['category'];
 
 
             try {
-                const result = await CustomHttp.request(config.host + '/operations/' + this.id, 'PUT', {
-                    type: type,
+                const result: GetErrorResponseType | GetOperationsPeriodType = await CustomHttp.request(config.host + '/operations/' + this.id, 'PUT', {
+                    type: this.typeValue,
                     amount: parseInt(amount),
                     date: date,
                     comment: comment,
@@ -206,11 +250,11 @@ export class EditPL {
                 })
 
                 if (result) {
-                    if (result.error) {
-                        await this.showResult(result.message);
-                        throw new Error(result.message);
+                    if ((result as GetErrorResponseType).error) {
+                        await this.showResult(result as GetErrorResponseType);
+                        throw new Error((result as GetErrorResponseType).message);
                     }
-                    await this.showResult(result);
+                    await this.showResult(result as GetOperationsPeriodType);
                     location.href = '#/p&l';
                 }
             } catch (error) {
@@ -220,15 +264,17 @@ export class EditPL {
         }
     }
 
-    async showResult(message) {
+    private async showResult(message: GetErrorResponseType | GetOperationsPeriodType): Promise<void> {
         return new Promise((resolve) => {
-            if (message.date && message.category && message.amount && message.comment) {
-                this.textMessage = "Изменена запись от " + message.date + " c категорией " + message.category + " на сумму $" + message.amount + " с комментарием " + message.comment;
+            if ((message as GetOperationsPeriodType).date && (message as GetOperationsPeriodType).category && (message as GetOperationsPeriodType).amount && (message as GetOperationsPeriodType).comment) {
+                this.textMessage = "Изменена запись от " + (message as GetOperationsPeriodType).date + " c категорией " + (message as GetOperationsPeriodType).category + " на сумму $" + (message as GetOperationsPeriodType).amount + " с комментарием " + (message as GetOperationsPeriodType).comment;
             } else {
-                this.textMessage = message;
+                this.textMessage = (message as GetErrorResponseType).message;
             }
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (this.modalMessageField) {
+                this.modalMessageField.innerText = this.textMessage;
+            }
 
             this.resultModal.show();
 

@@ -82,7 +82,7 @@ export class EditEarnings {
 
 
     }
-    async rewriteCategory(title: string, id: number){
+    private async rewriteCategory(title: string, id: number): Promise<void> {
         if(title && id){
             try {
                 const result: GetErrorResponseType |  GetCategoryIncomeType = await CustomHttp.request(config.host + '/categories/income/' + id, 'PUT',{
