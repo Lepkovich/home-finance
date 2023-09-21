@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddPL = void 0;
-var custom_http_ts_1 = require("../services/custom-http.ts");
+var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var AddPL = /** @class */ (function () {
     function AddPL() {
         this.typeValue = null;
@@ -87,21 +88,30 @@ var AddPL = /** @class */ (function () {
         var that = this;
         this.fields.forEach(function (item) {
             item.element = document.getElementById(item.id);
-            item.element.onchange = function () {
-                that.validateField.call(that, item, this);
-            };
+            if (item.element) {
+                item.element.onchange = function () {
+                    that.validateField.call(that, item, this);
+                };
+            }
         });
         this.processElement = document.getElementById('process');
+        if (this.processElement) {
+            this.processElement.addEventListener('click', this.processForm.bind(this));
+        }
         this.cancelElement = document.getElementById('cancel');
+        if (this.cancelElement) {
+            this.cancelElement.onclick = function () {
+                location.href = '#/p&l';
+            };
+        }
         this.typeElement = document.getElementById('type');
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        var textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
-        this.cancelElement.onclick = function () {
-            location.href = '#/p&l';
-        };
-        this.processElement.addEventListener('click', this.processForm.bind(this));
         this.init();
     }
     AddPL.prototype.init = function () {
@@ -118,12 +128,12 @@ var AddPL = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         _a.trys.push([2, 7, , 8]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/income')];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/income')];
                     case 3:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 6];
                         if (!result.error) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 4:
                         _a.sent();
                         throw new Error(result.message);
@@ -143,12 +153,12 @@ var AddPL = /** @class */ (function () {
                         _a.label = 11;
                     case 11:
                         _a.trys.push([11, 16, , 17]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/categories/expense')];
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/categories/expense')];
                     case 12:
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 15];
                         if (!result.error) return [3 /*break*/, 14];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 13:
                         _a.sent();
                         throw new Error(result.message);
@@ -160,7 +170,9 @@ var AddPL = /** @class */ (function () {
                         error_2 = _a.sent();
                         return [2 /*return*/, console.log(error_2)];
                     case 17:
-                        this.typeElement.value = this.typeValue;
+                        if (this.typeElement) {
+                            this.typeElement.value = this.typeValue;
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -170,22 +182,29 @@ var AddPL = /** @class */ (function () {
     AddPL.prototype.showCategories = function (categories) {
         // Получение ссылки на элемент <select>
         var selectElement = document.getElementById("category");
-        // Создание строк <option> на основе массива categories
-        categories.forEach(function (category) {
-            var optionElement = document.createElement("option");
-            optionElement.value = category.id;
-            optionElement.textContent = category.title;
-            selectElement.appendChild(optionElement);
-        });
+        if (selectElement) {
+            // Создание строк <option> на основе массива categories
+            categories.forEach(function (category) {
+                var optionElement = document.createElement("option");
+                optionElement.value = category.id.toString();
+                optionElement.textContent = category.title;
+                selectElement.appendChild(optionElement);
+            });
+        }
     };
     AddPL.prototype.validateField = function (field, element) {
         if (!element.value || !element.value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element.validationMessage) {
-                element.nextElementSibling.innerText = element.validationMessage;
+            if (element instanceof HTMLInputElement && element.validationMessag) {
+                var nextElement = element.nextElementSibling;
+                if (nextElement instanceof HTMLElement) {
+                    nextElement.innerText = element.validationMessage;
+                }
             }
-            element.nextElementSibling.style.display = "flex";
+            if (element.nextElementSibling) {
+                element.nextElementSibling.style.display = "flex";
+            }
         }
         else {
             field.valid = true;
@@ -197,10 +216,10 @@ var AddPL = /** @class */ (function () {
     ;
     AddPL.prototype.validateForm = function () {
         var validForm = this.fields.every(function (item) { return item.valid; });
-        if (validForm) {
+        if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
         }
-        else {
+        else if (this.processElement) {
             this.processElement.classList.add('disabled');
         }
         return validForm;
@@ -208,20 +227,28 @@ var AddPL = /** @class */ (function () {
     ;
     AddPL.prototype.processForm = function (event) {
         return __awaiter(this, void 0, void 0, function () {
-            var amount, date, comment, categoryId, result, error_3;
+            var values_1, amount, date, comment, categoryId, result, error_3;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         event.preventDefault();
                         if (!this.validateForm()) return [3 /*break*/, 8];
-                        amount = this.fields.find(function (item) { return item.name === 'sum'; }).element.value;
-                        date = this.fields.find(function (item) { return item.name === 'date'; }).element.value;
-                        comment = this.fields.find(function (item) { return item.name === 'comment'; }).element.value;
-                        categoryId = this.fields.find(function (item) { return item.name === 'category'; }).element.value;
+                        values_1 = {};
+                        ['sum', 'date', 'comment', 'category'].forEach(function (fieldName) {
+                            var field = _this.fields.find(function (item) { return item.name === fieldName; });
+                            if (field && field.element) {
+                                values_1[fieldName] = field.element.value;
+                            }
+                        });
+                        amount = values_1['sum'];
+                        date = values_1['date'];
+                        comment = values_1['comment'];
+                        categoryId = values_1['category'];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 7, , 8]);
-                        return [4 /*yield*/, custom_http_ts_1.CustomHttp.request(config_1.default.host + '/operations', 'POST', {
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/operations', 'POST', {
                                 type: this.type,
                                 amount: amount,
                                 date: date,
@@ -232,7 +259,7 @@ var AddPL = /** @class */ (function () {
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 6];
                         if (!result.error) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 3:
                         _a.sent();
                         throw new Error(result.message);
@@ -257,7 +284,9 @@ var AddPL = /** @class */ (function () {
                 return [2 /*return*/, new Promise(function (resolve) {
                         _this.textMessage = message.error ? message.message :
                             "Запись успешно добавлена." + "\nСообщение сервера: " + JSON.stringify(message);
-                        _this.modalMessageField.innerText = _this.textMessage;
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {

@@ -14,9 +14,9 @@ export class AddPL {
     private typeValue: string | null;
     private readonly type: string;
     private fields: FieldsType[];
-    private processElement: HTMLElement | null;
-    private cancelElement: HTMLElement | null;
-    private typeElement: HTMLElement | null;
+    private readonly processElement: HTMLElement | null;
+    private readonly cancelElement: HTMLElement | null;
+    private readonly typeElement: HTMLElement | null;
     private resultModal!: Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
@@ -64,16 +64,20 @@ export class AddPL {
         ];
         const that = this;
         this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
+            item.element = document.getElementById(item.id) as HTMLInputElement;
             if (item.element) {
                 item.element.onchange = function () {
-                    that.validateField.call(that, item, this)
+                    that.validateField.call(that, item, <HTMLInputElement>this);
                 }
             }
         });
-        this.processElement = document.getElementById('process');
+        // this.processForm = this.processForm.bind(this);
+        this.processElement = document.getElementById('process') as HTMLElement;
         if (this.processElement) {
-            this.processElement.addEventListener('click', this.processForm.bind(this));
+            this.processElement.onclick = function () {
+                that.processForm();
+            }
+            // this.processElement.addEventListener('click', this.processForm);
         }
         this.cancelElement = document.getElementById('cancel');
         if (this.cancelElement) {
@@ -157,7 +161,7 @@ export class AddPL {
         if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element instanceof HTMLInputElement && element.validationMessag) {
+            if (element instanceof HTMLInputElement && element.validationMessage) {
                 const nextElement = element.nextElementSibling;
                 if (nextElement instanceof HTMLElement) {
                     nextElement.innerText = element.validationMessage;
@@ -185,8 +189,8 @@ export class AddPL {
         return validForm;
     };
 
-    async processForm(event: SubmitEvent) {
-        event.preventDefault();
+    private async processForm(): Promise<void> {
+        // event.preventDefault();
         if (this.validateForm()) {
 
                 // "type": "income",
