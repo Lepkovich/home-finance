@@ -142,7 +142,7 @@ var EditPL = /** @class */ (function () {
     };
     EditPL.prototype.fillFields = function (fields) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, result, key, field, options, i, option, error_2;
+            var result, result, key, field, selectElement, options, i, option, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -177,10 +177,11 @@ var EditPL = /** @class */ (function () {
                                 field = document.getElementById(key);
                                 if (field) {
                                     if (field.tagName === 'SELECT') {
-                                        options = field.options;
+                                        selectElement = field;
+                                        options = selectElement.options;
                                         for (i = 0; i < options.length; i++) { //пройдемся по всем options
                                             option = options[i];
-                                            if (option.textContent.trim() === fields[key]) { //и сравним текстовые значения {"id": 2, "title": "Жилье"}
+                                            if (option.textContent && option.textContent.trim() === fields[key]) { //и сравним текстовые значения {"id": 2, "title": "Жилье"}
                                                 field.selectedIndex = i; //и подставим индекс того, с которым мы перешли на страницу  {category:"Жилье"}
                                                 break;
                                             }
@@ -194,7 +195,7 @@ var EditPL = /** @class */ (function () {
                                         else if (fields[key] === 'expense') {
                                             fields[key] = 'Расход';
                                         }
-                                        field.value = fields[key];
+                                        field.value = fields[key].toString();
                                     }
                                 }
                             }

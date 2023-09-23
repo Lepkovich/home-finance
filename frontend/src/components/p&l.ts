@@ -2,10 +2,25 @@ import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import {ShowButtons} from "../services/show-buttons";
+import bootstrap, {Modal} from "bootstrap";
+import {GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 
 export class PL extends ShowButtons{
+    private readonly addIncomeButton: HTMLElement | null;
+    private readonly addExpenseButton: HTMLElement | null;
+    private emptyText: HTMLElement | null;
+    private readonly tbody: HTMLElement | null;
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
+    private confirmationModal!: Modal;
+    private editElements: NodeListOf<Element> | null;
+    private deleteElements: NodeListOf<Element> | null;
+
     constructor() {
         super();
+        this.editElements = null;
+        this.deleteElements = null;
         this.addIncomeButton = document.getElementById('add-income');
         this.addExpenseButton = document.getElementById('add-expense');
         this.emptyText = document.getElementById('emptyText');
@@ -13,8 +28,12 @@ export class PL extends ShowButtons{
 
 
         //определяем параметры модальных окон
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
-        this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        const textModalElement = document.getElementById('textModal');
+        const confirmationModalElement = document.getElementById('confirmationModal');
+        if (textModalElement && confirmationModalElement) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+            this.confirmationModal = new bootstrap.Modal(confirmationModalElement);
+        }
         this.modalMessageField = document.getElementById('textModal-message');
         this.textMessage = null;
 
@@ -27,6 +46,33 @@ export class PL extends ShowButtons{
         await Sidebar.showSidebar('pl');
         this.processButtons();
 
+        // Создаем массив кнопок и их соответствующих обработчиков
+        const buttons = [
+            { button: this.todayButton, handler: 'today' },
+            { button: this.weekButton, handler: 'week' },
+            { button: this.monthButton, handler: 'month' },
+            { button: this.yearButton, handler: 'year' },
+            { button: this.allButton, handler: 'all' },
+        ];
+
+        // Добавляем обработчики для существующих кнопок
+        buttons.forEach(({ button, handler }) => {
+            if (button) {
+                button.onclick = this.getTable.bind(this, handler);
+            }
+        });
+        // Добавляем обработчик для periodButton, если он существует
+        if (this.periodButton) {
+
+            this.periodButton.onclick = () => {
+                if (this.periodFrom && this.periodTo) {
+                    const queryString = `interval&dateFrom=${(this.periodFrom as HTMLInputElement).value}&dateTo=${(this.periodTo as HTMLInputElement).value}`;
+                    this.getTable(queryString);
+                }
+            };
+        }
+
+/*
         this.todayButton.onclick = this.getTable.bind(this, 'today');
         this.weekButton.onclick = this.getTable.bind(this, 'week');
         this.monthButton.onclick = this.getTable.bind(this, 'month');
@@ -35,27 +81,33 @@ export class PL extends ShowButtons{
         this.periodButton.onclick = () => {
             const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
             this.getTable(queryString);
-        };
+        }; */
 
-        this.addIncomeButton.onclick = () => {
-            location.href = '#/add-p&l?=income'
-        };
+        if (this.addIncomeButton) {
+            this.addIncomeButton.onclick = () => {
+                location.href = '#/add-p&l?=income'
+            };
+        }
 
-        this.addExpenseButton.onclick = () => {
-            location.href = '#/add-p&l?=expense'
-        };
+        if (this.addExpenseButton) {
+            this.addExpenseButton.onclick = () => {
+                location.href = '#/add-p&l?=expense'
+            };
+        }
+
 
     }
-    async getTable(period) {
+
+    private async getTable(period?: string): Promise<void> {
         try {
-            const result = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
+            const result: GetOperationsPeriodType[] | GetErrorResponseType = await CustomHttp.request(config.host + '/operations/?period=' + period, 'GET',)
 
             if (result) {
-                if (result.error || !result) {
-                    await this.showResult(result.message);
-                    throw new Error(result.message);
+                if ((result as GetErrorResponseType).error || !result) {
+                    await this.showResult(result as GetErrorResponseType);
+                    throw new Error((result as GetErrorResponseType).message);
                 }
-                await this.showTable(result);
+                await this.showTable(result as GetOperationsPeriodType[]);
             }
 
         } catch (error) {
@@ -63,14 +115,16 @@ export class PL extends ShowButtons{
         }
     };
 
-    async showTable(table) {
+    private async showTable(table:GetOperationsPeriodType[]): Promise<void> {
         // Очистим таблицу перед заполнением
-        this.tbody.innerHTML = '';
+        if (this.tbody) {
+            this.tbody.innerHTML = '';
+        }
 
         if (table.length === 0) {
-            this.emptyText.style.display = 'flex';
+            (this.emptyText as HTMLElement).style.display = 'flex';
         } else {
-            this.emptyText.style.display = 'none';
+            (this.emptyText as HTMLElement).style.display = 'none';
 
             //создаем структуру html
             // <tr>
@@ -98,7 +152,7 @@ export class PL extends ShowButtons{
 
                 // Создание ячейки для номера
                 let numberCell = document.createElement("th");
-                numberCell.textContent = i + 1;
+                numberCell.textContent = (i + 1).toString();
                 row.appendChild(numberCell);
 
                 // Создание ячейки для типа (доход/расход)
@@ -162,7 +216,9 @@ export class PL extends ShowButtons{
                 row.appendChild(actionsCell);
 
                 // Добавление строки в таблицу
-                tbody.appendChild(row);
+                if ( this.tbody) {
+                    this.tbody.appendChild(row);
+                }
 
             }
             this.editElements = document.querySelectorAll('[id^="edit-"]');
@@ -176,7 +232,8 @@ export class PL extends ShowButtons{
                 });
             });
 
-            for (const element of this.deleteElements) {
+            const elementsArray = Array.from(this.deleteElements);
+            for (const element of elementsArray) {
                 element.addEventListener("click", async () => {
                     const id = element.id;
                     const number = parseInt(id.split('-')[1]);
@@ -186,36 +243,20 @@ export class PL extends ShowButtons{
        }
     }
 
-    async deleteElement(id) {
-        try {
-            const result = await CustomHttp.request(config.host + '/operations/' + id, 'DELETE',)
 
-            if (result) {
-                if (result.error || !result) {
-                    await this.showResult(result.message);
-                    throw new Error(result.message);
-                }
-                await this.showResult(result);
-                location.reload();
-            }
-
-        } catch (error) {
-            console.log('ошибка' + error);
-        }
-    }
-    async confirmDeleting(id) {
+    private async confirmDeleting(id:number): Promise<void> {
         return new Promise((resolve) => {
             const deleteButton = document.getElementById('delete');
             const cancelButton = document.getElementById('cancel');
 
             this.confirmationModal.show();
 
-            cancelButton.onclick = () => {
+            (cancelButton as HTMLElement).onclick = () => {
                 this.confirmationModal.hide();
                 resolve(); // Разрешаем обещание после закрытия модального окна
             };
 
-            deleteButton.onclick = async () => {
+            (deleteButton as HTMLElement).onclick = async () => {
                 this.confirmationModal.hide();
                 await this.deleteElement(id);
                 resolve(); // Разрешаем обещание после удаления категории
@@ -227,12 +268,33 @@ export class PL extends ShowButtons{
             });
         });
     }
-    async showResult(message) {
+
+    private async deleteElement(id:number): Promise<void> {
+        try {
+            const result: GetErrorResponseType = await CustomHttp.request(config.host + '/operations/' + id.toString(), 'DELETE',)
+
+            if (result) {
+                if (result.error || !result) {
+                    await this.showResult(result);
+                    throw new Error(result.message);
+                }
+                await this.showResult(result);
+                location.reload();
+            }
+
+        } catch (error) {
+            console.log('ошибка' + error);
+        }
+    }
+
+    private async showResult(message: GetErrorResponseType): Promise<void> {
         return new Promise((resolve) => {
             this.textMessage = message.error ? message.message :
                 "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (this.modalMessageField) {
+                this.modalMessageField.innerText = this.textMessage;
+            }
 
             this.resultModal.show();
 

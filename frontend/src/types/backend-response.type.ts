@@ -10,7 +10,32 @@ export type RefreshResponseType = {
 
 export type GetErrorResponseType = {
     error?: boolean,
+    message: string
+}
+
+export type PostSignupResponseType = {
+    error: boolean,
     message: string,
+    user?: {
+    id: number,
+    email: string,
+    name: string,
+    lastName: string
+    }
+}
+
+export type PostLoginResponseType = {
+    error: boolean,
+    message: string
+    tokens?: {
+        accessToken: string,
+        refreshToken: string,
+    }
+    user?: {
+        name: string,
+        lastName: string,
+        id: number
+    }
 }
 
 export type GetCategoryIncomeType = {

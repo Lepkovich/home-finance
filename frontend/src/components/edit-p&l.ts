@@ -176,7 +176,7 @@ export class EditPL {
 
     validateField(field: FieldsType, element: HTMLElement) {
 
-        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex)) {
+        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex as RegExp)) {
             field.valid = false;
             element.classList.add('is-invalid');
             if (element instanceof HTMLInputElement && element.validationMessage) {

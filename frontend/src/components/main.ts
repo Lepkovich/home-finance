@@ -3,15 +3,28 @@ import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
+import bootstrap, {Modal} from "bootstrap";
 
 export class Main extends ShowButtons{
     private readonly earningsChart: HTMLElement | null;
     private readonly expensesChart: HTMLElement | null;
     private readonly emptyText: HTMLElement | null;
     private readonly charts: HTMLElement | null;
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
 
     constructor() {
         super();
+
+        //определяем параметры модального окна
+        const textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+        }
+        this.textMessage = null;
+        this.modalMessageField = document.getElementById('textModal-message');
+
         this.earningsChart = document.getElementById('earnings-chart');
         this.expensesChart = document.getElementById('expenses-chart');
         this.emptyText = document.getElementById('emptyText');
@@ -19,6 +32,7 @@ export class Main extends ShowButtons{
 
         this.dataInit();
     }
+
     private async dataInit(): Promise<void>{
         await Sidebar.showSidebar('main');
         this.processButtons();
@@ -61,7 +75,7 @@ export class Main extends ShowButtons{
         };*/
     }
 
-    async getTable(period?: string){
+    private async getTable(period?: string): Promise<void>{
         try {
             const [operations, income, expenses] = await Promise.all([
                 CustomHttp.request(config.host + '/operations/?period=' + period, 'GET'),
@@ -158,7 +172,7 @@ export class Main extends ShowButtons{
                 this.emptyText.style.display = 'none';
 
                 // Очищаем канвасы и уничтожаем объекты графиков
-                if (this.earningsChart.chart) {
+                if ((this.earningsChart as HTMLElement).chart) {
                     this.earningsChart.chart.destroy();
                 }
                 const earningsContext = this.earningsChart.getContext("2d");
@@ -244,12 +258,14 @@ export class Main extends ShowButtons{
     };
 
 
-    async showResult(message) {
+    private async showResult(message: GetErrorResponseType): Promise<void> {
         return new Promise((resolve) => {
-            this.textMessage = message.error ? message.message :
-                "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (message.error && this.modalMessageField) {
+                this.textMessage = message.message;
+                this.modalMessageField.innerText = this.textMessage;
+            }
+
 
             this.resultModal.show();
 

@@ -74,10 +74,10 @@ export class AddPL {
         // this.processForm = this.processForm.bind(this);
         this.processElement = document.getElementById('process') as HTMLElement;
         if (this.processElement) {
-            this.processElement.onclick = function () {
-                that.processForm();
-            }
-            // this.processElement.addEventListener('click', this.processForm);
+            // this.processElement.onclick = function () {
+            //     that.processForm();
+            // }
+            this.processElement.addEventListener('click', this.processForm);
         }
         this.cancelElement = document.getElementById('cancel');
         if (this.cancelElement) {
@@ -158,7 +158,7 @@ export class AddPL {
 
     private validateField(field: FieldsType , element: HTMLElement) {
 
-        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex)) {
+        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex!)) {
             field.valid = false;
             element.classList.add('is-invalid');
             if (element instanceof HTMLInputElement && element.validationMessage) {
@@ -189,8 +189,8 @@ export class AddPL {
         return validForm;
     };
 
-    private async processForm(): Promise<void> {
-        // event.preventDefault();
+    private async processForm(event: MouseEvent): Promise<void> {
+        event.preventDefault();
         if (this.validateForm()) {
 
                 // "type": "income",

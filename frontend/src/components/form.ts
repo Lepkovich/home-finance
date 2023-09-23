@@ -1,11 +1,28 @@
 import {CustomHttp} from "../services/custom-http";
 import {Auth} from "../services/auth";
 import config from "../../config/config";
+import {FieldsType} from "../types/fields.type";
+import bootstrap, {Modal} from "bootstrap";
+import {PostLoginResponseType, PostSignupResponseType} from "../types/backend-response.type";
 
 export class Form {
-    constructor(page) {
+    private readonly rememberMeElement: HTMLElement | null;
+    private rememberMe: boolean;
+    private name: string | null;
+    private lastName: string | null;
+    private readonly processElement: HTMLElement | null;
+    private readonly page: string;
+    private fields: FieldsType[];
+    private resultModal!: Modal;
+    private textMessage: string | null;
+    private readonly modalMessageField: HTMLElement | null;
+
+    constructor(page: string) {
         //определяем параметры модального окна
-        this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
+        const textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            this.resultModal = new bootstrap.Modal(textModalElement);
+        }
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
 
@@ -54,13 +71,17 @@ export class Form {
 
         const that = this;
         this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
-            item.element.onchange = function () {
-                that.validateField.call(that, item, this)
+            item.element = document.getElementById(item.id) as HTMLInputElement;
+            if (item.element) {
+                item.element.onchange = function () {
+                    that.validateField.call(that, item, <HTMLInputElement>this);
+                }
             }
         });
         this.processElement = document.getElementById('process');
-        this.processElement.addEventListener('click', this.processForm.bind(this));
+        if (this.processElement) {
+            this.processElement.addEventListener('click', this.processForm.bind(this));
+        }
 
 
         if (this.page === 'login') {
@@ -69,23 +90,29 @@ export class Form {
 
     }
 
-    validateField(field, element) {
+    validateField(field: FieldsType, element: HTMLElement) {
 
-        if (!element.value || !element.value.match(field.regex)) {
+        if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex!)) {
             field.valid = false;
             element.classList.add('is-invalid');
-            if (element.validationMessage) {
-                element.nextElementSibling.innerText = element.validationMessage;
+            if (element instanceof HTMLInputElement && element.validationMessage) {
+                const nextElement = element.nextElementSibling;
+                if (nextElement instanceof HTMLElement) {
+                    nextElement.innerText = element.validationMessage;
+                }
             }
-            element.nextElementSibling.style.display = "flex";
+            if (element.nextElementSibling) {
+                (element.nextElementSibling as HTMLElement).style.display = "flex";
+            }
         } else {
             field.valid = true;
             element.classList.remove('is-invalid');
-            element.nextElementSibling.style.display = "none";
+            (element.nextElementSibling as HTMLElement).style.display = "none";
         }
 
         if (field.name === 'name') {
-            const fullName = this.fields.find(item => item.name === 'name').element.value;
+            const fullNameElement = this.fields.find(item => item.name === 'name')?.element as HTMLInputElement;
+            const fullName = fullNameElement?.value;
             this.name = fullName.split(" ")[0]; // Имя (до пробела)
             this.lastName = fullName.split(" ")[1]; // Фамилия (после пробела)
         }
@@ -93,49 +120,56 @@ export class Form {
         if (field.name === 'repeat-password') {
 
             const passwordField = this.fields.find(item => item.name === 'password');
-            if (!element.value || element.value !== passwordField.element.value) {
-                field.valid = false;
-                element.classList.add('is-invalid');
-                element.nextElementSibling.style.display = 'flex';
-            } else {
-                field.valid = true;
-                element.classList.remove('is-invalid');
-                element.nextElementSibling.style.display = "none";
+            if (passwordField) {
+                if (!(element as HTMLInputElement).value || (element as HTMLInputElement).value !== (passwordField.element as HTMLInputElement).value) {
+                    field.valid = false;
+                    element.classList.add('is-invalid');
+                    (element.nextElementSibling as HTMLElement).style.display = 'flex';
+                } else {
+                    field.valid = true;
+                    element.classList.remove('is-invalid');
+                    (element.nextElementSibling as HTMLElement).style.display = "none";
+                }
             }
+
         }
 
 
         this.validateForm();
     };
 
-    validateForm() {
+    private validateForm(): boolean {
         const validForm = this.fields.every(item => item.valid);
-        if (validForm) {
+        if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
-        } else {
+        } else if (this.processElement) {
             this.processElement.classList.add('disabled');
         }
         return validForm;
     };
 
-    async processForm(event) {
+    private async processForm(event: MouseEvent): Promise<void>  {
         event.preventDefault();
         if (this.validateForm()) {
-            const email = this.fields.find(item => item.name === 'email').element.value;
-            const password = this.fields.find(item => item.name === 'password').element.value;
+            const emailEmail =  this.fields.find(item => item.name === 'email')?.element as HTMLInputElement;
+            const email = emailEmail.value;
+            const passwordElement = this.fields.find(item => item.name === 'password')?.element as HTMLInputElement;
+            const password = passwordElement.value;
             if (this.rememberMeElement){
-                this.rememberMe = this.rememberMeElement.checked;
+                this.rememberMe = (this.rememberMeElement as HTMLInputElement).checked;
             }
+            const passwordRepeatElement = this.fields.find(item => item.name === 'repeat-password')?.element as HTMLInputElement;
+            const passwordRepeat = passwordRepeatElement.value;
 
 
             if (this.page === 'signup') {
                 try {
-                    const result = await CustomHttp.request(config.host + '/signup', 'POST', {
+                    const result: PostSignupResponseType = await CustomHttp.request(config.host + '/signup', 'POST', {
                         name: this.name,
                         lastName: this.lastName,
                         email: email,
                         password: password,
-                        passwordRepeat: this.fields.find(item => item.name === 'repeat-password').element.value,
+                        passwordRepeat: passwordRepeat
                     })
 
                     if (result) {
@@ -150,7 +184,7 @@ export class Form {
             }
 
             try {
-                const result = await CustomHttp.request(config.host + '/login', 'POST', {
+                const result: PostLoginResponseType = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
                     rememberMe: this.rememberMe
@@ -161,13 +195,13 @@ export class Form {
                         await this.showResult(result); //вот тут мы не видим модальное окно
                         throw new Error(result.message);
                     }
-
-                    if (!result.error && result.tokens.accessToken && result.tokens.refreshToken && result.user.name && result.user.lastName && result.user.id) {
+                    result.tokens
+                    if (!result.error && result.tokens  && result.tokens.accessToken && result.tokens.refreshToken && result.user && result.user.name && result.user.lastName && result.user.id) {
                         await this.showResult(result);
 
                         let userFullName = result.user.name + ' ' + result.user.lastName;
                         Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
-                        Auth.setUserData(result.user.id, userFullName);
+                        Auth.setUserData((result.user.id).toString(), userFullName);
                         location.href = "#/"
                     }
                 }
@@ -177,13 +211,17 @@ export class Form {
             }
         }
     }
-    async showResult(message){
+
+    private async showResult(message: PostSignupResponseType | PostLoginResponseType): Promise<void>{
         return new Promise((resolve) => {
 
             this.textMessage = message.error ? message.message :
-                "Вход под именем " + message.user.name + " успешно выполнен";
+                "Вход под именем " + message.user!.name + " успешно выполнен";
 
-            this.modalMessageField.innerText = this.textMessage;
+            if (this.modalMessageField) {
+                this.modalMessageField.innerText = this.textMessage;
+            }
+
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа

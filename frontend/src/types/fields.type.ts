@@ -2,6 +2,6 @@ export type FieldsType = {
     name: string,
     id: string,
     element: HTMLElement | null,
-    regex: RegExp,
+    regex?: RegExp,
     valid: boolean
 }

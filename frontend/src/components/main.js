@@ -59,10 +59,18 @@ var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
 var show_buttons_1 = require("../services/show-buttons");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
         var _this = _super.call(this) || this;
+        //определяем параметры модального окна
+        var textModalElement = document.getElementById('textModal');
+        if (textModalElement !== null) {
+            _this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+        }
+        _this.textMessage = null;
+        _this.modalMessageField = document.getElementById('textModal-message');
         _this.earningsChart = document.getElementById('earnings-chart');
         _this.expensesChart = document.getElementById('expenses-chart');
         _this.emptyText = document.getElementById('emptyText');
@@ -251,9 +259,10 @@ var Main = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve) {
-                        _this.textMessage = message.error ? message.message :
-                            "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
-                        _this.modalMessageField.innerText = _this.textMessage;
+                        if (message.error && _this.modalMessageField) {
+                            _this.textMessage = message.message;
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {

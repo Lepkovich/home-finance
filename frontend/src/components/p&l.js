@@ -59,17 +59,24 @@ var custom_http_1 = require("../services/custom-http");
 var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
 var show_buttons_1 = require("../services/show-buttons");
+var bootstrap_1 = __importDefault(require("bootstrap"));
 var PL = /** @class */ (function (_super) {
     __extends(PL, _super);
     function PL() {
         var _this = _super.call(this) || this;
+        _this.editElements = null;
+        _this.deleteElements = null;
         _this.addIncomeButton = document.getElementById('add-income');
         _this.addExpenseButton = document.getElementById('add-expense');
         _this.emptyText = document.getElementById('emptyText');
         _this.tbody = document.getElementById("tbody");
         //определяем параметры модальных окон
-        _this.resultModal = new bootstrap.Modal(document.getElementById('textModal'));
-        _this.confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        var textModalElement = document.getElementById('textModal');
+        var confirmationModalElement = document.getElementById('confirmationModal');
+        if (textModalElement && confirmationModalElement) {
+            _this.resultModal = new bootstrap_1.default.Modal(textModalElement);
+            _this.confirmationModal = new bootstrap_1.default.Modal(confirmationModalElement);
+        }
         _this.modalMessageField = document.getElementById('textModal-message');
         _this.textMessage = null;
         _this.dataInit();
@@ -77,6 +84,7 @@ var PL = /** @class */ (function (_super) {
     }
     PL.prototype.dataInit = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var buttons;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -84,21 +92,49 @@ var PL = /** @class */ (function (_super) {
                     case 1:
                         _a.sent();
                         this.processButtons();
-                        this.todayButton.onclick = this.getTable.bind(this, 'today');
-                        this.weekButton.onclick = this.getTable.bind(this, 'week');
-                        this.monthButton.onclick = this.getTable.bind(this, 'month');
-                        this.yearButton.onclick = this.getTable.bind(this, 'year');
-                        this.allButton.onclick = this.getTable.bind(this, 'all');
-                        this.periodButton.onclick = function () {
-                            var queryString = "interval&dateFrom=".concat(_this.periodFrom.value, "&dateTo=").concat(_this.periodTo.value);
-                            _this.getTable(queryString);
-                        };
-                        this.addIncomeButton.onclick = function () {
-                            location.href = '#/add-p&l?=income';
-                        };
-                        this.addExpenseButton.onclick = function () {
-                            location.href = '#/add-p&l?=expense';
-                        };
+                        buttons = [
+                            { button: this.todayButton, handler: 'today' },
+                            { button: this.weekButton, handler: 'week' },
+                            { button: this.monthButton, handler: 'month' },
+                            { button: this.yearButton, handler: 'year' },
+                            { button: this.allButton, handler: 'all' },
+                        ];
+                        // Добавляем обработчики для существующих кнопок
+                        buttons.forEach(function (_a) {
+                            var button = _a.button, handler = _a.handler;
+                            if (button) {
+                                button.onclick = _this.getTable.bind(_this, handler);
+                            }
+                        });
+                        // Добавляем обработчик для periodButton, если он существует
+                        if (this.periodButton) {
+                            this.periodButton.onclick = function () {
+                                if (_this.periodFrom && _this.periodTo) {
+                                    var queryString = "interval&dateFrom=".concat(_this.periodFrom.value, "&dateTo=").concat(_this.periodTo.value);
+                                    _this.getTable(queryString);
+                                }
+                            };
+                        }
+                        /*
+                                this.todayButton.onclick = this.getTable.bind(this, 'today');
+                                this.weekButton.onclick = this.getTable.bind(this, 'week');
+                                this.monthButton.onclick = this.getTable.bind(this, 'month');
+                                this.yearButton.onclick = this.getTable.bind(this, 'year');
+                                this.allButton.onclick = this.getTable.bind(this, 'all');
+                                this.periodButton.onclick = () => {
+                                    const queryString = `interval&dateFrom=${this.periodFrom.value}&dateTo=${this.periodTo.value}`;
+                                    this.getTable(queryString);
+                                }; */
+                        if (this.addIncomeButton) {
+                            this.addIncomeButton.onclick = function () {
+                                location.href = '#/add-p&l?=income';
+                            };
+                        }
+                        if (this.addExpenseButton) {
+                            this.addExpenseButton.onclick = function () {
+                                location.href = '#/add-p&l?=expense';
+                            };
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -116,7 +152,7 @@ var PL = /** @class */ (function (_super) {
                         result = _a.sent();
                         if (!result) return [3 /*break*/, 5];
                         if (!(result.error || !result)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.showResult(result.message)];
+                        return [4 /*yield*/, this.showResult(result)];
                     case 2:
                         _a.sent();
                         throw new Error(result.message);
@@ -137,11 +173,13 @@ var PL = /** @class */ (function (_super) {
     ;
     PL.prototype.showTable = function (table) {
         return __awaiter(this, void 0, void 0, function () {
-            var i, item, row, numberCell, typeCell, categoryCell, amountCell, dateCell, parts, commentCell, actionsCell, actionsDiv, deleteLink, deleteIcon, editLink, editIcon, _loop_1, _i, _a, element;
+            var i, item, row, numberCell, typeCell, categoryCell, amountCell, dateCell, parts, commentCell, actionsCell, actionsDiv, deleteLink, deleteIcon, editLink, editIcon, elementsArray, _loop_1, _i, elementsArray_1, element;
             var _this = this;
-            return __generator(this, function (_b) {
+            return __generator(this, function (_a) {
                 // Очистим таблицу перед заполнением
-                this.tbody.innerHTML = '';
+                if (this.tbody) {
+                    this.tbody.innerHTML = '';
+                }
                 if (table.length === 0) {
                     this.emptyText.style.display = 'flex';
                 }
@@ -168,7 +206,7 @@ var PL = /** @class */ (function (_super) {
                         item = table[i];
                         row = document.createElement("tr");
                         numberCell = document.createElement("th");
-                        numberCell.textContent = i + 1;
+                        numberCell.textContent = (i + 1).toString();
                         row.appendChild(numberCell);
                         typeCell = document.createElement("td");
                         if (item.type === 'expense') {
@@ -215,7 +253,9 @@ var PL = /** @class */ (function (_super) {
                         actionsCell.appendChild(actionsDiv);
                         row.appendChild(actionsCell);
                         // Добавление строки в таблицу
-                        tbody.appendChild(row);
+                        if (this.tbody) {
+                            this.tbody.appendChild(row);
+                        }
                     }
                     this.editElements = document.querySelectorAll('[id^="edit-"]');
                     this.deleteElements = document.querySelectorAll('[id^="delete-"]');
@@ -226,6 +266,7 @@ var PL = /** @class */ (function (_super) {
                             location.href = '#/edit-p&l?=' + number;
                         });
                     });
+                    elementsArray = Array.from(this.deleteElements);
                     _loop_1 = function (element) {
                         element.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
                             var id, number;
@@ -242,43 +283,12 @@ var PL = /** @class */ (function (_super) {
                             });
                         }); });
                     };
-                    for (_i = 0, _a = this.deleteElements; _i < _a.length; _i++) {
-                        element = _a[_i];
+                    for (_i = 0, elementsArray_1 = elementsArray; _i < elementsArray_1.length; _i++) {
+                        element = elementsArray_1[_i];
                         _loop_1(element);
                     }
                 }
                 return [2 /*return*/];
-            });
-        });
-    };
-    PL.prototype.deleteElement = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 6, , 7]);
-                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/operations/' + id, 'DELETE')];
-                    case 1:
-                        result = _a.sent();
-                        if (!result) return [3 /*break*/, 5];
-                        if (!(result.error || !result)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.showResult(result.message)];
-                    case 2:
-                        _a.sent();
-                        throw new Error(result.message);
-                    case 3: return [4 /*yield*/, this.showResult(result)];
-                    case 4:
-                        _a.sent();
-                        location.reload();
-                        _a.label = 5;
-                    case 5: return [3 /*break*/, 7];
-                    case 6:
-                        error_2 = _a.sent();
-                        console.log('ошибка' + error_2);
-                        return [3 /*break*/, 7];
-                    case 7: return [2 /*return*/];
-                }
             });
         });
     };
@@ -315,6 +325,37 @@ var PL = /** @class */ (function (_super) {
             });
         });
     };
+    PL.prototype.deleteElement = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        return [4 /*yield*/, custom_http_1.CustomHttp.request(config_1.default.host + '/operations/' + id.toString(), 'DELETE')];
+                    case 1:
+                        result = _a.sent();
+                        if (!result) return [3 /*break*/, 5];
+                        if (!(result.error || !result)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.showResult(result)];
+                    case 2:
+                        _a.sent();
+                        throw new Error(result.message);
+                    case 3: return [4 /*yield*/, this.showResult(result)];
+                    case 4:
+                        _a.sent();
+                        location.reload();
+                        _a.label = 5;
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        error_2 = _a.sent();
+                        console.log('ошибка' + error_2);
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
     PL.prototype.showResult = function (message) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -322,7 +363,9 @@ var PL = /** @class */ (function (_super) {
                 return [2 /*return*/, new Promise(function (resolve) {
                         _this.textMessage = message.error ? message.message :
                             "Запись успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message);
-                        _this.modalMessageField.innerText = _this.textMessage;
+                        if (_this.modalMessageField) {
+                            _this.modalMessageField.innerText = _this.textMessage;
+                        }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
                         _this.resultModal._element.addEventListener('hidden.bs.modal', function () {
