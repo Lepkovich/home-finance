@@ -4,10 +4,16 @@ import {Sidebar} from "./sidebar";
 import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 import bootstrap, {Modal} from "bootstrap";
+import {Chart} from "chart.js";
+// import Chart from 'chart.js/auto';
+
+
 
 export class Main extends ShowButtons{
-    private readonly earningsChart: HTMLElement | null;
-    private readonly expensesChart: HTMLElement | null;
+    private earningsChart: Chart | null;
+    private expensesChart: Chart | null;
+    private readonly earningsChartCanvas: HTMLCanvasElement | null;
+    private readonly expensesChartCanvas: HTMLCanvasElement | null;
     private readonly emptyText: HTMLElement | null;
     private readonly charts: HTMLElement | null;
     private resultModal!: Modal;
@@ -17,6 +23,9 @@ export class Main extends ShowButtons{
     constructor() {
         super();
 
+        this.earningsChart = null;
+        this.expensesChart = null;
+
         //определяем параметры модального окна
         const textModalElement = document.getElementById('textModal');
         if (textModalElement !== null) {
@@ -25,8 +34,8 @@ export class Main extends ShowButtons{
         this.textMessage = null;
         this.modalMessageField = document.getElementById('textModal-message');
 
-        this.earningsChart = document.getElementById('earnings-chart');
-        this.expensesChart = document.getElementById('expenses-chart');
+        this.earningsChartCanvas = document.getElementById('earnings-chart') as HTMLCanvasElement;
+        this.expensesChartCanvas = document.getElementById('expenses-chart') as HTMLCanvasElement;
         this.emptyText = document.getElementById('emptyText');
         this.charts = document.getElementById('charts');
 
@@ -163,7 +172,7 @@ export class Main extends ShowButtons{
 
     async showOperations(income: GetCategoryIncomeType[], expenses: GetCategoryIncomeType[], operations: GetOperationsPeriodType[]) {
 
-        if (this.charts && this.emptyText && this.earningsChart && this.expensesChart) {
+        if (this.charts && this.emptyText && this.earningsChartCanvas && this.expensesChartCanvas) {
             if (operations.length === 0) {
                 this.charts.style.display = 'none';
                 this.emptyText.style.display = 'flex';
@@ -171,23 +180,29 @@ export class Main extends ShowButtons{
                 this.charts.style.display = 'flex';
                 this.emptyText.style.display = 'none';
 
-                // Очищаем канвасы и уничтожаем объекты графиков
-                if ((this.earningsChart as HTMLElement).chart) {
-                    this.earningsChart.chart.destroy();
+                // Проверка и уничтожение существующих графиков
+                if (this.earningsChart) {
+                    this.earningsChart.destroy();
                 }
-                const earningsContext = this.earningsChart.getContext("2d");
-                earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
 
-                if (this.expensesChart.chart) {
-                    this.expensesChart.chart.destroy();
+                if (this.expensesChart) {
+                    this.expensesChart.destroy();
                 }
-                const expensesContext = this.expensesChart.getContext("2d");
-                expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
 
+
+                const earningsContext = this.earningsChartCanvas.getContext("2d");
+                if (earningsContext) {
+                    earningsContext.clearRect(0, 0, this.earningsChartCanvas.width, this.earningsChartCanvas.height);
+                }
+
+                const expensesContext = this.expensesChartCanvas.getContext("2d");
+                if (expensesContext) {
+                    expensesContext.clearRect(0, 0, this.expensesChartCanvas.width, this.expensesChartCanvas.height);
+                }
 
 
                 //отсортируем из операций только доходы, оставим только непустые категории и просуммируем все доходы в них
-                const incomeData = operations.reduce((data, operation) => {
+                const incomeData = operations.reduce((data:{amounts: any[], labels: any[]}, operation) => {
                     if (operation.type === 'income') {
                         const categoryIndex = data.labels.indexOf(operation.category);
                         if (categoryIndex !== -1) {
@@ -200,7 +215,7 @@ export class Main extends ShowButtons{
                     return data;
                 }, { labels: [], amounts: [] });
 
-                const earningsChart = new Chart(this.earningsChart, {
+                this.earningsChart = new Chart(this.earningsChartCanvas, {
                     type: 'pie',
                     data: {
                         labels: incomeData.labels,
@@ -223,7 +238,7 @@ export class Main extends ShowButtons{
                 });
 
                 //отсортируем из операций только расходы, оставим только непустые категории и просуммируем все расходы в них
-                const expensesData = operations.reduce((data, operation) => {
+                const expensesData = operations.reduce((data:{amounts: any[], labels: any[]}, operation) => {
                     if (operation.type === 'expense') {
                         const categoryIndex = data.labels.indexOf(operation.category);
                         if (categoryIndex !== -1) {
@@ -237,7 +252,7 @@ export class Main extends ShowButtons{
                 }, { labels: [], amounts: [] });
 
 
-                const expensesChart = new Chart(this.expensesChart, {
+                this.expensesChart = new Chart(this.expensesChartCanvas, {
                     type: 'pie',
                     data: {
                         labels: expensesData.labels,
@@ -248,11 +263,6 @@ export class Main extends ShowButtons{
                         }]
                     },
                 });
-
-
-                // Сохраняем ссылки на объекты графиков
-                this.earningsChart.chart = earningsChart;
-                this.expensesChart.chart = expensesChart;
             }
         }
     };
