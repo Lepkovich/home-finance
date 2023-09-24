@@ -141,11 +141,13 @@ export class Earnings {
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа
-
-            this.resultModal.getElement()?.addEventListener('hidden.bs.modal', () => {
+            addEventListener('click', () => {
+                this.resultModal.hide();
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
-
+            // this.resultModal.getElement()?.addEventListener('hidden.bs.modal', () => {
+            //     resolve(); // Разрешаем обещание при закрытии попапа
+            // });
         });
     }
 }

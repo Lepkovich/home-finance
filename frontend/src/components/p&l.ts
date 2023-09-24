@@ -263,9 +263,13 @@ export class PL extends ShowButtons{
             };
 
             // Обработчик события при закрытии попапа
-            this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+            addEventListener('click', () => {
+                this.confirmationModal.hide();
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
+            // this.confirmationModal._element.addEventListener('hidden.bs.modal', () => {
+            //     resolve(); // Разрешаем обещание при закрытии попапа
+            // });
         });
     }
 
@@ -299,9 +303,13 @@ export class PL extends ShowButtons{
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа
-            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+            addEventListener('click', () => {
+                this.resultModal.hide();
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
+            // this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+            //     resolve(); // Разрешаем обещание при закрытии попапа
+            // });
         });
     }
 

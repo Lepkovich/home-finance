@@ -254,9 +254,13 @@ var Form = /** @class */ (function () {
                         }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
-                        _this.resultModal._element.addEventListener('hidden.bs.modal', function () {
+                        addEventListener('click', function () {
+                            _this.resultModal.hide();
                             resolve(); // Разрешаем обещание при закрытии попапа
                         });
+                        // this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                        //     resolve(); // Разрешаем обещание при закрытии попапа
+                        // });
                     })];
             });
         });

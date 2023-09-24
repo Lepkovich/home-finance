@@ -221,7 +221,6 @@ var Earnings = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve) {
-                        var _a;
                         _this.textMessage = message.error ? message.message :
                             "Категория успешно удалена." + "\nСообщение сервера: " + JSON.stringify(message.message);
                         if (_this.modalMessageField) {
@@ -229,9 +228,13 @@ var Earnings = /** @class */ (function () {
                         }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
-                        (_a = _this.resultModal.getElement()) === null || _a === void 0 ? void 0 : _a.addEventListener('hidden.bs.modal', function () {
+                        addEventListener('click', function () {
+                            _this.resultModal.hide();
                             resolve(); // Разрешаем обещание при закрытии попапа
                         });
+                        // this.resultModal.getElement()?.addEventListener('hidden.bs.modal', () => {
+                        //     resolve(); // Разрешаем обещание при закрытии попапа
+                        // });
                     })];
             });
         });

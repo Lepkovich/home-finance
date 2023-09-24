@@ -60,10 +60,14 @@ var config_1 = __importDefault(require("../../config/config"));
 var sidebar_1 = require("./sidebar");
 var show_buttons_1 = require("../services/show-buttons");
 var bootstrap_1 = __importDefault(require("bootstrap"));
+var chart_js_1 = require("chart.js");
+// import Chart from 'chart.js/auto';
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
         var _this = _super.call(this) || this;
+        _this.earningsChart = null;
+        _this.expensesChart = null;
         //определяем параметры модального окна
         var textModalElement = document.getElementById('textModal');
         if (textModalElement !== null) {
@@ -71,8 +75,8 @@ var Main = /** @class */ (function (_super) {
         }
         _this.textMessage = null;
         _this.modalMessageField = document.getElementById('textModal-message');
-        _this.earningsChart = document.getElementById('earnings-chart');
-        _this.expensesChart = document.getElementById('expenses-chart');
+        _this.earningsChartCanvas = document.getElementById('earnings-chart');
+        _this.expensesChartCanvas = document.getElementById('expenses-chart');
         _this.emptyText = document.getElementById('emptyText');
         _this.charts = document.getElementById('charts');
         _this.dataInit();
@@ -166,9 +170,9 @@ var Main = /** @class */ (function (_super) {
     ;
     Main.prototype.showOperations = function (income, expenses, operations) {
         return __awaiter(this, void 0, void 0, function () {
-            var earningsContext, expensesContext, incomeData, earningsChart, expensesData, expensesChart;
+            var earningsContext, expensesContext, incomeData, expensesData;
             return __generator(this, function (_a) {
-                if (this.charts && this.emptyText && this.earningsChart && this.expensesChart) {
+                if (this.charts && this.emptyText && this.earningsChartCanvas && this.expensesChartCanvas) {
                     if (operations.length === 0) {
                         this.charts.style.display = 'none';
                         this.emptyText.style.display = 'flex';
@@ -176,17 +180,21 @@ var Main = /** @class */ (function (_super) {
                     else {
                         this.charts.style.display = 'flex';
                         this.emptyText.style.display = 'none';
-                        // Очищаем канвасы и уничтожаем объекты графиков
-                        if (this.earningsChart.chart) {
-                            this.earningsChart.chart.destroy();
+                        // Проверка и уничтожение существующих графиков
+                        if (this.earningsChart) {
+                            this.earningsChart.destroy();
                         }
-                        earningsContext = this.earningsChart.getContext("2d");
-                        earningsContext.clearRect(0, 0, this.earningsChart.width, this.earningsChart.height);
-                        if (this.expensesChart.chart) {
-                            this.expensesChart.chart.destroy();
+                        if (this.expensesChart) {
+                            this.expensesChart.destroy();
                         }
-                        expensesContext = this.expensesChart.getContext("2d");
-                        expensesContext.clearRect(0, 0, this.expensesChart.width, this.expensesChart.height);
+                        earningsContext = this.earningsChartCanvas.getContext("2d");
+                        if (earningsContext) {
+                            earningsContext.clearRect(0, 0, this.earningsChartCanvas.width, this.earningsChartCanvas.height);
+                        }
+                        expensesContext = this.expensesChartCanvas.getContext("2d");
+                        if (expensesContext) {
+                            expensesContext.clearRect(0, 0, this.expensesChartCanvas.width, this.expensesChartCanvas.height);
+                        }
                         incomeData = operations.reduce(function (data, operation) {
                             if (operation.type === 'income') {
                                 var categoryIndex = data.labels.indexOf(operation.category);
@@ -200,7 +208,7 @@ var Main = /** @class */ (function (_super) {
                             }
                             return data;
                         }, { labels: [], amounts: [] });
-                        earningsChart = new Chart(this.earningsChart, {
+                        this.earningsChart = new chart_js_1.Chart(this.earningsChartCanvas, {
                             type: 'pie',
                             data: {
                                 labels: incomeData.labels,
@@ -233,7 +241,7 @@ var Main = /** @class */ (function (_super) {
                             }
                             return data;
                         }, { labels: [], amounts: [] });
-                        expensesChart = new Chart(this.expensesChart, {
+                        this.expensesChart = new chart_js_1.Chart(this.expensesChartCanvas, {
                             type: 'pie',
                             data: {
                                 labels: expensesData.labels,
@@ -244,9 +252,6 @@ var Main = /** @class */ (function (_super) {
                                     }]
                             },
                         });
-                        // Сохраняем ссылки на объекты графиков
-                        this.earningsChart.chart = earningsChart;
-                        this.expensesChart.chart = expensesChart;
                     }
                 }
                 return [2 /*return*/];
@@ -265,9 +270,13 @@ var Main = /** @class */ (function (_super) {
                         }
                         _this.resultModal.show();
                         // Обработчик события при закрытии попапа
-                        _this.resultModal._element.addEventListener('hidden.bs.modal', function () {
+                        addEventListener('click', function () {
+                            _this.resultModal.hide();
                             resolve(); // Разрешаем обещание при закрытии попапа
                         });
+                        // this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+                        //     resolve(); // Разрешаем обещание при закрытии попапа
+                        // });
                     })];
             });
         });

@@ -4,7 +4,7 @@ import {Sidebar} from "./sidebar";
 import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 import bootstrap, {Modal} from "bootstrap";
-import {Chart} from "chart.js";
+import {Chart, ChartType} from "chart.js";
 // import Chart from 'chart.js/auto';
 
 
@@ -202,7 +202,7 @@ export class Main extends ShowButtons{
 
 
                 //отсортируем из операций только доходы, оставим только непустые категории и просуммируем все доходы в них
-                const incomeData = operations.reduce((data:{amounts: any[], labels: any[]}, operation) => {
+                const incomeData = operations.reduce((data:{amounts: number[], labels: string[]}, operation) => {
                     if (operation.type === 'income') {
                         const categoryIndex = data.labels.indexOf(operation.category);
                         if (categoryIndex !== -1) {
@@ -216,7 +216,7 @@ export class Main extends ShowButtons{
                 }, { labels: [], amounts: [] });
 
                 this.earningsChart = new Chart(this.earningsChartCanvas, {
-                    type: 'pie',
+                    type: 'pie' as ChartType,
                     data: {
                         labels: incomeData.labels,
                         // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -238,7 +238,7 @@ export class Main extends ShowButtons{
                 });
 
                 //отсортируем из операций только расходы, оставим только непустые категории и просуммируем все расходы в них
-                const expensesData = operations.reduce((data:{amounts: any[], labels: any[]}, operation) => {
+                const expensesData = operations.reduce((data:{amounts: number[], labels: string[]}, operation) => {
                     if (operation.type === 'expense') {
                         const categoryIndex = data.labels.indexOf(operation.category);
                         if (categoryIndex !== -1) {
@@ -253,7 +253,7 @@ export class Main extends ShowButtons{
 
 
                 this.expensesChart = new Chart(this.expensesChartCanvas, {
-                    type: 'pie',
+                    type: 'pie' as ChartType, 
                     data: {
                         labels: expensesData.labels,
                         datasets: [{
@@ -280,9 +280,13 @@ export class Main extends ShowButtons{
             this.resultModal.show();
 
             // Обработчик события при закрытии попапа
-            this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+            addEventListener('click', () => {
+                this.resultModal.hide();
                 resolve(); // Разрешаем обещание при закрытии попапа
             });
+            // this.resultModal._element.addEventListener('hidden.bs.modal', () => {
+            //     resolve(); // Разрешаем обещание при закрытии попапа
+            // });
         });
     };
 }
