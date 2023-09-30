@@ -69,7 +69,7 @@ export class Form {
         }
 
 
-        const that = this;
+        const that: Form = this;
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id) as HTMLInputElement;
             if (item.element) {

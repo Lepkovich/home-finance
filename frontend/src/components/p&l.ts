@@ -137,8 +137,8 @@ export class PL extends ShowButtons{
             //     <td>
             //         <div className="d-flex">
             //             <a href="#" id="delete-1" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            //                className="me-3"><img src="static/images/trash-icon.png" alt="удалить"></a>
-            //             <a href="#/edit-p&l" id="edit-1"><img src="static/images/pen-icon.png" alt="редактировать"></a>
+            //                className="me-3"><img src="/images/trash-icon.png" alt="удалить"></a>
+            //             <a href="#/edit-p&l" id="edit-1"><img src="/images/pen-icon.png" alt="редактировать"></a>
             //         </div>
             //     </td>
             // </tr>
@@ -198,7 +198,7 @@ export class PL extends ShowButtons{
                 // deleteLink.setAttribute("data-bs-target", "#exampleModal");
                 deleteLink.classList.add("me-3");
                 let deleteIcon = document.createElement("img");
-                deleteIcon.src = "static/images/trash-icon.png";
+                deleteIcon.src = "/images/trash-icon.png";
                 deleteIcon.alt = "удалить";
                 deleteLink.appendChild(deleteIcon);
                 actionsDiv.appendChild(deleteLink);
@@ -207,7 +207,7 @@ export class PL extends ShowButtons{
                 let editLink = document.createElement("a");
                 editLink.id = "edit-" + item.id;
                 let editIcon = document.createElement("img");
-                editIcon.src = "static/images/pen-icon.png";
+                editIcon.src = "/images/pen-icon.png";
                 editIcon.alt = "редактировать";
                 editLink.appendChild(editIcon);
                 actionsDiv.appendChild(editLink);

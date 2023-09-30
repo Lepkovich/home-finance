@@ -9,15 +9,15 @@ body {
 }
 
 @font-face {
-    src: url("../static/fonts/Roboto.ttf");
+    src: url("/fonts/Roboto.ttf");
     font-family: "Roboto";
 }
 @font-face {
-    src: url("../static/fonts/Robotomedium.ttf");
+    src: url("/fonts/Robotomedium.ttf");
     font-family: "Roboto Medium";
 }
 @font-face {
-    src: url("../static/fonts/Roboto-Bold.ttf");
+    src: url("/fonts/Roboto-Bold.ttf");
     font-family: "Roboto Bold";
 }
 

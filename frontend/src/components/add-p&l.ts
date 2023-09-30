@@ -62,7 +62,7 @@ export class AddPL {
                 valid: false,
             },
         ];
-        const that = this;
+        const that: AddPL = this;
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id) as HTMLInputElement;
             if (item.element) {

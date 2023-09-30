@@ -39,18 +39,18 @@
 }
 
 #main.nav-link {
-    background-image: url('../static/images/home-icon-dark.png');
+    background-image: url('/images/home-icon-dark.png');
 }
 
 #main.nav-link.active {
-    background-image: url('../static/images/home-icon.png');
+    background-image: url('/images/home-icon.png');
 }
 #pl.nav-link {
-    background-image: url('../static/images/p&l-icon.png');
+    background-image: url('/images/p&l-icon.png');
 }
 
 #pl.nav-link.active {
-    background-image: url('../static/images/p&l-icon-white.png');
+    background-image: url('/images/p&l-icon-white.png');
 }
 
 #earnings.nav-link {
@@ -73,10 +73,10 @@
     margin-left: 60px;
     line-height: 0;
     vertical-align: middle;
-    content: url(../static/images/arrow.png);
+    content: url(/images/arrow.png);
 }
 .open.arrow::after {
-    content: url(../static/images/arrow-down.png);
+    content: url(/images/arrow-down.png);
 
 }
 .sub-menu {
