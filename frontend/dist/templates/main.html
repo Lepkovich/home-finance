@@ -1,0 +1,35 @@
+<div class="d-flex flex-column flex-shrink-0 bg-body main">
+    <h1>Главная</h1>
+    <div class="bd-example border-0 range-buttons top-60">
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="today">Сегодня</button>
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="week">Неделя</button>
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="month">Месяц</button>
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="year">Год</button>
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="all">Все</button>
+        <button type="button" class="btn btn-outline-secondary m-2 medium" id="period">Интервал</button>
+        <span>c</span>
+        <input type="date" id="periodFrom" placeholder="Дата">
+        <span>по</span>
+        <input type="date" id="periodTo" placeholder="Дата">
+    </div>
+    <div id="emptyText" class="display-4">Нет записей в выбранном диапазоне</div>
+    <div id="charts" style="display: none">
+        <div class="d-flex justify-content-between charts">
+            <div style="width: 437px;">
+                <div class="d-flex flex-column">
+                    <h3 id="income-block">Доходы</h3>
+                    <canvas id="earnings-chart">Здесь диаграмма доходов</canvas>
+                </div>
+            </div>
+            <div class="separator"></div>
+            <div style="width: 437px;">
+                <div class="d-flex flex-column">
+                    <h3 id="expenses-block">Расходы</h3>
+                    <canvas id="expenses-chart">Здесь диаграмма расходов</canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

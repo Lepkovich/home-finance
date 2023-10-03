@@ -2,18 +2,19 @@ import {CustomHttp} from "../services/custom-http";
 import {Auth} from "../services/auth";
 import config from "../../config/config";
 import {FieldsType} from "../types/fields.type";
-import bootstrap, {Modal} from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {PostLoginResponseType, PostSignupResponseType} from "../types/backend-response.type";
 
 export class Form {
     private readonly rememberMeElement: HTMLElement | null;
     private rememberMe: boolean;
+    private passwordRepeat: string | null;
     private name: string | null;
     private lastName: string | null;
     private readonly processElement: HTMLElement | null;
     private readonly page: string;
     private fields: FieldsType[];
-    private resultModal!: Modal;
+    private resultModal!: bootstrap.Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
 
@@ -21,6 +22,7 @@ export class Form {
         //определяем параметры модального окна
         const textModalElement = document.getElementById('textModal');
         if (textModalElement !== null) {
+            console.log(bootstrap);
             this.resultModal = new bootstrap.Modal(textModalElement);
         }
         this.textMessage = null;
@@ -30,6 +32,7 @@ export class Form {
         this.rememberMe = false;
         this.name = null;
         this.lastName = null;
+        this.passwordRepeat = null;
         this.processElement = null;
         this.page = page;
         this.fields = [
@@ -151,15 +154,18 @@ export class Form {
     private async processForm(event: MouseEvent): Promise<void>  {
         event.preventDefault();
         if (this.validateForm()) {
-            const emailEmail =  this.fields.find(item => item.name === 'email')?.element as HTMLInputElement;
-            const email = emailEmail.value;
+            const emailElement =  this.fields.find(item => item.name === 'email')?.element as HTMLInputElement;
+            const email = emailElement.value;
             const passwordElement = this.fields.find(item => item.name === 'password')?.element as HTMLInputElement;
             const password = passwordElement.value;
             if (this.rememberMeElement){
                 this.rememberMe = (this.rememberMeElement as HTMLInputElement).checked;
             }
+
             const passwordRepeatElement = this.fields.find(item => item.name === 'repeat-password')?.element as HTMLInputElement;
-            const passwordRepeat = passwordRepeatElement.value;
+            if (passwordRepeatElement) {
+                this.passwordRepeat = passwordRepeatElement.value;
+            }
 
 
             if (this.page === 'signup') {
@@ -169,7 +175,7 @@ export class Form {
                         lastName: this.lastName,
                         email: email,
                         password: password,
-                        passwordRepeat: passwordRepeat
+                        passwordRepeat: this.passwordRepeat
                     })
 
                     if (result) {
@@ -193,6 +199,7 @@ export class Form {
                 if (result) {
                     if (result.error) {
                         await this.showResult(result); //вот тут мы не видим модальное окно
+                        // console.log(result);
                         throw new Error(result.message);
                     }
                     result.tokens

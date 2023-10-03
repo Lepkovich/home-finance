@@ -1,0 +1,29 @@
+<main class="form-signin w-100 m-auto text-center main">
+    <form>
+        <img class="mb-5" src="/images/logo.png" alt="Логотип">
+        <h1 class="mb-3">Создайте аккаунт</h1>
+        <div class="form-field">
+            <div class="field-icon"><img src="/images/form-field-fullname.png" alt="ФИО"></div>
+            <input type="text" class="form-control" id="full-name" placeholder="ФИО">
+            <div class="error">Имя и фамилия на русском. Первые буквы - заглавные. Один пробел.</div>
+        </div>
+        <div class="form-field">
+            <div class="field-icon"><img src="/images/form-field-email.png" alt="Электронная почта"></div>
+            <input type="email" class="form-control" id="email" placeholder="Электронная почта">
+            <div class="error">Введите корректный email.</div>
+        </div>
+        <div class="form-field my-form-field">
+            <div class="field-icon"><img src="/images/form-field-psw.png" alt="Пароль"></div>
+            <input type="password" class="form-control" id="password" placeholder="Пароль">
+            <div class="error">Не менее 8 символов. Хотя бы одна цифра и заглавная буква.</div>
+        </div>
+        <div class="form-field my-form-field">
+            <div class="field-icon"><img src="/images/form-field-psw.png" alt="Пароль"></div>
+            <input type="password" class="form-control" id="repeat-password" placeholder="Подтверждение пароля">
+            <div class="error">Пароли не совпадают</div>
+        </div>
+
+        <button class="btn btn-primary w-100 py-2 mt-2 btn-my disabled" id="process">Войти</button>
+        <div class="no-acc">Уже есть аккаунт? <a href="#/login">Войдите в систему</a></div>
+    </form>
+</main>

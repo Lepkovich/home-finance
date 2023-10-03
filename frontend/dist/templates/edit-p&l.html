@@ -1,0 +1,21 @@
+<div class="container d-flex flex-column bg-body add">
+    <h1 class="mb-5">Редактирование дохода/расхода</h1>
+    <input type="text" class="form-control mb-2" id="type" placeholder="Тип..." readonly>
+    <div class="error">Поле не должно быть пустым</div>
+    <select class="form-select mb-2" id="category">
+        <option></option>
+    </select>
+    <div class="error">Поле не должно быть пустым</div>
+    <input type="text" class="form-control mb-2" id="amount" placeholder="Сумма в $...">
+    <div class="error">Сумма должна быть только цифрами</div>
+    <input type="date" class="form-control mb-2" id="date" placeholder="Дата...">
+    <div class="error">Поле не должно быть пустым</div>
+    <input type="text" class="form-control mb-2" id="comment" placeholder="Комментарий...">
+    <div class="error">Комментарий не должен быть пустым</div>
+    <div class="d-flex">
+        <button class="btn btn-success px-2 me-3 btn-add" type="button" id="process">Сохранить</button>
+        <button class="btn btn-danger px-2 btn-add" type="button" id="cancel">Отмена</button>
+    </div>
+</div>
+
+

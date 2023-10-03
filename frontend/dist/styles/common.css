@@ -1,0 +1,23 @@
+html{
+    font-size: 10px;
+}
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    color: #052C65;
+    box-sizing: border-box;
+}
+
+@font-face {
+    src: url("/fonts/Roboto.ttf");
+    font-family: "Roboto";
+}
+@font-face {
+    src: url("/fonts/Robotomedium.ttf");
+    font-family: "Roboto Medium";
+}
+@font-face {
+    src: url("/fonts/Roboto-Bold.ttf");
+    font-family: "Roboto Bold";
+}
+
