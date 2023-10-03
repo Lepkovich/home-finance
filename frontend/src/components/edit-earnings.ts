@@ -1,12 +1,13 @@
 import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
-import bootstrap from "bootstrap";
+// import bootstrap from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {GetCategoryIncomeType, GetErrorResponseType} from "../types/backend-response.type";
 
 export class EditEarnings {
-    private saveCategoryButton: HTMLElement | null;
-    private cancelCategoryButton: HTMLElement | null;
+    private readonly saveCategoryButton: HTMLElement | null;
+    private readonly cancelCategoryButton: HTMLElement | null;
     private readonly categoryField: HTMLElement | null;
     private errorText: HTMLElement | null;
     private readonly id: string;

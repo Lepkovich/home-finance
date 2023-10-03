@@ -22,7 +22,6 @@ export class Form {
         //определяем параметры модального окна
         const textModalElement = document.getElementById('textModal');
         if (textModalElement !== null) {
-            console.log(bootstrap);
             this.resultModal = new bootstrap.Modal(textModalElement);
         }
         this.textMessage = null;

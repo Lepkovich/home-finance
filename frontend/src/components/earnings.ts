@@ -3,7 +3,8 @@ import config from "../../config/config";
 import {ShowCategories} from "../services/show-categories";
 import {Sidebar} from "./sidebar";
 import {GetErrorResponseType, GetCategoryIncomeType} from "../types/backend-response.type";
-import bootstrap from "bootstrap";
+// import bootstrap from "bootstrap";
+import * as bootstrap from "bootstrap";
 
 
 export class Earnings {

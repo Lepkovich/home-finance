@@ -2,7 +2,9 @@ import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import {FieldsType} from "../types/fields.type";
-import bootstrap, {Modal} from "bootstrap";
+// import bootstrap, {Modal} from "bootstrap";
+import * as bootstrap from "bootstrap";
+
 import {
     GetCategoryExpenseType,
     GetCategoryIncomeType,
@@ -17,7 +19,7 @@ export class AddPL {
     private readonly processElement: HTMLElement | null;
     private readonly cancelElement: HTMLElement | null;
     private readonly typeElement: HTMLElement | null;
-    private resultModal!: Modal;
+    private resultModal!: bootstrap.Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
 
@@ -179,7 +181,7 @@ export class AddPL {
         this.validateForm();
     };
 
-    validateForm() {
+    validateForm(): boolean {
         const validForm = this.fields.every(item => item.valid);
         if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
@@ -191,7 +193,8 @@ export class AddPL {
 
     private async processForm(event: MouseEvent): Promise<void> {
         event.preventDefault();
-        if (this.validateForm()) {
+        const isFormValid = this.validateForm();
+        if (isFormValid) {
 
                 // "type": "income",
                 // "amount": 250,

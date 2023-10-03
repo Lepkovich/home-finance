@@ -75,3 +75,7 @@ export type PostOperationResponseType = {
     comment: string,
     category: string
 }
+
+export type GetBalanceResponseType = {
+    balance: number
+}

@@ -1,7 +1,8 @@
 import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
-import bootstrap from "bootstrap";
+// import bootstrap from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {GetCategoryExpenseType, GetCategoryIncomeType, GetErrorResponseType} from "../types/backend-response.type";
 
 export class EditExpenses {

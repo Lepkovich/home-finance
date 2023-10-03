@@ -2,7 +2,8 @@ import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {ShowCategories} from "../services/show-categories";
 import {Sidebar} from "./sidebar";
-import bootstrap from "bootstrap";
+// import bootstrap from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {GetCategoryExpenseType, GetErrorResponseType} from "../types/backend-response.type";
 
 export class Expenses {

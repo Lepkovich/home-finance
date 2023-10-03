@@ -3,7 +3,8 @@ import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
-import bootstrap, {Modal} from "bootstrap";
+// import bootstrap, {Modal} from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {Chart, ChartType} from "chart.js";
 // import Chart from 'chart.js/auto';
 
@@ -16,7 +17,7 @@ export class Main extends ShowButtons{
     private readonly expensesChartCanvas: HTMLCanvasElement | null;
     private readonly emptyText: HTMLElement | null;
     private readonly charts: HTMLElement | null;
-    private resultModal!: Modal;
+    private resultModal!: bootstrap.Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
 

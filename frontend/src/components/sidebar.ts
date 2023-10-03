@@ -1,5 +1,6 @@
 import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
+import {GetBalanceResponseType, GetErrorResponseType} from "../types/backend-response.type";
 
 export class Sidebar {
     private static sidebarElement: HTMLElement | null;
@@ -21,14 +22,15 @@ export class Sidebar {
         let balanceValue = document.getElementById('balance-value');
         let userFullName = document.getElementById('userFullName');
         try {
-            const result = await CustomHttp.request(config.host +  '/balance', 'GET')
+            const result: GetBalanceResponseType | GetErrorResponseType = await CustomHttp.request(config.host +  '/balance', 'GET')
 
             if (result) {
-                if (result.error || result.balance === undefined) {
-                    throw new Error(result.message);
+
+                if ((result as GetErrorResponseType).error) {
+                    throw new Error((result as GetErrorResponseType).message);
                 }
                 if (balanceValue && userFullName) {
-                    balanceValue.textContent = result.balance + "$";
+                    balanceValue.textContent = (result as GetBalanceResponseType).balance + "$";
                     userFullName.textContent = localStorage.getItem('userFullName');
                 }
             }

@@ -2,7 +2,8 @@ import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import {ShowButtons} from "../services/show-buttons";
-import bootstrap, {Modal} from "bootstrap";
+// import bootstrap, {Modal} from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 
 export class PL extends ShowButtons{
@@ -10,10 +11,10 @@ export class PL extends ShowButtons{
     private readonly addExpenseButton: HTMLElement | null;
     private emptyText: HTMLElement | null;
     private readonly tbody: HTMLElement | null;
-    private resultModal!: Modal;
+    private resultModal!: bootstrap.Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
-    private confirmationModal!: Modal;
+    private confirmationModal!: bootstrap.Modal;
     private editElements: NodeListOf<Element> | null;
     private deleteElements: NodeListOf<Element> | null;
 

@@ -1,7 +1,8 @@
 import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
 import {Sidebar} from "./sidebar";
-import bootstrap, {Modal} from "bootstrap";
+// import bootstrap, {Modal} from "bootstrap";
+import * as bootstrap from "bootstrap";
 import {GetErrorResponseType, PostIncomeCategoryType} from "../types/backend-response.type";
 
 export class AddEarnings {
@@ -9,7 +10,7 @@ export class AddEarnings {
     private readonly cancelCategoryButton: HTMLElement | null;
     private readonly categoryField: HTMLElement | null;
     private readonly errorText: HTMLElement | null;
-    private resultModal!: Modal;
+    private resultModal!: bootstrap.Modal;
     private textMessage: string | null;
     private readonly modalMessageField: HTMLElement | null;
     
