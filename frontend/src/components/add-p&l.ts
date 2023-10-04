@@ -65,7 +65,7 @@ export class AddPL {
             },
         ];
         const that: AddPL = this;
-        this.fields.forEach(item => {
+        this.fields.forEach((item: FieldsType) => {
             item.element = document.getElementById(item.id) as HTMLInputElement;
             if (item.element) {
                 item.element.onchange = function () {
@@ -76,10 +76,10 @@ export class AddPL {
         // this.processForm = this.processForm.bind(this);
         this.processElement = document.getElementById('process') as HTMLElement;
         if (this.processElement) {
-            // this.processElement.onclick = function () {
-            //     that.processForm();
-            // }
-            this.processElement.addEventListener('click', this.processForm);
+            this.processElement.onclick = function () {
+                that.processForm();
+            }
+            // this.processElement.addEventListener('click', this.processForm);
         }
         this.cancelElement = document.getElementById('cancel');
         if (this.cancelElement) {
@@ -158,7 +158,7 @@ export class AddPL {
     }
 
 
-    private validateField(field: FieldsType , element: HTMLElement) {
+    private validateField(field: FieldsType , element: HTMLInputElement) {
 
         if (!(element as HTMLInputElement).value || !(element as HTMLInputElement).value.match(field.regex!)) {
             field.valid = false;
@@ -181,8 +181,8 @@ export class AddPL {
         this.validateForm();
     };
 
-    validateForm(): boolean {
-        const validForm = this.fields.every(item => item.valid);
+    private validateForm(): boolean {
+        const validForm: boolean = this.fields.every(item => item.valid);
         if (validForm && this.processElement) {
             this.processElement.classList.remove('disabled');
         } else if (this.processElement) {
@@ -191,10 +191,10 @@ export class AddPL {
         return validForm;
     };
 
-    private async processForm(event: MouseEvent): Promise<void> {
-        event.preventDefault();
-        const isFormValid = this.validateForm();
-        if (isFormValid) {
+
+
+    private async processForm(): Promise<void> {
+        if (this.validateForm()) {
 
                 // "type": "income",
                 // "amount": 250,

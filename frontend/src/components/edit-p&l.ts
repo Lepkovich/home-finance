@@ -228,7 +228,7 @@ export class EditPL {
             // реализация на TS:
             const values: Record<string, string> = {};
 
-            ['sum', 'date', 'comment', 'category'].forEach(fieldName => {
+            ['amount', 'date', 'comment', 'category'].forEach(fieldName => {
                 const field = this.fields.find(item => item.name === fieldName);
                 if (field && field.element) {
                     values[fieldName] = (field.element as HTMLInputElement).value;
@@ -236,7 +236,7 @@ export class EditPL {
             });
 
 // Теперь объект `values` содержит значения всех полей, где ключи - это имена полей, а значения - их значения
-            const amount = values['sum'];
+            const amount = values['amount'];
             const date = values['date'];
             const comment = values['comment'];
             const categoryId = values['category'];

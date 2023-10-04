@@ -18,7 +18,7 @@ export class Sidebar {
         if (this.sidebarElement) {
             this.sidebarElement.style.display = 'flex';
         }
-        //получаем баланс и имя пользователя
+        //получаем поля баланса и имени пользователя
         let balanceValue = document.getElementById('balance-value');
         let userFullName = document.getElementById('userFullName');
         try {

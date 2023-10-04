@@ -14,8 +14,8 @@ export type GetErrorResponseType = {
 }
 
 export type PostSignupResponseType = {
-    error: boolean,
-    message: string,
+    error?: boolean,
+    message?: string,
     user?: {
     id: number,
     email: string,
@@ -25,8 +25,8 @@ export type PostSignupResponseType = {
 }
 
 export type PostLoginResponseType = {
-    error: boolean,
-    message: string
+    error?: boolean,
+    message?: string
     tokens?: {
         accessToken: string,
         refreshToken: string,

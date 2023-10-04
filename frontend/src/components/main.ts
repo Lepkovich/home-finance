@@ -5,7 +5,8 @@ import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 // import bootstrap, {Modal} from "bootstrap";
 import * as bootstrap from "bootstrap";
-import {Chart, ChartType} from "chart.js";
+import {Chart, ChartType, PieController} from "chart.js";
+// import * as chart from "chart.js";
 // import Chart from 'chart.js/auto';
 
 
@@ -23,6 +24,8 @@ export class Main extends ShowButtons{
 
     constructor() {
         super();
+
+        Chart.register(PieController);
 
         this.earningsChart = null;
         this.expensesChart = null;
@@ -254,7 +257,7 @@ export class Main extends ShowButtons{
 
 
                 this.expensesChart = new Chart(this.expensesChartCanvas, {
-                    type: 'pie' as ChartType, 
+                    type: 'pie' as ChartType,
                     data: {
                         labels: expensesData.labels,
                         datasets: [{

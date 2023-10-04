@@ -33,7 +33,7 @@ export class CustomHttp {
                 }
             }
             console.log(response.statusText);
-            // throw new Error(response.message);
+            // throw new Error(response.statusText);
         }
         return await response.json();
 

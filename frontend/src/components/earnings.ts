@@ -10,7 +10,7 @@ import * as bootstrap from "bootstrap";
 export class Earnings {
     private editCategoryButtons: NodeListOf<HTMLElement> | null;
     private deleteCategoryButtons: NodeListOf<HTMLElement> | null;
-    private readonly addCategoryButton: HTMLElement | null;
+    private addCategoryButton: HTMLElement | null;
 
     private resultModal!: bootstrap.Modal;
     private confirmationModal!: bootstrap.Modal;
@@ -20,12 +20,7 @@ export class Earnings {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
-        this.addCategoryButton = document.getElementById('add-category');
-        if (this.addCategoryButton) {
-            this.addCategoryButton.onclick = () => {
-                location.href = "#/add-earnings"
-            };
-        }
+        this.addCategoryButton = null;
 
         //определяем параметры модальных окон
         const textModalElement = document.getElementById('textModal');
@@ -65,6 +60,12 @@ export class Earnings {
 
         this.editCategoryButtons = document.querySelectorAll('[id^="edit-"]');
         this.deleteCategoryButtons = document.querySelectorAll('[id^="delete-"]');
+        this.addCategoryButton = document.getElementById('add-category');
+        if (this.addCategoryButton) {
+            this.addCategoryButton.onclick = () => {
+                location.href = "#/add-earnings"
+            };
+        }
 
         this.editCategoryButtons.forEach((element) => {
             element.addEventListener("click", () => {

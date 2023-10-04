@@ -9,7 +9,7 @@ import {GetCategoryExpenseType, GetErrorResponseType} from "../types/backend-res
 export class Expenses {
     private editCategoryButtons: NodeListOf<HTMLElement> | null;
     private deleteCategoryButtons: NodeListOf<HTMLElement> | null;
-    private readonly addCategoryButton: HTMLElement | null;
+    private addCategoryButton: HTMLElement | null;
 
     private resultModal!: bootstrap.Modal;
     private confirmationModal!: bootstrap.Modal;
@@ -19,13 +19,8 @@ export class Expenses {
     constructor() {
         this.editCategoryButtons = null;
         this.deleteCategoryButtons = null;
-        this.addCategoryButton = document.getElementById('add-category');
+        this.addCategoryButton = null;
 
-        if (this.addCategoryButton) {
-            this.addCategoryButton.onclick = () => {
-                location.href = "#/add-expenses";
-            };
-        }
 
         //определяем параметры модальных окон
         const textModalElement = document.getElementById('textModal');
@@ -66,6 +61,13 @@ export class Expenses {
 
         this.editCategoryButtons = document.querySelectorAll('[id^="edit-"]');
         this.deleteCategoryButtons = document.querySelectorAll('[id^="delete-"]');
+        this.addCategoryButton = document.getElementById('add-category');
+
+        if (this.addCategoryButton) {
+            this.addCategoryButton.onclick = () => {
+                location.href = "#/add-expenses";
+            };
+        }
 
 
         this.editCategoryButtons.forEach((element) => {

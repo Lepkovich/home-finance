@@ -3,7 +3,7 @@ import {Auth} from "../services/auth";
 import config from "../../config/config";
 import {FieldsType} from "../types/fields.type";
 import * as bootstrap from "bootstrap";
-import {PostLoginResponseType, PostSignupResponseType} from "../types/backend-response.type";
+import {GetErrorResponseType, PostLoginResponseType, PostSignupResponseType} from "../types/backend-response.type";
 
 export class Form {
     private readonly rememberMeElement: HTMLElement | null;
@@ -72,7 +72,7 @@ export class Form {
 
 
         const that: Form = this;
-        this.fields.forEach(item => {
+        this.fields.forEach((item: FieldsType) => {
             item.element = document.getElementById(item.id) as HTMLInputElement;
             if (item.element) {
                 item.element.onchange = function () {
@@ -198,7 +198,8 @@ export class Form {
                 if (result) {
                     if (result.error) {
                         await this.showResult(result); //вот тут мы не видим модальное окно
-                        // console.log(result);
+                        // console.log(result.message);
+                        // location.href = "#/login"
                         throw new Error(result.message);
                     }
                     result.tokens
@@ -220,11 +221,14 @@ export class Form {
 
     private async showResult(message: PostSignupResponseType | PostLoginResponseType): Promise<void>{
         return new Promise((resolve) => {
+            if (message.error && message.message) {
+                console.log(message.message);
+                this.textMessage = message.message;
+            } else if (message.user!.name) {
+                this.textMessage = "Вход под именем " + message.user!.name + " успешно выполнен";
+            }
 
-            this.textMessage = message.error ? message.message :
-                "Вход под именем " + message.user!.name + " успешно выполнен";
-
-            if (this.modalMessageField) {
+            if (this.modalMessageField && this.textMessage) {
                 this.modalMessageField.innerText = this.textMessage;
             }
 
