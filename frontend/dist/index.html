@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title id="title">Главная</title>
-    <link href="styles/bootstrap.css" rel="stylesheet">
-    <link href="styles/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bootstrap-common.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<!--    <link href="styles/bootstrap.css" rel="stylesheet">-->
+<!--    <link href="styles/sidebars.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="styles/bootstrap-common.css">-->
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" id="styles" href="styles/main.css">
 <script defer src="main.js"></script></head>
@@ -59,25 +60,36 @@
             <div class="p-3 nav-link link-body-emphasis">
                 <div id="user-info" class="dropup">
                     <a class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
-                       data-toggle="dropdown" aria-expanded="false">
+                       data-toggle="dropdown" aria-expanded="false" role="button" id="dropdownMenuLink">
                         <img src="/images/user-icon.png" alt="Аватар пользователя" width="32" height="32"
                              class="rounded-circle me-4">
                         <span class="text-truncate" id="userFullName">RomanChernov</span>
 
                     </a>
-                    <ul class="dropdown-menu shadow">
+                    <ul class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
                         <li><a href="#/logout" class="dropdown-item link-body-emphasis">Выйти</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Выберите опцию
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Опция 1</a></li>
+                    <li><a class="dropdown-item" href="#">Опция 2</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Другая опция</a></li>
+                </ul>
             </div>
         </div>
     </div>
     <div id="content"></div>
     <div id="popup"></div>
 </div>
-
-
-<script src="scripts/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!--<script src="scripts/popper.min.js"></script>-->
+<!--<script src="scripts/bootstrap.bundle.min.js"></script>-->
 <script src="scripts/chart.js"></script>
 <!--<script src="src/app.js" type="module"></script>-->
 </body>
