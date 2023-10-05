@@ -8,6 +8,8 @@ export class Sidebar {
     private static categoriesElement: HTMLElement | null;
     private static categoriesSubmenu: HTMLElement | null;
     private static selectedMenuItem: HTMLElement | null;
+    private static userExitLink: HTMLElement | null;
+    private static userExitField: HTMLElement | null;
 
 
     constructor() {
@@ -38,6 +40,18 @@ export class Sidebar {
         } catch (error) {
             console.log(error);
             location.href = '#/login';
+        }
+
+        // обрабатываем клик по имени пользователя
+        this.userExitField = document.getElementById('dropUp')
+        this.userExitLink = document.querySelector('.exit');
+        if (this.userExitLink && this.userExitField) {
+            (this.userExitLink as HTMLElement).style.display = 'none';
+
+            this.userExitField.onclick = () => {
+                (this.userExitLink as HTMLElement).style.display = 'block';
+            }
+
         }
 
         // обрабатываем кнопки меню на sidebar
