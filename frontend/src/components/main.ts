@@ -5,7 +5,7 @@ import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
 // import bootstrap, {Modal} from "bootstrap";
 import * as bootstrap from "bootstrap";
-import {Chart, ChartType, PieController} from "chart.js";
+import {Chart, ChartType, PieController, ArcElement} from "chart.js";
 // import * as chart from "chart.js";
 // import Chart from 'chart.js/auto';
 
@@ -25,7 +25,7 @@ export class Main extends ShowButtons{
     constructor() {
         super();
 
-        Chart.register(PieController);
+        Chart.register(PieController, ArcElement);
 
         this.earningsChart = null;
         this.expensesChart = null;
@@ -219,6 +219,7 @@ export class Main extends ShowButtons{
                     return data;
                 }, { labels: [], amounts: [] });
 
+
                 this.earningsChart = new Chart(this.earningsChartCanvas, {
                     type: 'pie' as ChartType,
                     data: {
@@ -228,16 +229,24 @@ export class Main extends ShowButtons{
                             label: 'Сумма Доходов',
                             data: incomeData.amounts,
                             // data: [12, 19, 3, 5, 2, 3],
-                            borderWidth: 1
+                            borderWidth: 1 ,
+                            backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                            hoverOffset: 4
                         }]
                     },
 
                     options: {
-                        // scales: {
-                        //     y: {
-                        //         beginAtZero: true
-                        //     }
-                        // }
+                        devicePixelRatio: 4,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        weight: '500',
+                                    },
+                                    color: "#000000",
+                                },
+                            },
+                        },
                     }
                 });
 
@@ -255,7 +264,6 @@ export class Main extends ShowButtons{
                     return data;
                 }, { labels: [], amounts: [] });
 
-
                 this.expensesChart = new Chart(this.expensesChartCanvas, {
                     type: 'pie' as ChartType,
                     data: {
@@ -263,7 +271,9 @@ export class Main extends ShowButtons{
                         datasets: [{
                             label: 'Сумма расходов',
                             data: expensesData.amounts,
-                            borderWidth: 1
+                            borderWidth: 1,
+                            backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                            hoverOffset: 4
                         }]
                     },
                 });
