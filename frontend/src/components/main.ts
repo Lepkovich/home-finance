@@ -3,11 +3,10 @@ import config from "../../config/config";
 import {Sidebar} from "./sidebar";
 import { ShowButtons } from '../services/show-buttons'
 import {GetCategoryIncomeType, GetErrorResponseType, GetOperationsPeriodType} from "../types/backend-response.type";
-// import bootstrap, {Modal} from "bootstrap";
 import * as bootstrap from "bootstrap";
-import {Chart, ChartType, PieController, ArcElement} from "chart.js";
+// import {Chart, ChartType, PieController, ArcElement} from "chart.js";
 // import * as chart from "chart.js";
-// import Chart from 'chart.js/auto';
+import Chart, { ChartType } from 'chart.js/auto';
 
 
 
@@ -25,7 +24,7 @@ export class Main extends ShowButtons{
     constructor() {
         super();
 
-        Chart.register(PieController, ArcElement);
+        // Chart.register(PieController, ArcElement);
 
         this.earningsChart = null;
         this.expensesChart = null;
